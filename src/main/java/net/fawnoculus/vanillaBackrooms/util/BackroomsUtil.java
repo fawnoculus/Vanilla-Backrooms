@@ -1,12 +1,10 @@
 package net.fawnoculus.vanillaBackrooms.util;
 
-import net.fawnoculus.craft_attack.CraftAttack;
-import net.fawnoculus.craft_attack.CraftAttackConfig;
-import net.fawnoculus.craft_attack.blocks.ModBlocks;
-import net.fawnoculus.craft_attack.blocks.entities.BackroomsGeneratorBE;
-import net.fawnoculus.craft_attack.misc.CustomDataHolder;
-import net.fawnoculus.craft_attack.misc.tags.ModItemTags;
-import net.fawnoculus.craft_attack.util.PlayerUtil;
+import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
+import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
+import net.fawnoculus.vanillaBackrooms.blocks.ModBlocks;
+import net.fawnoculus.vanillaBackrooms.blocks.entities.BackroomsGeneratorBE;
+import net.fawnoculus.vanillaBackrooms.misc.CustomDataHolder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.ItemEntity;
@@ -27,11 +25,11 @@ import net.minecraft.storage.NbtReadView;
 import net.minecraft.storage.NbtWriteView;
 import net.minecraft.storage.ReadView;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextCodecs;
 import net.minecraft.util.ErrorReporter;
-import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
@@ -43,205 +41,307 @@ import java.util.Objects;
 import java.util.Set;
 
 public class BackroomsUtil {
-  public static final RegistryKey<World> BACKROOMS_WORLD = RegistryKey.of(RegistryKeys.WORLD, CraftAttack.id("backrooms"));
-  public static final String PLAYER_DATA_EXTENSION = "backrooms";
+	public static final RegistryKey<World> LEVEL_0 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_0"));
+	public static final RegistryKey<World> LEVEL_1 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_1"));
+	public static final RegistryKey<World> LEVEL_2 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_2"));
+	public static final RegistryKey<World> LEVEL_3 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_3"));
+	public static final RegistryKey<World> LEVEL_4 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_4"));
+	public static final RegistryKey<World> LEVEL_5 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_5"));
 
-  public static boolean sendToBackrooms(MinecraftServer server, Entity entity) {
-    if(!CraftAttackConfig.BACKROOMS_ENABLED.getValue()){
-      return false;
-    }
+	public static void onEntityDamaged(LivingEntity entity, ServerWorld world, DamageSource source, float ignored) {
+		if (!VanillaBackroomsConfig.SUFFOCATION_NOCLIP.getValue() || !source.isOf(DamageTypes.IN_WALL)) {
+			NbtCompound data = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
+			data.putInt("suffocationDamageTicks", 0);
+			CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
+			return;
+		}
 
-    if(isInDimension(entity)) return false;
+		NbtCompound data = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
 
-    ServerWorld backroomsWorld = server.getWorld(BACKROOMS_WORLD);
-    if (backroomsWorld == null) {
-      CraftAttack.LOGGER.error("(sendToBackrooms) Failed: Backrooms World == null");
-      return false;
-    }
+		int ticks = data.getInt("suffocationDamageTicks", 0);
+		ticks++;
 
-    if(entity instanceof ServerPlayerEntity player) {
-      try {
-        savePlayerData(player);
-      } catch (Exception e) {
-        CraftAttack.LOGGER.error("(sendToBackrooms) Failed to save player data: {}", e.toString());
-        return false;
-      }
-    }
+		if (ticks >= world.getRandom().nextBetween(40, 80)) {
+			data.putInt("suffocationDamageTicks", 0);
+			CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
 
-    if (backroomsWorld.getBlockState(BlockPos.ORIGIN).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
-      BackroomsGeneratorBE.placeBackroomsSegment(backroomsWorld, BlockPos.ORIGIN);
-      backroomsWorld.setBlockState(BlockPos.ORIGIN, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
-    }
+			noclip(world.getServer(), entity);
+			return;
+		}
 
-    Vec3d spawnPos = new Vec3d(24, 2, 24);
+		data.putInt("suffocationDamageTicks", ticks);
+		CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
+	}
 
-    entity.fallDistance = 0;
-    entity.teleport(backroomsWorld, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), 0, 0, false);
+	public static void onEntityDimensionChanged(Entity entity, ServerWorld world) {
+		NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
+		boolean wasInBackrooms = customData.getBoolean("isInBackrooms", false);
 
-    if(entity instanceof ServerPlayerEntity player) {
-      player.sendMessage(Text.literal("§n§o§m§i§n§i§m§a§p"));
-      player.sendMessage(Text.literal("§f§a§i§r§x§a§e§r§o"));
-      player.changeGameMode(GameMode.ADVENTURE);
-      player.clearStatusEffects();
-      player.getInventory().clear();
-      player.setSpawnPoint(new ServerPlayerEntity.Respawn(backroomsWorld.getRegistryKey(), BlockPos.ofFloored(spawnPos), backroomsWorld.getSpawnAngle(), true), false);
-      player.setHealth(player.getMaxHealth());
-      player.getHungerManager().add(20, 20);
-      player.setExperienceLevel(0);
-      player.setExperiencePoints(0);
+		Identifier wordID = world.getRegistryKey().getValue();
+		if (wordID.equals(LEVEL_0.getValue())
+		  || wordID.equals(LEVEL_1.getValue())
+		  || wordID.equals(LEVEL_2.getValue())
+		  || wordID.equals(LEVEL_3.getValue())
+		  || wordID.equals(LEVEL_4.getValue())
+		  || wordID.equals(LEVEL_5.getValue())
+		) {
+			if (wasInBackrooms) {
+				return;
+			}
 
-      player.getEnderPearls().forEach(Entity::discard);
+			customData.putBoolean("isInBackrooms", true);
+			onEnterBackrooms(entity);
+			return;
+		}
 
-      NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
-      customData.put("messageIgnoreReason", TextCodecs.CODEC, Text.literal("NUH UH!").formatted(Formatting.RED));
-      customData.putBoolean("disableMinimap", true);
-      customData.putBoolean("fairXaero", true);
-      PlayerUtil.setPermanentCustomData(player, customData);
-    }
+		if (!wasInBackrooms) return;
+		onExitBackrooms(entity);
+	}
 
-    return true;
-  }
+	public static boolean noclip(MinecraftServer server, Entity entity) {
+		entity.detach();
+		RegistryKey<World> nextDimension = getNextDimension(entity.getWorld().getRegistryKey(), entity.getRandom());
+		return sendToDimension(server, entity, nextDimension);
+	}
 
-  public static boolean removeFromBackrooms(MinecraftServer server, Entity entity) {
-    if (!isInDimension(entity)) return false;
-    if (entity instanceof ServerPlayerEntity player) {
-      ArrayList<ItemStack> stacks = new ArrayList<>(player.getInventory().size());
+	public static boolean sendToDimension(MinecraftServer server, Entity entity, RegistryKey<World> targetDimension) {
+		RegistryKey<World> previousDimension = entity.getWorld().getRegistryKey();
 
-      for (ItemStack stack : player.getInventory()) {
-        if(stack.getRegistryEntry().isIn(ModItemTags.BACKROOMS_NON_RETURN)){
-          continue;
-        }
+		if (previousDimension.getValue().equals(targetDimension.getValue())) {
+			return false;
+		}
 
-        stacks.add(stack.copy());
-      }
+		if (targetDimension.getValue().equals(World.OVERWORLD.getValue())) {
+			exitBackrooms(server, entity);
+			return true;
+		}
 
-      loadPlayerData(player);
+		ServerWorld backroomsWorld = server.getWorld(targetDimension);
 
-      for (ItemStack stack : stacks) {
-        player.giveOrDropStack(stack);
-      }
+		if (backroomsWorld == null) {
+			VanillaBackrooms.LOGGER.error("Failed to get Dimension : '{}'", targetDimension.getValue());
+			return false;
+		}
 
-      player.sendMessage(Text.literal("§r§e§s§e§t§x§a§e§r§o"));
+		if (backroomsWorld.getBlockState(BlockPos.ORIGIN).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
+			try {
+				BackroomsGeneratorBE.placeBackroomsSegment(backroomsWorld, BlockPos.ORIGIN);
+			}catch (NullPointerException e) {
+				VanillaBackrooms.LOGGER.error("Failed to generate center segment for dimension: {}, Exception: '{}'", targetDimension.getValue(), e.toString());
+				return false;
+			}
+			backroomsWorld.setBlockState(BlockPos.ORIGIN, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
+		}
 
-      NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
-      customData.remove("messageIgnoreReason");
-      customData.remove("disableMinimap");
-      customData.remove("fairXaero");
-      PlayerUtil.setPermanentCustomData(player, customData);
+		Vec3d spawnPos = new Vec3d(24, 2, 24);
 
-      return true;
-    }
+		if (targetDimension.getValue().equals(LEVEL_0.getValue()) && entity instanceof ServerPlayerEntity player) {
+			try {
+				savePlayerData(player);
+			} catch (Exception e) {
+				VanillaBackrooms.LOGGER.error("Failed to save Player Data for Player '{}'", player.getGameProfile().getName());
+				return false;
+			}
+		}
 
-    if(entity instanceof InventoryOwner owner) {
-      SimpleInventory inventory = owner.getInventory();
+		entity.fallDistance = 0;
+		entity.teleport(backroomsWorld, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), 0, 0, false);
 
-      for (int i = 0; i < inventory.size(); i++) {
-        if(inventory.getStack(i).getRegistryEntry().isIn(ModItemTags.BACKROOMS_NON_RETURN)){
-          inventory.setStack(i, ItemStack.EMPTY);
-        }
-      }
-    }
+		if (targetDimension.getValue().equals(LEVEL_0.getValue()) && entity instanceof ServerPlayerEntity player) {
+			if (VanillaBackroomsConfig.DISABLE_XAERO_MINIMAP.getValue()) {
+				player.sendMessage(Text.literal("§n§o§m§i§n§i§m§a§p"));
+			}
+			if (VanillaBackroomsConfig.XAERO_FAIR.getValue()) {
+				player.sendMessage(Text.literal("§f§a§i§r§x§a§e§r§o"));
+			}
+			player.clearStatusEffects();
+			player.getInventory().clear();
+			player.setSpawnPoint(new ServerPlayerEntity.Respawn(backroomsWorld.getRegistryKey(), BlockPos.ofFloored(spawnPos), backroomsWorld.getSpawnAngle(), true), false);
+			player.setHealth(player.getMaxHealth());
+			player.getHungerManager().add(20, 20);
+			player.setExperienceLevel(0);
+			player.setExperiencePoints(0);
+		}
 
-    if(entity instanceof ItemEntity item && item.getStack().getRegistryEntry().isIn(ModItemTags.BACKROOMS_NON_RETURN)){
-      item.kill((ServerWorld) item.getWorld());
-      return true;
-    }
+		return true;
+	}
 
-    ServerWorld overWorld = server.getOverworld();
-    Vec3d spawnPos = overWorld.getSpawnPos().toCenterPos();
-    entity.fallDistance = 0;
-    entity.teleport(overWorld, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), overWorld.getSpawnAngle(), 0, false);
-    return true;
-  }
+	private static void exitBackrooms(MinecraftServer server, Entity entity) {
+		if (!onExitBackrooms(entity)) {
+			return;
+		}
 
-  public static boolean switchDimension(MinecraftServer server, Entity entity) {
-    if (isInDimension(entity)) {
-      return removeFromBackrooms(server, entity);
-    }
+		if (entity instanceof ServerPlayerEntity player) {
+			ArrayList<ItemStack> stacks = new ArrayList<>(player.getInventory().size());
 
-    return sendToBackrooms(server, entity);
-  }
+			for (ItemStack stack : player.getInventory()) {
+				if (stack.getRegistryEntry().isIn(VanillaBackroomsConfig.BACKROOMS_NOT_RETURN.getValue())) {
+					continue;
+				}
 
-  public static void onEntityDamaged(LivingEntity entity, ServerWorld world, DamageSource source, float ignored) {
-    if(!source.isOf(DamageTypes.IN_WALL) || !CraftAttackConfig.BACKROOMS_ENABLED.getValue()){
-      NbtCompound data = CustomDataHolder.from(entity).CA$getCustomData();
-      data.putInt("suffocationDamageTicks", 0);
-      CustomDataHolder.from(entity).CA$setCustomData(data);
-      return;
-    }
+				stacks.add(stack.copy());
+			}
 
-    if(entity instanceof ServerPlayerEntity) {
-      NbtCompound data = CustomDataHolder.from(entity).CA$getCustomData();
+			loadPlayerData(player);
 
-      int ticks = data.getInt("suffocationDamageTicks", 0);
-      ticks++;
+			for (ItemStack stack : stacks) {
+				player.giveOrDropStack(stack);
+			}
 
-      if(ticks >= world.getRandom().nextBetween(40, 80)){
-        data.putInt("suffocationDamageTicks", 0);
-        CustomDataHolder.from(entity).CA$setCustomData(data);
+			player.sendMessage(Text.literal("§r§e§s§e§t§x§a§e§r§o"));
 
-        switchDimension(world.getServer(), entity);
-        return;
-      }
+			NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
+			customData.remove("isInBackrooms");
+			PlayerUtil.setPermanentCustomData(player, customData);
+			return;
+		}
 
-      data.putInt("suffocationDamageTicks", ticks);
-      CustomDataHolder.from(entity).CA$setCustomData(data);
-    }
-  }
+		ServerWorld overWorld = server.getOverworld();
+		Vec3d spawnPos = overWorld.getSpawnPos().toCenterPos();
+		entity.fallDistance = 0;
+		entity.teleport(overWorld, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), overWorld.getSpawnAngle(), 0, false);
+	}
 
-  public static boolean isInDimension(Entity entity) {
-    return entity.getWorld().getRegistryKey().getValue().equals(BACKROOMS_WORLD.getValue());
-  }
+	private static void onEnterBackrooms(Entity entity) {
+		NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
+		customData.putBoolean("isInBackrooms", true);
+		CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(customData);
 
-  public static void savePlayerData(ServerPlayerEntity player) throws IOException {
-    MinecraftServer server = Objects.requireNonNull(player.getServer());
+		if (entity instanceof ServerPlayerEntity player) {
+			if (VanillaBackroomsConfig.DISABLE_XAERO_MINIMAP.getValue()) {
+				player.sendMessage(Text.literal("§n§o§m§i§n§i§m§a§p"));
+			}
+			if (VanillaBackroomsConfig.XAERO_FAIR.getValue()) {
+				player.sendMessage(Text.literal("§f§a§i§r§x§a§e§r§o"));
+			}
+			player.changeGameMode(GameMode.ADVENTURE);
 
-    Path playerData = server.getPath("data")
-      .resolve("ca")
-      .resolve("player_data")
-      .resolve(PLAYER_DATA_EXTENSION)
-      .resolve(player.getUuidAsString() + ".dat");
+			player.getEnderPearls().forEach(Entity::discard);
 
-    var ignored = playerData.getParent().toFile().mkdirs();
+			NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
+			permanentCustomData.putBoolean("isInBackrooms", true);
+			PlayerUtil.setPermanentCustomData(player, permanentCustomData);
+		}
+	}
 
-    if (playerData.toFile().exists()) {
-      var ignored2 = playerData.toFile().delete();
-    }
-    var ignored3 = playerData.toFile().createNewFile();
+	private static boolean onExitBackrooms(Entity entity) {
+		NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
+		customData.remove("isInBackrooms");
+		CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(customData);
 
-    NbtCompound nbt = new NbtCompound();
+		if (entity instanceof ItemEntity item && item.getStack().getRegistryEntry().isIn(VanillaBackroomsConfig.BACKROOMS_NOT_RETURN.getValue())) {
+			item.kill((ServerWorld) item.getWorld());
+			item.discard();
+			return false;
+		}
 
-    NbtWriteView view = NbtWriteView.create(ErrorReporter.EMPTY, player.getRegistryManager());
-    player.writeData(view);
-    nbt.put("data", view.getNbt());
+		if (entity instanceof InventoryOwner owner) {
+			SimpleInventory inventory = owner.getInventory();
 
-    NbtIo.write(nbt, playerData);
-  }
+			for (int i = 0; i < inventory.size(); i++) {
+				if (inventory.getStack(i).getRegistryEntry().isIn(VanillaBackroomsConfig.BACKROOMS_NOT_RETURN.getValue())) {
+					inventory.setStack(i, ItemStack.EMPTY);
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public static RegistryKey<World> getNextDimension(RegistryKey<World> previousDimension, Random random) {
+		Identifier identifier = previousDimension.getValue();
+
+		if (LEVEL_0.getValue().equals(identifier)) {
+			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_0_EXIT_CHANCE.getValue()) {
+				return World.OVERWORLD;
+			}
+			return LEVEL_1;
+		}
+
+		if (LEVEL_1.getValue().equals(identifier)) {
+			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_1_EXIT_CHANCE.getValue()) {
+				return World.OVERWORLD;
+			}
+			return LEVEL_2;
+		}
+
+		if (LEVEL_2.getValue().equals(identifier)) {
+			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_2_EXIT_CHANCE.getValue()) {
+				return World.OVERWORLD;
+			}
+			return LEVEL_3;
+		}
+
+		if (LEVEL_3.getValue().equals(identifier)) {
+			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_3_EXIT_CHANCE.getValue()) {
+				return World.OVERWORLD;
+			}
+			return LEVEL_4;
+		}
+
+		if (LEVEL_4.getValue().equals(identifier)) {
+			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_4_EXIT_CHANCE.getValue()) {
+				return World.OVERWORLD;
+			}
+			return LEVEL_5;
+		}
+
+		if (LEVEL_5.getValue().equals(identifier)) {
+			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_5_EXIT_CHANCE.getValue()) {
+				return World.OVERWORLD;
+			}
+		}
+
+		return LEVEL_0;
+	}
+
+	public static void savePlayerData(ServerPlayerEntity player) throws IOException {
+		MinecraftServer server = Objects.requireNonNull(player.getServer());
+
+		Path playerData = server.getPath("data")
+		  .resolve("vanilla_backrooms")
+		  .resolve("backrooms_player_data")
+		  .resolve(player.getUuidAsString() + ".dat");
+
+		var ignored = playerData.getParent().toFile().mkdirs();
+
+		if (playerData.toFile().exists()) {
+			var ignored2 = playerData.toFile().delete();
+		}
+		var ignored3 = playerData.toFile().createNewFile();
+
+		NbtCompound nbt = new NbtCompound();
+
+		NbtWriteView view = NbtWriteView.create(ErrorReporter.EMPTY, player.getRegistryManager());
+		player.writeData(view);
+		nbt.put("data", view.getNbt());
+
+		NbtIo.write(nbt, playerData);
+	}
 
 
-  public static void loadPlayerData(ServerPlayerEntity player) {
-    MinecraftServer server = Objects.requireNonNull(player.getServer());
+	public static void loadPlayerData(ServerPlayerEntity player) {
+		MinecraftServer server = Objects.requireNonNull(player.getServer());
 
-    Path playerData = server.getPath("data")
-      .resolve("ca")
-      .resolve("player_data")
-      .resolve(PLAYER_DATA_EXTENSION)
-      .resolve(player.getUuidAsString() + ".dat");
+		Path playerData = server.getPath("data")
+		  .resolve("vanilla_backrooms")
+		  .resolve("backrooms_player_data")
+		  .resolve(player.getUuidAsString() + ".dat");
 
-    NbtCompound nbt = new NbtCompound();
-    try {
-      nbt = Objects.requireNonNull(NbtIo.read(playerData));
-    } catch (Exception ignored) {
-    }
-    ReadView view = NbtReadView.create(ErrorReporter.EMPTY, player.getRegistryManager(), nbt.getCompoundOrEmpty("data"));
+		NbtCompound nbt = new NbtCompound();
+		try {
+			nbt = Objects.requireNonNull(NbtIo.read(playerData));
+		} catch (Exception ignored) {
+		}
+		ReadView view = NbtReadView.create(ErrorReporter.EMPTY, player.getRegistryManager(), nbt.getCompoundOrEmpty("data"));
 
 
-    player.readData(view);
+		player.readData(view);
 
-    player.teleportTo(player.getRespawnTarget(false, TeleportTarget.NO_OP));
-    player.readRootVehicle(view);
-    player.readGameModeData(view);
-    player.getServer().getPlayerManager().sendStatusEffects(player);
-    player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.GAME_MODE_CHANGED, player.getGameMode().getIndex()));
-  }
+		player.teleportTo(player.getRespawnTarget(false, TeleportTarget.NO_OP));
+		player.readRootVehicle(view);
+		player.readGameModeData(view);
+		player.getServer().getPlayerManager().sendStatusEffects(player);
+		player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.GAME_MODE_CHANGED, player.getGameMode().getIndex()));
+	}
 }

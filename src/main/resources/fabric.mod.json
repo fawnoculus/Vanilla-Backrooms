@@ -1,13 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "vanilla-backrooms",
+  "id": "vanilla_backrooms",
   "version": "${version}",
   "name": "Vanilla-Backrooms",
   "description": "",
-  "authors": [],
+  "authors": [
+	  "fawnoculus",
+	  "OrdenEnderman"
+  ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/vanilla-backrooms/icon.png",
+  "icon": "assets/vanilla_backrooms/icon.png",
   "environment": "*",
   "entrypoints": {
     "fabric-datagen": [
@@ -21,7 +24,7 @@
     ]
   },
   "mixins": [
-    "vanilla-backrooms.mixins.json",
+	  "vanilla_backrooms.mixins.json",
     {
       "config": "vanilla-backrooms.client.mixins.json",
       "environment": "client"

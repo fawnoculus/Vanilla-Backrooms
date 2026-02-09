@@ -2,18 +2,17 @@ package net.fawnoculus.vanillaBackrooms.misc.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 
 @FunctionalInterface
-public interface EntityDimensionChanged {
-  Event<EntityDimensionChanged> EVENT = EventFactory.createArrayBacked(EntityDimensionChanged.class, callbacks ->
-    (entity, world, source, amount) -> {
-    for (EntityDimensionChanged callback : callbacks) {
-      callback.onDamaged(entity, world, source, amount);
-    }
-  });
+public interface EntityDimensionChangedEvent {
+	Event<EntityDimensionChangedEvent> EVENT = EventFactory.createArrayBacked(EntityDimensionChangedEvent.class, callbacks ->
+	  (entity, world) -> {
+		  for (EntityDimensionChangedEvent callback : callbacks) {
+			  callback.onDimensionChanged(entity, world);
+		  }
+	  });
 
-  void onDamaged(LivingEntity entity, ServerWorld world, DamageSource source, float amount);
+	void onDimensionChanged(Entity entity, ServerWorld world);
 }

@@ -1,0 +1,20 @@
+{
+	"message.vanilla_backrooms.reloading_config": "Reloading Config",
+	"message.vanilla_backrooms.must_be_executed_by_player": "Must be executed by a Player",
+	"message.vanilla_backrooms.noclip_failed": "Failed to Noclip",
+	"message.vanilla_backrooms.noclip_multiple_failed": "Failed to noclip some entities",
+	"message.vanilla_backrooms.noclip_next": "noclip-ed to next Level",
+	"message.vanilla_backrooms.noclip_multiple_next": "noclip-ed %1$s entities next Level",
+	"message.vanilla_backrooms.noclip_to": "noclip-ed to Level %1$s",
+	"message.vanilla_backrooms.noclip_multiple_to": "noclip-ed %1$s entities to Level %2$s",
+	"message.vanilla_backrooms.flicker_chance": "Flicker Chance: 1/%1$s (%2$s%%) pro Tick",
+
+	"itemGroup.vanilla_backrooms.vanilla_backrooms": "Vanilla-Backrooms",
+
+	"tag.item.vanilla_backrooms.backrooms_non_return": "Backrooms not Return",
+
+	"item.vanilla_backrooms.flickering_light": "Flickering Light",
+	"item.vanilla_backrooms.active_light": "Active Light",
+	"item.vanilla_backrooms.noclip_block": "Noclip Block",
+	"item.vanilla_backrooms.backrooms_generator": "Backrooms Generator"
+}

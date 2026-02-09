@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 
 public class VanillaBackroomsClient implements ClientModInitializer {
 
-    @Override
-    public void onInitializeClient() {
-    }
+	@Override
+	public void onInitializeClient() {
+	}
 }

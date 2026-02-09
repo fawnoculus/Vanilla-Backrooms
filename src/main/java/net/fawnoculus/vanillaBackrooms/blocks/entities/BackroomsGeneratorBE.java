@@ -1,10 +1,11 @@
 package net.fawnoculus.vanillaBackrooms.blocks.entities;
 
-import net.fawnoculus.craft_attack.CraftAttack;
-import net.fawnoculus.craft_attack.blocks.ModBlockEntities;
-import net.fawnoculus.craft_attack.blocks.ModBlocks;
-import net.fawnoculus.craft_attack.util.MixinUtil;
-import net.fawnoculus.craft_attack.util.event.BackroomsUtil;
+import com.google.common.collect.ImmutableMap;
+import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
+import net.fawnoculus.vanillaBackrooms.blocks.ModBlockEntities;
+import net.fawnoculus.vanillaBackrooms.blocks.ModBlocks;
+import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
+import net.fawnoculus.vanillaBackrooms.util.MixinUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.registry.Registry;
@@ -16,128 +17,187 @@ import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkSectionPos;
+import net.minecraft.util.math.random.CheckedRandom;
+import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 public class BackroomsGeneratorBE extends BlockEntity {
-  private static final RegistryKey<StructurePool> RING_9_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring9"));
-  private static final RegistryKey<StructurePool> RING_8_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring8"));
-  private static final RegistryKey<StructurePool> RING_7_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring7"));
-  private static final RegistryKey<StructurePool> RING_6_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring6"));
-  private static final RegistryKey<StructurePool> RING_5_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring5"));
-  private static final RegistryKey<StructurePool> RING_4_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring4"));
-  private static final RegistryKey<StructurePool> RING_3_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring3"));
-  private static final RegistryKey<StructurePool> RING_2_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring2"));
-  private static final RegistryKey<StructurePool> RING_1_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring1"));
-  private static final RegistryKey<StructurePool> RING_0_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/ring0"));
-  private static final RegistryKey<StructurePool> SPAWN_ID = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, CraftAttack.id("backrooms/spawn"));
-  private static final Identifier STRUCTURE_START = CraftAttack.id("backrooms_start");
-  private static final double RING_9_DISTANCE = 900 * 900;
-  private static final double RING_8_DISTANCE = 800 * 800;
-  private static final double RING_7_DISTANCE = 700 * 700;
-  private static final double RING_6_DISTANCE = 600 * 600;
-  private static final double RING_5_DISTANCE = 500 * 500;
-  private static final double RING_4_DISTANCE = 400 * 400;
-  private static final double RING_3_DISTANCE = 300 * 300;
-  private static final double RING_2_DISTANCE = 200 * 200;
-  private static final double RING_1_DISTANCE = 100 * 100;
-  private static final int HORIZONTAL_OFFSET = 48;
-  private static final int Y_LEVEL = 0;
+	private static final ImmutableMap<Identifier, DimensionData> DIMENSION_DATA = new ImmutableMap.Builder<Identifier, DimensionData>()
+	  .put(BackroomsUtil.LEVEL_0.getValue(), new SimpleDimensionDataBuilder(true)
+		.addStructure(900, "level_0/ring9")
+		.addStructure(800, "level_0/ring8")
+		.addStructure(700, "level_0/ring7")
+		.addStructure(600, "level_0/ring6")
+		.addStructure(500, "level_0/ring5")
+		.addStructure(400, "level_0/ring4")
+		.addStructure(300, "level_0/ring3")
+		.addStructure(200, "level_0/ring2")
+		.addStructure(100, "level_0/ring1")
+		.addStructure(1, "level_0/ring0")
+		.addStructure(0, "level_0/spawn")
+		.build()
+	  )
+	  .put(BackroomsUtil.LEVEL_1.getValue(), new SimpleDimensionDataBuilder(false)
+		.addStructure(0, "level_1/spawn")
+		.build()
+	  )
+	  .build();
 
-  public BackroomsGeneratorBE(BlockPos pos, BlockState state) {
-    super(ModBlockEntities.BACKROOMS_GENERATOR_BE, pos, state);
-  }
 
-  public static void tick(World world, BlockPos pos, BlockState ignored, BackroomsGeneratorBE ignored2) {
-    if (world.getRegistryKey().equals(BackroomsUtil.BACKROOMS_WORLD)
-      && world instanceof ServerWorld serverWorld
-      && pos.getY() == Y_LEVEL
-    ) {
-      tryPlaceNeighbours(serverWorld, pos);
-    }
-  }
+	// TODO: Fix the structures so that we don't have to do this shit
+	private static final Identifier STRUCTURE_START = Identifier.of("craft_attack", "backrooms_start");
+	private static final int HORIZONTAL_OFFSET = 48;
+	private static final int Y_LEVEL = 0;
+	private DimensionData dimensionData = null;
+	private boolean hashChecked = false;
 
-  private static void tryPlaceNeighbours(ServerWorld world, BlockPos pos) {
-    if (world.getBlockState(pos.add(0, 0, HORIZONTAL_OFFSET)).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
-      placeBackroomsSegment(world, pos.add(0, 0, HORIZONTAL_OFFSET));
-    }
-    if (world.getBlockState(pos.add(HORIZONTAL_OFFSET, 0, 0)).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
-      placeBackroomsSegment(world, pos.add(HORIZONTAL_OFFSET, 0, 0));
-    }
-    if (world.getBlockState(pos.add(0, 0, -HORIZONTAL_OFFSET)).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
-      placeBackroomsSegment(world, pos.add(0, 0, -HORIZONTAL_OFFSET));
-    }
-    if (world.getBlockState(pos.add(-HORIZONTAL_OFFSET, 0, 0)).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
-      placeBackroomsSegment(world, pos.add(-HORIZONTAL_OFFSET, 0, 0));
-    }
-  }
+	public BackroomsGeneratorBE(BlockPos pos, BlockState state) {
+		super(ModBlockEntities.BACKROOMS_GENERATOR_BE, pos, state);
+	}
 
-  public static void placeBackroomsSegment(ServerWorld world, BlockPos pos) {
-    placeSegmentWithRotation(world, pos, BlockRotation.random(world.getRandom()));
-  }
+	public static void tick(World world, BlockPos pos, BlockState ignored, BackroomsGeneratorBE backroomsGeneratorBE) {
+		if (!backroomsGeneratorBE.hashChecked) {
+			backroomsGeneratorBE.dimensionData = DIMENSION_DATA.get(world.getRegistryKey().getValue());
+			backroomsGeneratorBE.hashChecked = true;
+		}
 
-  private static void placeSegmentWithRotation(ServerWorld world, BlockPos pos, BlockRotation rotation) {
-    int xOffset = 0;
-    int zOffset = 0;
+		if (backroomsGeneratorBE.dimensionData != null
+		  && world instanceof ServerWorld serverWorld
+		  && pos.getY() == Y_LEVEL
+		) {
+			tryPlaceNeighbours(serverWorld, pos, backroomsGeneratorBE.dimensionData);
+		}
+	}
 
-    switch (rotation) {
-      case NONE -> {}
-      case CLOCKWISE_90 -> xOffset = HORIZONTAL_OFFSET - 1;
-      case COUNTERCLOCKWISE_90 -> zOffset = HORIZONTAL_OFFSET - 1;
-      case CLOCKWISE_180 -> {
-        xOffset = HORIZONTAL_OFFSET - 1;
-        zOffset = HORIZONTAL_OFFSET - 1;
-      }
-    }
+	private static void tryPlaceNeighbours(ServerWorld world, BlockPos pos, DimensionData dimensionData) {
+		if (world.getBlockState(pos.add(0, 0, HORIZONTAL_OFFSET)).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
+			dimensionData.placeBackroomsSegment(world, pos.add(0, 0, HORIZONTAL_OFFSET));
+		}
+		if (world.getBlockState(pos.add(HORIZONTAL_OFFSET, 0, 0)).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
+			dimensionData.placeBackroomsSegment(world, pos.add(HORIZONTAL_OFFSET, 0, 0));
+		}
+		if (world.getBlockState(pos.add(0, 0, -HORIZONTAL_OFFSET)).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
+			dimensionData.placeBackroomsSegment(world, pos.add(0, 0, -HORIZONTAL_OFFSET));
+		}
+		if (world.getBlockState(pos.add(-HORIZONTAL_OFFSET, 0, 0)).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
+			dimensionData.placeBackroomsSegment(world, pos.add(-HORIZONTAL_OFFSET, 0, 0));
+		}
+	}
 
-    BlockPos placementPos = pos.add(xOffset, 1, zOffset);
+	public static void placeBackroomsSegment(ServerWorld world, BlockPos pos) throws NullPointerException {
+		Objects.requireNonNull(DIMENSION_DATA.get(world.getRegistryKey().getValue()), "No Backrooms dimension data found").placeBackroomsSegment(world, pos);
+	}
 
-    MixinUtil.setRandomBlockRotationOverride(rotation);
+	private interface DimensionData {
+		void placeBackroomsSegment(ServerWorld world, BlockPos pos);
+	}
 
-    Registry<StructurePool> registry = world.getRegistryManager().getOrThrow(RegistryKeys.TEMPLATE_POOL);
-    RegistryEntry<StructurePool> registryEntry = registry.getOrThrow(poolFromPos(pos));
-    boolean success = StructurePoolBasedGenerator.generate(world, registryEntry, STRUCTURE_START, 20, placementPos, false);
+	private record SimpleDimensionData(boolean rotateStructures,
+									   List<Pair<Integer, RegistryKey<StructurePool>>> structures) implements DimensionData {
+		public RegistryKey<StructurePool> poolFromPos(BlockPos pos) {
+			double distanceFromCenter = Math.abs((double) pos.getX() * pos.getX() + pos.getZ() * pos.getZ());
 
-    if (success) {
-      world.setBlockState(pos, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
-    } else {
-      CraftAttack.LOGGER.warn("Failed to generate backrooms segment");
-    }
-  }
+			for (Pair<Integer, RegistryKey<StructurePool>> pair : structures) {
+				if (distanceFromCenter >= pair.getLeft()) {
+					return pair.getRight();
+				}
+			}
 
-  private static RegistryKey<StructurePool> poolFromPos(BlockPos pos) {
-    double distanceFromCenter = Math.abs((double) pos.getX() * pos.getX() + pos.getZ() * pos.getZ());
+			return structures.getFirst().getRight();
+		}
 
-    if (distanceFromCenter == 0.0) {
-      return SPAWN_ID;
-    }
-    if (distanceFromCenter < RING_1_DISTANCE) {
-      return RING_0_ID;
-    }
-    if (distanceFromCenter < RING_2_DISTANCE) {
-      return RING_1_ID;
-    }
-    if (distanceFromCenter < RING_3_DISTANCE) {
-      return RING_2_ID;
-    }
-    if (distanceFromCenter < RING_4_DISTANCE) {
-      return RING_3_ID;
-    }
-    if (distanceFromCenter < RING_5_DISTANCE) {
-      return RING_4_ID;
-    }
-    if (distanceFromCenter < RING_6_DISTANCE) {
-      return RING_5_ID;
-    }
-    if (distanceFromCenter < RING_7_DISTANCE) {
-      return RING_6_ID;
-    }
-    if (distanceFromCenter < RING_8_DISTANCE) {
-      return RING_7_ID;
-    }
-    if (distanceFromCenter < RING_9_DISTANCE) {
-      return RING_8_ID;
-    }
-    return RING_9_ID;
-  }
+		@Override
+		public void placeBackroomsSegment(ServerWorld world, BlockPos pos) {
+			Registry<StructurePool> registry = world.getRegistryManager().getOrThrow(RegistryKeys.TEMPLATE_POOL);
+			Optional<RegistryEntry.Reference<StructurePool>> registryEntry = registry.getOptional(this.poolFromPos(pos));
+			if (registryEntry.isEmpty()) {
+				return;
+			}
+
+			BlockRotation rotation = BlockRotation.NONE;
+
+			if (this.rotateStructures) {
+				ChunkRandom chunkRandom = new ChunkRandom(new CheckedRandom(0L));
+				chunkRandom.setCarverSeed(
+				  world.getSeed(),
+				  ChunkSectionPos.getSectionCoord(pos.getX()),
+				  ChunkSectionPos.getSectionCoord(pos.getZ())
+				);
+				rotation = BlockRotation.random(chunkRandom);
+			}
+
+			placeSegmentWithRotation(world, pos, registryEntry.get(), rotation);
+		}
+
+		private static void placeSegmentWithRotation(
+		  ServerWorld world,
+		  BlockPos pos,
+		  RegistryEntry.Reference<StructurePool> structurePool,
+		  BlockRotation rotation
+		) {
+			int xOffset = 0;
+			int zOffset = 0;
+
+			switch (rotation) {
+				case NONE -> {
+				}
+				case CLOCKWISE_90 -> xOffset = HORIZONTAL_OFFSET - 1;
+				case COUNTERCLOCKWISE_90 -> zOffset = HORIZONTAL_OFFSET - 1;
+				case CLOCKWISE_180 -> {
+					xOffset = HORIZONTAL_OFFSET - 1;
+					zOffset = HORIZONTAL_OFFSET - 1;
+				}
+			}
+
+			BlockPos placementPos = pos.add(xOffset, 1, zOffset);
+
+			MixinUtil.setRandomBlockRotationOverride(rotation);
+
+			boolean success = StructurePoolBasedGenerator.generate(world, structurePool, STRUCTURE_START, 20, placementPos, false);
+
+			if (success) {
+				world.setBlockState(pos, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
+			} else {
+				VanillaBackrooms.LOGGER.warn("Failed to generate backrooms segment");
+			}
+		}
+	}
+
+	private static class SimpleDimensionDataBuilder {
+		private final boolean rotateStructures;
+		private final List<Pair<Integer, RegistryKey<StructurePool>>> structures = new ArrayList<>();
+
+		public SimpleDimensionDataBuilder(boolean rotateStructures) {
+			this.rotateStructures = rotateStructures;
+		}
+
+		public SimpleDimensionDataBuilder addStructure(int distanceFromOrigin, String name) {
+			int squareDistance = distanceFromOrigin * distanceFromOrigin;
+
+			if (!this.structures.isEmpty() && this.structures.getLast().getLeft() < squareDistance) {
+				throw new IllegalArgumentException("Wrong sort order");
+			}
+
+			this.structures.add(
+			  new Pair<>(squareDistance, RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id(name)))
+			);
+
+			return this;
+		}
+
+		public SimpleDimensionData build() {
+			if (this.structures.isEmpty()) {
+				throw new IllegalStateException("Cannot build Dimension data without any structure pools");
+			}
+			return new SimpleDimensionData(this.rotateStructures, List.copyOf(structures));
+		}
+	}
 }

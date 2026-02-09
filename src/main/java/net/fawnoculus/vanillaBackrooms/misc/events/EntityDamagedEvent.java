@@ -8,12 +8,12 @@ import net.minecraft.server.world.ServerWorld;
 
 @FunctionalInterface
 public interface EntityDamagedEvent {
-  Event<EntityDamagedEvent> EVENT = EventFactory.createArrayBacked(EntityDamagedEvent.class, callbacks ->
-    (entity, world, source, amount) -> {
-    for (EntityDamagedEvent callback : callbacks) {
-      callback.onDamaged(entity, world, source, amount);
-    }
-  });
+	Event<EntityDamagedEvent> EVENT = EventFactory.createArrayBacked(EntityDamagedEvent.class, callbacks ->
+	  (entity, world, source, amount) -> {
+		  for (EntityDamagedEvent callback : callbacks) {
+			  callback.onDamaged(entity, world, source, amount);
+		  }
+	  });
 
-  void onDamaged(LivingEntity entity, ServerWorld world, DamageSource source, float amount);
+	void onDamaged(LivingEntity entity, ServerWorld world, DamageSource source, float amount);
 }
