@@ -1,0 +1,11 @@
+{
+  "type": "craft_attack:backrooms",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome":"minecraft:the_void",
+      "layers":[{"block":"minecraft:bedrock","height":128}],
+      "structure_overrides": []
+    }
+  }
+}

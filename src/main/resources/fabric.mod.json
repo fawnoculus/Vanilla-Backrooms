@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "vanilla-backrooms",
+  "version": "${version}",
+  "name": "Vanilla-Backrooms",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/vanilla-backrooms/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "net.fawnoculus.vanillaBackrooms.client.VanillaBackroomsDataGenerator"
+    ],
+    "client": [
+      "net.fawnoculus.vanillaBackrooms.client.VanillaBackroomsClient"
+    ],
+    "main": [
+      "net.fawnoculus.vanillaBackrooms.VanillaBackrooms"
+    ]
+  },
+  "mixins": [
+    "vanilla-backrooms.mixins.json",
+    {
+      "config": "vanilla-backrooms.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

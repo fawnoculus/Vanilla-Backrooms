@@ -1,0 +1,16 @@
+{
+	"type": "vanilla_backrooms:backrooms",
+	"generator": {
+		"type": "minecraft:flat",
+		"settings": {
+			"biome": "minecraft:the_void",
+			"layers": [
+				{
+					"block": "minecraft:bedrock",
+					"height": 128
+				}
+			],
+			"structure_overrides": []
+		}
+	}
+}
