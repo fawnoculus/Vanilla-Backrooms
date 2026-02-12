@@ -14,12 +14,12 @@ import java.io.Reader;
 import java.io.Writer;
 
 public class JsonConfigEncoder implements ConfigEncoding {
-	private static final JsonConfigEncoder INSTANCE = new JsonConfigEncoder();
 	public static final Gson GSON = new GsonBuilder()
 	  .serializeNulls()
 	  .setStrictness(Strictness.LENIENT)
 	  .setPrettyPrinting()
 	  .create();
+	private static final JsonConfigEncoder INSTANCE = new JsonConfigEncoder();
 
 	private JsonConfigEncoder() {
 	}

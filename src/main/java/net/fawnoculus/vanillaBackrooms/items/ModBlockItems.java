@@ -19,6 +19,11 @@ import net.minecraft.util.Identifier;
 import java.util.function.BiFunction;
 
 public class ModBlockItems {
+	public static final BlockItem FAKE_SKY = register(
+	  ModBlocks.FAKE_SKY,
+	  (block, settings) -> new BasicBlockItem(block, settings, Items.LIGHT_BLUE_CONCRETE, Text.literal("Fake Sky")),
+	  new Item.Settings()
+	);
 	public static final BlockItem FLICKERING_LIGHT = register(
 	  ModBlocks.FLICKERING_LIGHT,
 	  (block, settings) -> new BasicBlockItem(block, settings, Items.REDSTONE_LAMP, Text.literal("Flickering Light")),
@@ -37,6 +42,11 @@ public class ModBlockItems {
 	);
 	public static final BlockItem BACKROOMS_GENERATOR = register(
 	  ModBlocks.BACKROOMS_GENERATOR,
+	  (block, settings) -> new BasicBlockItem(block, settings, Items.TARGET, Text.literal("Backrooms Generator")),
+	  new Item.Settings()
+	);
+	public static final BlockItem FINISHED_BACKROOMS_GENERATOR = register(
+	  ModBlocks.FINISHED_BACKROOMS_GENERATOR,
 	  (block, settings) -> new BasicBlockItem(block, settings, Items.TARGET, Text.literal("Backrooms Generator")),
 	  new Item.Settings()
 	);

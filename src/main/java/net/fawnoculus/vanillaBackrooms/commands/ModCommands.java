@@ -1,9 +1,12 @@
 package net.fawnoculus.vanillaBackrooms.commands;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
 import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
+import net.fawnoculus.vanillaBackrooms.levels.BackroomsLevel;
 import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -13,77 +16,34 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
-import java.util.Collection;
-
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class ModCommands {
 	public static void initialize() {
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			dispatcher.register(literal("vanilla-backrooms")
-			  .then(literal("version")
-				.executes(ModCommands::version)
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
+		  literal("vanilla-backrooms")
+			.then(literal("version")
+			  .executes(ModCommands::version)
+			)
+			.then(literal("reload-config")
+			  .requires(source -> source.hasPermissionLevel(2))
+			  .executes(ModCommands::reloadConfig)
+			)
+			.then(literal("noclip")
+			  .requires(source -> source.hasPermissionLevel(2))
+			  .executes(ModCommands::noclip)
+			  .then(argument("level_id", IntegerArgumentType.integer())
+				.executes(ModCommands::noclipLevel)
 			  )
-			  .then(literal("reload-config")
-				.requires(source -> source.hasPermissionLevel(2))
-				.executes(ModCommands::reloadConfig)
-			  )
-			  .then(literal("noclip-self")
-				.requires(source -> source.hasPermissionLevel(2))
-				.executes(ModCommands::noclip)
-				.then(literal("level-0")
-				  .executes(context -> noclip(context, BackroomsUtil.LEVEL_0))
-				)
-				.then(literal("level-1")
-				  .executes(context -> noclip(context, BackroomsUtil.LEVEL_1))
-				)
-				.then(literal("level-2")
-				  .executes(context -> noclip(context, BackroomsUtil.LEVEL_2))
-				)
-				.then(literal("level-3")
-				  .executes(context -> noclip(context, BackroomsUtil.LEVEL_3))
-				)
-				.then(literal("level-4")
-				  .executes(context -> noclip(context, BackroomsUtil.LEVEL_4))
-				)
-				.then(literal("level-5")
-				  .executes(context -> noclip(context, BackroomsUtil.LEVEL_5))
+			  .then(argument("targets", EntityArgumentType.entities())
+				.executes(ModCommands::noclipEntities)
+				.then(argument("level_id", IntegerArgumentType.integer())
+				  .executes(ModCommands::noclipEntitiesLevel)
 				)
 			  )
-			  .then(literal("noclip")
-				.requires(source -> source.hasPermissionLevel(2))
-				.then(argument("targets", EntityArgumentType.entities())
-				  .executes(context ->
-					noclip(context, EntityArgumentType.getEntities(context, "targets")))
-				  .then(literal("level-0")
-					.executes(context ->
-					  noclip(context, EntityArgumentType.getEntities(context, "targets"), BackroomsUtil.LEVEL_0))
-				  )
-				  .then(literal("level-1")
-					.executes(context ->
-					  noclip(context, EntityArgumentType.getEntities(context, "targets"), BackroomsUtil.LEVEL_1))
-				  )
-				  .then(literal("level-2")
-					.executes(context ->
-					  noclip(context, EntityArgumentType.getEntities(context, "targets"), BackroomsUtil.LEVEL_2))
-				  )
-				  .then(literal("level-3")
-					.executes(context ->
-					  noclip(context, EntityArgumentType.getEntities(context, "targets"), BackroomsUtil.LEVEL_3))
-				  )
-				  .then(literal("level-4")
-					.executes(context ->
-					  noclip(context, EntityArgumentType.getEntities(context, "targets"), BackroomsUtil.LEVEL_4))
-				  )
-				  .then(literal("level-5")
-					.executes(context ->
-					  noclip(context, EntityArgumentType.getEntities(context, "targets"), BackroomsUtil.LEVEL_5))
-				  )
-				)
-			  )
-			);
-		});
+			)
+		));
 	}
 
 	private static int version(CommandContext<ServerCommandSource> context) {
@@ -93,7 +53,7 @@ public class ModCommands {
 	}
 
 	private static int reloadConfig(CommandContext<ServerCommandSource> context) {
-		context.getSource().sendFeedback(() -> Text.translatableWithFallback("message.vanilla_backrooms.reloading_config","Reloading Config"), true);
+		context.getSource().sendFeedback(() -> Text.translatableWithFallback("message.vanilla_backrooms.reloading_config", "Reloading Config"), true);
 		VanillaBackroomsConfig.FILE.readFile();
 		return 1;
 	}
@@ -115,12 +75,19 @@ public class ModCommands {
 		}
 
 		context.getSource().sendError(Text.translatableWithFallback(
-		  "message.vanilla_backrooms.noclip_failed", "Failed to noclip (Check Server Logs)")
+		  "message.vanilla_backrooms.noclip_failed", "Failed to noclip")
 		);
 		return -2;
 	}
 
-	private static int noclip(CommandContext<ServerCommandSource> context, RegistryKey<World> targetWorld) {
+	private static int noclipLevel(CommandContext<ServerCommandSource> context) {
+		int levelId = IntegerArgumentType.getInteger(context, "level_id");
+		RegistryKey<World> levelKey = BackroomsUtil.getLevelKey(levelId);
+		if (!BackroomsLevel.isLevel(levelKey.getValue())) {
+			context.getSource().sendError(Text.literal("No level with id " + levelId + " exists"));
+			return 1;
+		}
+
 		ServerPlayerEntity player = context.getSource().getPlayer();
 		if (player == null) {
 			context.getSource().sendError(Text.translatableWithFallback(
@@ -129,22 +96,23 @@ public class ModCommands {
 			return -1;
 		}
 
-		boolean successful = BackroomsUtil.sendToDimension(context.getSource().getServer(), player, targetWorld);
+		boolean successful = BackroomsUtil.sendToDimension(context.getSource().getServer(), player, levelKey);
 
 		if (successful) {
 			context.getSource().sendFeedback(
-			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_to", "noclip-ed to Level %1$s", targetWorld.getValue().toString()), true
+			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_to", "noclip-ed to Level %1$s", levelKey.getValue().toString()), true
 			);
 			return 1;
 		}
 
 		context.getSource().sendError(Text.translatableWithFallback(
-		  "message.vanilla_backrooms.noclip_failed", "Failed to noclip (Check Server Logs)")
+		  "message.vanilla_backrooms.noclip_failed", "Failed to noclip")
 		);
 		return -2;
 	}
 
-	private static int noclip(CommandContext<ServerCommandSource> context, Collection<? extends Entity> entities) {
+	private static int noclipEntities(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		var entities = EntityArgumentType.getEntities(context, "targets");
 		boolean successful = true;
 
 		for (Entity entity : entities) {
@@ -166,18 +134,26 @@ public class ModCommands {
 		return -2;
 	}
 
-	private static int noclip(CommandContext<ServerCommandSource> context, Collection<? extends Entity> entities, RegistryKey<World> targetWorld) {
+	private static int noclipEntitiesLevel(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		int levelId = IntegerArgumentType.getInteger(context, "level_id");
+		RegistryKey<World> levelKey = BackroomsUtil.getLevelKey(levelId);
+		if (!BackroomsLevel.isLevel(levelKey.getValue())) {
+			context.getSource().sendError(Text.literal("No level with id " + levelId + " exists"));
+			return 1;
+		}
+
 		boolean successful = true;
+		var entities = EntityArgumentType.getEntities(context, "targets");
 
 		for (Entity entity : entities) {
-			if (!BackroomsUtil.sendToDimension(context.getSource().getServer(), entity, targetWorld)) {
+			if (!BackroomsUtil.sendToDimension(context.getSource().getServer(), entity, levelKey)) {
 				successful = false;
 			}
 		}
 
 		if (successful) {
 			context.getSource().sendError(Text.translatableWithFallback(
-			  "message.vanilla_backrooms.noclip_multiple_to", "noclip-ed %1$s entities to Level %2$s", entities.size(), targetWorld.getValue().toString())
+			  "message.vanilla_backrooms.noclip_multiple_to", "noclip-ed %1$s entities to Level %2$s", entities.size(), levelKey.getValue().toString())
 			);
 			return 1;
 		}

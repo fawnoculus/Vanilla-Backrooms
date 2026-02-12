@@ -12,9 +12,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
 public class ModBlockEntities {
-	public static final BlockEntityType<FlickeringLightBE> FLICKERING_LIGHT_BE = register("flickering_light", FlickeringLightBE::new, ModBlocks.FLICKERING_LIGHT);
-	public static final BlockEntityType<BackroomsGeneratorBE> BACKROOMS_GENERATOR_BE = register("backrooms_generator", BackroomsGeneratorBE::new, ModBlocks.BACKROOMS_GENERATOR);
-
 	private static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<? extends T> entityFactory, Block... blocks) {
 		BlockEntityType<T> type = Registry.register(
 		  Registries.BLOCK_ENTITY_TYPE,
@@ -23,8 +20,12 @@ public class ModBlockEntities {
 		);
 		PolymerBlockUtils.registerBlockEntity(type);
 		return type;
-	}
+	}	public static final BlockEntityType<FlickeringLightBE> FLICKERING_LIGHT_BE = register("flickering_light", FlickeringLightBE::new, ModBlocks.FLICKERING_LIGHT);
 
 	public static void initialize() {
-	}
+	}	public static final BlockEntityType<BackroomsGeneratorBE> BACKROOMS_GENERATOR_BE = register("backrooms_generator", BackroomsGeneratorBE::new, ModBlocks.BACKROOMS_GENERATOR);
+
+
+
+
 }

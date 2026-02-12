@@ -4,13 +4,16 @@ import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
 import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
 import net.fawnoculus.vanillaBackrooms.blocks.ModBlocks;
 import net.fawnoculus.vanillaBackrooms.blocks.entities.BackroomsGeneratorBE;
+import net.fawnoculus.vanillaBackrooms.levels.BackroomsLevel;
 import net.fawnoculus.vanillaBackrooms.misc.CustomDataHolder;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.entity.vehicle.VehicleInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -26,6 +29,7 @@ import net.minecraft.storage.NbtWriteView;
 import net.minecraft.storage.ReadView;
 import net.minecraft.text.Text;
 import net.minecraft.util.ErrorReporter;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -33,6 +37,8 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -41,28 +47,57 @@ import java.util.Objects;
 import java.util.Set;
 
 public class BackroomsUtil {
-	public static final RegistryKey<World> LEVEL_0 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_0"));
-	public static final RegistryKey<World> LEVEL_1 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_1"));
-	public static final RegistryKey<World> LEVEL_2 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_2"));
-	public static final RegistryKey<World> LEVEL_3 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_3"));
-	public static final RegistryKey<World> LEVEL_4 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_4"));
-	public static final RegistryKey<World> LEVEL_5 = RegistryKey.of(RegistryKeys.WORLD, VanillaBackrooms.id("level_5"));
+	@Contract("_ -> new")
+	public static @NotNull Identifier getLevelId(int levelNumber) {
+		return VanillaBackrooms.id("level_" + levelNumber);
+	}
 
-	public static void onEntityDamaged(LivingEntity entity, ServerWorld world, DamageSource source, float ignored) {
-		if (!VanillaBackroomsConfig.SUFFOCATION_NOCLIP.getValue() || !source.isOf(DamageTypes.IN_WALL)) {
-			NbtCompound data = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
-			data.putInt("suffocationDamageTicks", 0);
+	public static RegistryKey<World> getLevelKey(int levelNumber) {
+		return RegistryKey.of(RegistryKeys.WORLD, getLevelId(levelNumber));
+	}
+
+	public static void onEntityDie(LivingEntity entity, ServerWorld world, DamageSource ignored, float damage) {
+		if (VanillaBackroomsConfig.DEATH_NOCLIP.getValue().isFalse(world.getServer()) || damage < entity.getHealth()) {
+			return;
+		}
+
+		if (!VanillaBackroomsConfig.DEATH_NOCLIP_IN_BACKROOMS.getValue() && BackroomsLevel.isLevel(world.getRegistryKey().getValue())) {
+			return;
+		}
+
+		for (Hand hand : Hand.values()) {
+			if (entity.getStackInHand(hand).get(DataComponentTypes.DEATH_PROTECTION) != null) {
+				return;
+			}
+		}
+
+		noclip(world.getServer(), entity);
+		entity.setHealth(entity.getHealth() + damage); // Make the entity have with enough health to survive
+	}
+
+	public static void onEntitySuffocate(LivingEntity entity, ServerWorld world, DamageSource source, float ignored) {
+		NbtCompound data = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
+
+		if (VanillaBackroomsConfig.SUFFOCATION_NOCLIP.getValue().isFalse(world.getServer()) || !source.isOf(DamageTypes.IN_WALL)) {
+			data.remove("suffocationDamageTicks");
 			CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
 			return;
 		}
 
-		NbtCompound data = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
+		if (!VanillaBackroomsConfig.SUFFOCATION_NOCLIP_IN_BACKROOMS.getValue() && BackroomsLevel.isLevel(world.getRegistryKey().getValue())) {
+			data.remove("suffocationDamageTicks");
+			CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
+			return;
+		}
+
 
 		int ticks = data.getInt("suffocationDamageTicks", 0);
 		ticks++;
 
-		if (ticks >= world.getRandom().nextBetween(40, 80)) {
-			data.putInt("suffocationDamageTicks", 0);
+		if ((entity.getHealth() <= 4 && world.getRandom().nextBoolean())
+		  || ticks >= world.getRandom().nextBetween(60, 100)
+		) {
+			data.remove("suffocationDamageTicks");
 			CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
 
 			noclip(world.getServer(), entity);
@@ -77,14 +112,7 @@ public class BackroomsUtil {
 		NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
 		boolean wasInBackrooms = customData.getBoolean("isInBackrooms", false);
 
-		Identifier wordID = world.getRegistryKey().getValue();
-		if (wordID.equals(LEVEL_0.getValue())
-		  || wordID.equals(LEVEL_1.getValue())
-		  || wordID.equals(LEVEL_2.getValue())
-		  || wordID.equals(LEVEL_3.getValue())
-		  || wordID.equals(LEVEL_4.getValue())
-		  || wordID.equals(LEVEL_5.getValue())
-		) {
+		if (BackroomsLevel.isLevel(world.getRegistryKey().getValue())) {
 			if (wasInBackrooms) {
 				return;
 			}
@@ -111,62 +139,55 @@ public class BackroomsUtil {
 			return false;
 		}
 
-		if (targetDimension.getValue().equals(World.OVERWORLD.getValue())) {
-			exitBackrooms(server, entity);
+		BackroomsLevel level = BackroomsLevel.getLevel(targetDimension.getValue());
+		if (level == null) {
+			exitBackrooms(server, entity, targetDimension);
 			return true;
 		}
 
-		ServerWorld backroomsWorld = server.getWorld(targetDimension);
-
-		if (backroomsWorld == null) {
-			VanillaBackrooms.LOGGER.error("Failed to get Dimension : '{}'", targetDimension.getValue());
-			return false;
-		}
-
-		if (backroomsWorld.getBlockState(BlockPos.ORIGIN).getBlock() != ModBlocks.BACKROOMS_GENERATOR) {
-			try {
-				BackroomsGeneratorBE.placeBackroomsSegment(backroomsWorld, BlockPos.ORIGIN);
-			}catch (NullPointerException e) {
-				VanillaBackrooms.LOGGER.error("Failed to generate center segment for dimension: {}, Exception: '{}'", targetDimension.getValue(), e.toString());
+		ServerWorld world = server.getWorld(targetDimension);
+		if (world == null) {
+			VanillaBackrooms.LOGGER.error("Failed to find backrooms level ({}), will use level 0 instead", targetDimension.getValue());
+			world = server.getWorld(getLevelKey(0));
+			if (world == null) {
+				VanillaBackrooms.LOGGER.error("Level 0 does not exits, something has gone terribly wrong!");
 				return false;
 			}
-			backroomsWorld.setBlockState(BlockPos.ORIGIN, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
+		}
+
+
+		if (BackroomsGeneratorBE.shouldPlaceSegment(world, BlockPos.ORIGIN)) {
+			try {
+				level.generator().placeBackroomsSegment(world, BlockPos.ORIGIN);
+			} catch (Throwable throwable) {
+				VanillaBackrooms.LOGGER.error("Failed to generate center segment for backrooms level ({})", targetDimension.getValue(), throwable);
+				return false;
+			}
+			world.setBlockState(BlockPos.ORIGIN, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
 		}
 
 		Vec3d spawnPos = new Vec3d(24, 2, 24);
 
-		if (targetDimension.getValue().equals(LEVEL_0.getValue()) && entity instanceof ServerPlayerEntity player) {
+		if (targetDimension.getValue().equals(getLevelId(0)) && entity instanceof ServerPlayerEntity player) {
 			try {
 				savePlayerData(player);
 			} catch (Exception e) {
-				VanillaBackrooms.LOGGER.error("Failed to save Player Data for Player '{}'", player.getGameProfile().getName());
+				VanillaBackrooms.LOGGER.error("Failed to save Player Data for Player '{}', they will not be noclipped", player.getGameProfile().getName());
 				return false;
 			}
 		}
 
 		entity.fallDistance = 0;
-		entity.teleport(backroomsWorld, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), 0, 0, false);
+		entity.teleport(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), 0, 0, false);
 
-		if (targetDimension.getValue().equals(LEVEL_0.getValue()) && entity instanceof ServerPlayerEntity player) {
-			if (VanillaBackroomsConfig.DISABLE_XAERO_MINIMAP.getValue()) {
-				player.sendMessage(Text.literal("§n§o§m§i§n§i§m§a§p"));
-			}
-			if (VanillaBackroomsConfig.XAERO_FAIR.getValue()) {
-				player.sendMessage(Text.literal("§f§a§i§r§x§a§e§r§o"));
-			}
-			player.clearStatusEffects();
-			player.getInventory().clear();
-			player.setSpawnPoint(new ServerPlayerEntity.Respawn(backroomsWorld.getRegistryKey(), BlockPos.ofFloored(spawnPos), backroomsWorld.getSpawnAngle(), true), false);
-			player.setHealth(player.getMaxHealth());
-			player.getHungerManager().add(20, 20);
-			player.setExperienceLevel(0);
-			player.setExperiencePoints(0);
+		if (entity instanceof ServerPlayerEntity player) {
+			player.setSpawnPoint(new ServerPlayerEntity.Respawn(world.getRegistryKey(), BlockPos.ofFloored(spawnPos), world.getSpawnAngle(), true), false);
 		}
 
 		return true;
 	}
 
-	private static void exitBackrooms(MinecraftServer server, Entity entity) {
+	private static void exitBackrooms(MinecraftServer server, Entity entity, RegistryKey<World> targetWorld) {
 		if (!onExitBackrooms(entity)) {
 			return;
 		}
@@ -188,35 +209,48 @@ public class BackroomsUtil {
 				player.giveOrDropStack(stack);
 			}
 
-			player.sendMessage(Text.literal("§r§e§s§e§t§x§a§e§r§o"));
-
-			NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
-			customData.remove("isInBackrooms");
-			PlayerUtil.setPermanentCustomData(player, customData);
 			return;
 		}
 
-		ServerWorld overWorld = server.getOverworld();
-		Vec3d spawnPos = overWorld.getSpawnPos().toCenterPos();
+		ServerWorld world = server.getWorld(targetWorld);
+		if (world == null) {
+			VanillaBackrooms.LOGGER.error("Failed to get Dimension ({}) for Backrooms exit, will use overworld instead", targetWorld.getValue());
+			world = server.getOverworld();
+		}
+
+		Vec3d spawnPos = world.getSpawnPos().toCenterPos();
 		entity.fallDistance = 0;
-		entity.teleport(overWorld, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), overWorld.getSpawnAngle(), 0, false);
+		entity.teleport(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), world.getSpawnAngle(), 0, false);
 	}
 
 	private static void onEnterBackrooms(Entity entity) {
-		NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
-		customData.putBoolean("isInBackrooms", true);
-		CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(customData);
+		if (entity instanceof LivingEntity livingEntity) {
+			livingEntity.setHealth(livingEntity.getMaxHealth());
+		}
 
 		if (entity instanceof ServerPlayerEntity player) {
 			if (VanillaBackroomsConfig.DISABLE_XAERO_MINIMAP.getValue()) {
 				player.sendMessage(Text.literal("§n§o§m§i§n§i§m§a§p"));
 			}
+
 			if (VanillaBackroomsConfig.XAERO_FAIR.getValue()) {
 				player.sendMessage(Text.literal("§f§a§i§r§x§a§e§r§o"));
 			}
+
 			player.changeGameMode(GameMode.ADVENTURE);
 
 			player.getEnderPearls().forEach(Entity::discard);
+
+			player.clearStatusEffects();
+
+			if (VanillaBackroomsConfig.CLEAR_INV.getValue()) {
+				player.getInventory().clear();
+				player.getHungerManager().setFoodLevel(20);
+				player.getHungerManager().setSaturationLevel(20F);
+				player.setExperienceLevel(0);
+				player.setExperiencePoints(0);
+			}
+
 
 			NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
 			permanentCustomData.putBoolean("isInBackrooms", true);
@@ -245,54 +279,33 @@ public class BackroomsUtil {
 			}
 		}
 
+		if (entity instanceof VehicleInventory inventory) {
+			for (int i = 0; i < inventory.size(); i++) {
+				if (inventory.getStack(i).getRegistryEntry().isIn(VanillaBackroomsConfig.BACKROOMS_NOT_RETURN.getValue())) {
+					inventory.setStack(i, ItemStack.EMPTY);
+				}
+			}
+		}
+
+		if (entity instanceof ServerPlayerEntity player) {
+			player.sendMessage(Text.literal("§r§e§s§e§t§x§a§e§r§o"));
+
+			NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
+			permanentCustomData.remove("isInBackrooms");
+			PlayerUtil.setPermanentCustomData(player, permanentCustomData);
+		}
+
 		return true;
 	}
 
 	public static RegistryKey<World> getNextDimension(RegistryKey<World> previousDimension, Random random) {
-		Identifier identifier = previousDimension.getValue();
-
-		if (LEVEL_0.getValue().equals(identifier)) {
-			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_0_EXIT_CHANCE.getValue()) {
-				return World.OVERWORLD;
-			}
-			return LEVEL_1;
+		try {
+			return Objects.requireNonNull(RegistryKey.of(RegistryKeys.WORLD,
+			  VanillaBackroomsConfig.NOCLIP_CHANCES.getValue().get(previousDimension.getValue()).get(random)
+			));
+		} catch (Throwable ignored) {
+			return getLevelKey(0);
 		}
-
-		if (LEVEL_1.getValue().equals(identifier)) {
-			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_1_EXIT_CHANCE.getValue()) {
-				return World.OVERWORLD;
-			}
-			return LEVEL_2;
-		}
-
-		if (LEVEL_2.getValue().equals(identifier)) {
-			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_2_EXIT_CHANCE.getValue()) {
-				return World.OVERWORLD;
-			}
-			return LEVEL_3;
-		}
-
-		if (LEVEL_3.getValue().equals(identifier)) {
-			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_3_EXIT_CHANCE.getValue()) {
-				return World.OVERWORLD;
-			}
-			return LEVEL_4;
-		}
-
-		if (LEVEL_4.getValue().equals(identifier)) {
-			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_4_EXIT_CHANCE.getValue()) {
-				return World.OVERWORLD;
-			}
-			return LEVEL_5;
-		}
-
-		if (LEVEL_5.getValue().equals(identifier)) {
-			if (random.nextDouble() >= VanillaBackroomsConfig.LEVEL_5_EXIT_CHANCE.getValue()) {
-				return World.OVERWORLD;
-			}
-		}
-
-		return LEVEL_0;
 	}
 
 	public static void savePlayerData(ServerPlayerEntity player) throws IOException {

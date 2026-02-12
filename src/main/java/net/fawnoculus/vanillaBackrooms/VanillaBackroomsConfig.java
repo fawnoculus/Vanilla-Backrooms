@@ -1,6 +1,7 @@
 package net.fawnoculus.vanillaBackrooms;
 
 import com.mojang.serialization.Codec;
+import net.fawnoculus.vanillaBackrooms.levels.ClipChanceContainer;
 import net.fawnoculus.vanillaBackrooms.misc.tags.ModItemTags;
 import net.fawnoculus.vanillaBackrooms.util.config.ConfigFile;
 import net.fawnoculus.vanillaBackrooms.util.config.ConfigOption;
@@ -8,18 +9,41 @@ import net.fawnoculus.vanillaBackrooms.util.config.encoder.JsonConfigEncoder;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.StringIdentifiable;
 
 public class VanillaBackroomsConfig {
 	public static final ConfigFile FILE = new ConfigFile(JsonConfigEncoder.getInstance(), "vanilla_backrooms.json");
 
-	public static final ConfigOption<Boolean> SUFFOCATION_NOCLIP = FILE.newOption(
+	public static final ConfigOption<HardCoreOption> SUFFOCATION_NOCLIP = FILE.newOption(
 	  "suffocation_noclip",
+	  HardCoreOption.CODEC,
+	  HardCoreOption.NON_HARDCORE_ONLY,
+	  "Whether Suffocating makes you noclip into the Backrooms (never, hardcore_only, non_hardcore_only, always) [default: non_hardcore_only]"
+	);
+
+	public static final ConfigOption<Boolean> SUFFOCATION_NOCLIP_IN_BACKROOMS = FILE.newOption(
+	  "suffocation_noclip_in_backrooms",
 	  Codec.BOOL,
-	  true,
-	  "Whether Suffocating in a Block makes you noclip into the Backrooms [default: true]"
+	  false,
+	  "Whether Suffocating makes you noclip when you are already in the Backrooms [default: false]"
+	);
+
+	public static final ConfigOption<HardCoreOption> DEATH_NOCLIP = FILE.newOption(
+	  "death_noclip",
+	  HardCoreOption.CODEC,
+	  HardCoreOption.HARDCORE_ONLY,
+	  "Whether Dying makes you noclip into the Backrooms (never, hardcore_only, non_hardcore_only, always) [default: hardcore_only]"
+	);
+
+	public static final ConfigOption<Boolean> DEATH_NOCLIP_IN_BACKROOMS = FILE.newOption(
+	  "death_noclip_in_backrooms",
+	  Codec.BOOL,
+	  false,
+	  "Whether Dying makes you noclip when you are already in the Backrooms [default: false]"
 	);
 
 	public static final ConfigOption<Boolean> DISABLE_XAERO_MINIMAP = FILE.newOption(
@@ -34,6 +58,13 @@ public class VanillaBackroomsConfig {
 	  Codec.BOOL,
 	  true,
 	  "Whether Xaeros Minimap and WorldMap should be put into fair mode in the backrooms (aka: no cave mode, aka: you can not see the halls) [default: true]"
+	);
+
+	public static final ConfigOption<Boolean> CLEAR_INV = FILE.newOption(
+	  "clear_inv",
+	  Codec.BOOL,
+	  true,
+	  "Whether Players inventories and experience will be cleared and hunger reset when entering the backrooms (they'll get it back when they exit) [default: true]"
 	);
 
 	public static final ConfigOption<Boolean> OPERATORS_BYPASS_RESTRICTIONS = FILE.newOption(
@@ -54,7 +85,7 @@ public class VanillaBackroomsConfig {
 	  "disable_chat_message",
 	  TextCodecs.CODEC,
 	  Text.literal("The Chat is disabled in the Backrooms").formatted(Formatting.RED),
-	  "Message to send to players trying to use commands in the backrooms (only if commands are disabled)"
+	  "Message to send to players trying to use commands in the backrooms (only if commands are disabled) [default: {\"text\": \"The Chat is disabled in the Backrooms\",\"color\": \"red\"}]"
 	);
 
 	public static final ConfigOption<Boolean> DISABLE_CHAT_IN_BACKROOMS = FILE.newOption(
@@ -78,49 +109,43 @@ public class VanillaBackroomsConfig {
 	  "Tag of Items that will not be transported out of the backrooms with the player [default: #vanilla_backrooms:backrooms_non_return]"
 	);
 
-	public static final ConfigOption<Double> LEVEL_0_EXIT_CHANCE = FILE.newOption(
-	  "level_0_exit_chance",
-	  Codec.doubleRange(0.0, 1.0),
-	  0.05,
-	  "Chance that no-clipping in Level 0 will send you to the overworld, 0 means never, 1 means always [0.0 - 1.0, default 0.05]"
-	);
-
-	public static final ConfigOption<Double> LEVEL_1_EXIT_CHANCE = FILE.newOption(
-	  "level_1_exit_chance",
-	  Codec.doubleRange(0.0, 1.0),
-	  0.10,
-	  "Chance that no-clipping in Level 1 will send you to the overworld, 0 means never, 1 means always [0.0 - 1.0, default 0.10]"
-	);
-
-	public static final ConfigOption<Double> LEVEL_2_EXIT_CHANCE = FILE.newOption(
-	  "level_2_exit_chance",
-	  Codec.doubleRange(0.0, 1.0),
-	  0.25,
-	  "Chance that no-clipping in Level 2 will send you to the overworld, 0 means never, 1 means always [0.0 - 1.0, default 0.25]"
-	);
-
-	public static final ConfigOption<Double> LEVEL_3_EXIT_CHANCE = FILE.newOption(
-	  "level_3_exit_chance",
-	  Codec.doubleRange(0.0, 1.0),
-	  0.5,
-	  "Chance that no-clipping in Level 3 will send you to the overworld, 0 means never, 1 means always [0.0 - 1.0, default 0.5]"
-	);
-
-	public static final ConfigOption<Double> LEVEL_4_EXIT_CHANCE = FILE.newOption(
-	  "level_4_exit_chance",
-	  Codec.doubleRange(0.0, 1.0),
-	  0.75,
-	  "Chance that no-clipping in Level 4 will send you to the overworld, 0 means never, 1 means always [0.0 - 1.0, default 0.75]"
-	);
-
-	public static final ConfigOption<Double> LEVEL_5_EXIT_CHANCE = FILE.newOption(
-	  "level_5_exit_chance",
-	  Codec.doubleRange(0.0, 1.0),
-	  1.0,
+	public static final ConfigOption<ClipChanceContainer> NOCLIP_CHANCES = FILE.newOption(
+	  "noclip_chances",
+	  ClipChanceContainer.CODEC,
+	  ClipChanceContainer.DEFAULT,
 	  "Chance that no-clipping in Level 5 will send you to the overworld, 0 means never, 1 means always [0.0 - 1.0, default 1.0]"
 	);
+
+	public enum HardCoreOption implements StringIdentifiable {
+		NEVER("never"),
+		HARDCORE_ONLY("hardcore_only"),
+		NON_HARDCORE_ONLY("non_hardcore_only"),
+		ALWAYS("always");
+
+		public static final Codec<HardCoreOption> CODEC = StringIdentifiable.createCodec(HardCoreOption::values);
+		public final String name;
+
+		HardCoreOption(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String asString() {
+			return name;
+		}
+
+		public boolean isFalse(MinecraftServer server) {
+			return switch (this) {
+				case NEVER -> true;
+				case HARDCORE_ONLY -> !server.isHardcore();
+				case NON_HARDCORE_ONLY -> server.isHardcore();
+				case ALWAYS -> false;
+			};
+		}
+	}
 
 	public static void initialize() {
 		FILE.initialize();
 	}
+
 }

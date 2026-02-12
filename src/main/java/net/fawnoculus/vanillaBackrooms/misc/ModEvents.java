@@ -7,7 +7,8 @@ import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
 
 public class ModEvents {
 	public static void initialize() {
-		EntityDamagedEvent.EVENT.register(BackroomsUtil::onEntityDamaged);
+		EntityDamagedEvent.EVENT.register(BackroomsUtil::onEntityDie);
+		EntityDamagedEvent.EVENT.register(BackroomsUtil::onEntitySuffocate);
 		EntityDimensionChangedEvent.EVENT.register(BackroomsUtil::onEntityDimensionChanged);
 	}
 }
