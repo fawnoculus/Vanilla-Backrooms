@@ -4,6 +4,7 @@ import net.fawnoculus.vanillaBackrooms.levels.generators.RingBackroomsGenerator;
 import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,15 +66,18 @@ public record BackroomsLevel(int number, String name, BlockPos spawnBlock, Backr
 		LEVELS.put(level.getId(), level);
 	}
 
-	public static Builder builder(int levelId) {
+	@Contract("_ -> new")
+	public static @NotNull Builder builder(int levelId) {
 		return new Builder(levelId);
 	}
 
-	public Identifier getId() {
+	@Contract(" -> new")
+	public @NotNull Identifier getId() {
 		return BackroomsUtil.getLevelId(this.number);
 	}
 
-	public String fullName() {
+	@Contract(pure = true)
+	public @NotNull String fullName() {
 		return String.format("Level-%d \"%s\"", number, name);
 	}
 

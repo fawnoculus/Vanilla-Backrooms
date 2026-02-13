@@ -2,6 +2,7 @@ package net.fawnoculus.vanillaBackrooms.items;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
+import net.fawnoculus.vanillaBackrooms.items.custom.AlmondWatterItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 public class ModItems {
+	public static final Item ALMOND_WATTER = register("almond_watter", AlmondWatterItem::new, new Item.Settings());
 
 	public static @NotNull Item register(@NotNull String name, @NotNull Function<Item.Settings, Item> itemFactory, @NotNull Item.Settings settings) {
 		RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, VanillaBackrooms.id(name));

@@ -22,6 +22,7 @@ public class ModItemGroups {
 		Registry.register(Registries.ITEM_GROUP, VANILLA_BACKROOMS_ITEMS_KEY, VANILLA_BACKROOMS_ITEMS);
 
 		ItemGroupEvents.modifyEntriesEvent(VANILLA_BACKROOMS_ITEMS_KEY).register(itemGroup -> {
+			itemGroup.add(ModItems.ALMOND_WATTER);
 			itemGroup.add(ModBlockItems.FAKE_SKY);
 			itemGroup.add(ModBlockItems.FLICKERING_LIGHT);
 			itemGroup.add(ModBlockItems.ACTIVE_LIGHT);
