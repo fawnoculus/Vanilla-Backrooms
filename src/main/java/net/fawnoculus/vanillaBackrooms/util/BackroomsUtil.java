@@ -18,7 +18,6 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -166,9 +165,12 @@ public class BackroomsUtil {
 			world.setBlockState(BlockPos.ORIGIN, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
 		}
 
-		Vec3d spawnPos = new Vec3d(24, 2, 24);
+		Vec3d spawnPos = level.spawnBlock();
 
-		if (targetDimension.getValue().equals(getLevelId(0)) && entity instanceof ServerPlayerEntity player) {
+		if (VanillaBackroomsConfig.CLEAR_INV.getValue()
+		  && targetDimension.getValue().equals(getLevelId(0))
+		  && entity instanceof ServerPlayerEntity player
+		) {
 			try {
 				savePlayerData(player);
 			} catch (Exception e) {
@@ -193,21 +195,24 @@ public class BackroomsUtil {
 		}
 
 		if (entity instanceof ServerPlayerEntity player) {
-			ArrayList<ItemStack> stacks = new ArrayList<>(player.getInventory().size());
+			if (VanillaBackroomsConfig.CLEAR_INV.getValue()) {
+				ArrayList<ItemStack> stacks = new ArrayList<>(player.getInventory().size());
 
-			for (ItemStack stack : player.getInventory()) {
-				if (stack.getRegistryEntry().isIn(VanillaBackroomsConfig.BACKROOMS_NOT_RETURN.getValue())) {
-					continue;
+				for (ItemStack stack : player.getInventory()) {
+					if (stack.getRegistryEntry().isIn(VanillaBackroomsConfig.BACKROOMS_NOT_RETURN.getValue())) {
+						continue;
+					}
+
+					stacks.add(stack.copy());
 				}
+				loadPlayerData(player);
 
-				stacks.add(stack.copy());
+				for (ItemStack stack : stacks) {
+					player.giveOrDropStack(stack);
+				}
 			}
 
-			loadPlayerData(player);
-
-			for (ItemStack stack : stacks) {
-				player.giveOrDropStack(stack);
-			}
+			player.teleportTo(player.getRespawnTarget(false, TeleportTarget.NO_OP));
 
 			return;
 		}
@@ -348,13 +353,12 @@ public class BackroomsUtil {
 		}
 		ReadView view = NbtReadView.create(ErrorReporter.EMPTY, player.getRegistryManager(), nbt.getCompoundOrEmpty("data"));
 
-
 		player.readData(view);
 
 		player.teleportTo(player.getRespawnTarget(false, TeleportTarget.NO_OP));
 		player.readRootVehicle(view);
 		player.readGameModeData(view);
 		player.getServer().getPlayerManager().sendStatusEffects(player);
-		player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.GAME_MODE_CHANGED, player.getGameMode().getIndex()));
+		player.changeGameMode(player.getGameMode());
 	}
 }

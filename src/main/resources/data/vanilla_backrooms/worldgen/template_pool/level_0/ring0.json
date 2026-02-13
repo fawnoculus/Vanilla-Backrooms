@@ -12,7 +12,7 @@
 			}
 		},
 		{
-			"weight": 1,
+			"weight": 3,
 			"element": {
 				"location": "vanilla_backrooms:level_0/multiroom/2",
 				"processors": "minecraft:empty",
@@ -21,7 +21,7 @@
 			}
 		},
 		{
-			"weight": 2,
+			"weight": 3,
 			"element": {
 				"location": "vanilla_backrooms:level_0/multiroom/3",
 				"processors": "minecraft:empty",
@@ -30,7 +30,7 @@
 			}
 		},
 		{
-			"weight": 2,
+			"weight": 3,
 			"element": {
 				"location": "vanilla_backrooms:level_0/multiroom/4",
 				"processors": "minecraft:empty",

@@ -12,7 +12,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 30,
 			"element": {
 				"location": "vanilla_backrooms:level_0/multiroom/2",
 				"processors": "minecraft:empty",
@@ -21,7 +21,7 @@
 			}
 		},
 		{
-			"weight": 20,
+			"weight": 30,
 			"element": {
 				"location": "vanilla_backrooms:level_0/multiroom/3",
 				"processors": "minecraft:empty",
@@ -30,7 +30,7 @@
 			}
 		},
 		{
-			"weight": 20,
+			"weight": 30,
 			"element": {
 				"location": "vanilla_backrooms:level_0/multiroom/4",
 				"processors": "minecraft:empty",
@@ -39,7 +39,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/1",
 				"processors": "minecraft:empty",
@@ -48,7 +48,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/2",
 				"processors": "minecraft:empty",
@@ -57,7 +57,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/3",
 				"processors": "minecraft:empty",
@@ -66,7 +66,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/4",
 				"processors": "minecraft:empty",
@@ -75,7 +75,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/5",
 				"processors": "minecraft:empty",
@@ -84,7 +84,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/6",
 				"processors": "minecraft:empty",
@@ -93,7 +93,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/7",
 				"processors": "minecraft:empty",
@@ -102,7 +102,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/8",
 				"processors": "minecraft:empty",
@@ -111,7 +111,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/9",
 				"processors": "minecraft:empty",
@@ -120,7 +120,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/10",
 				"processors": "minecraft:empty",
@@ -129,7 +129,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/11",
 				"processors": "minecraft:empty",
@@ -138,7 +138,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/12",
 				"processors": "minecraft:empty",
@@ -147,7 +147,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/13",
 				"processors": "minecraft:empty",
@@ -156,7 +156,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/14",
 				"processors": "minecraft:empty",
@@ -165,7 +165,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/15",
 				"processors": "minecraft:empty",
@@ -174,7 +174,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/16",
 				"processors": "minecraft:empty",
@@ -183,7 +183,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/17",
 				"processors": "minecraft:empty",
@@ -192,7 +192,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/18",
 				"processors": "minecraft:empty",
@@ -201,7 +201,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/19",
 				"processors": "minecraft:empty",
@@ -210,7 +210,7 @@
 			}
 		},
 		{
-			"weight": 10,
+			"weight": 15,
 			"element": {
 				"location": "vanilla_backrooms:level_0/common/20",
 				"processors": "minecraft:empty",
@@ -294,33 +294,6 @@
 			"weight": 1,
 			"element": {
 				"location": "vanilla_backrooms:level_0/rare/3",
-				"processors": "minecraft:empty",
-				"projection": "rigid",
-				"element_type": "minecraft:single_pool_element"
-			}
-		},
-		{
-			"weight": 1,
-			"element": {
-				"location": "vanilla_backrooms:level_0/rare/4",
-				"processors": "minecraft:empty",
-				"projection": "rigid",
-				"element_type": "minecraft:single_pool_element"
-			}
-		},
-		{
-			"weight": 1,
-			"element": {
-				"location": "vanilla_backrooms:level_0/rare/5",
-				"processors": "minecraft:empty",
-				"projection": "rigid",
-				"element_type": "minecraft:single_pool_element"
-			}
-		},
-		{
-			"weight": 1,
-			"element": {
-				"location": "vanilla_backrooms:level_0/rare/6",
 				"processors": "minecraft:empty",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"

@@ -3,7 +3,7 @@ package net.fawnoculus.vanillaBackrooms.levels;
 import net.fawnoculus.vanillaBackrooms.levels.generators.RingBackroomsGenerator;
 import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public record BackroomsLevel(int number, String name, BlockPos spawnBlock, BackroomsGenerator generator) {
+public record BackroomsLevel(int number, String name, Vec3d spawnBlock, BackroomsGenerator generator) {
 	private static final Map<Identifier, BackroomsLevel> LEVELS = new HashMap<>();
 
 	public static void initialize() {
@@ -28,25 +28,50 @@ public record BackroomsLevel(int number, String name, BlockPos spawnBlock, Backr
 			.addStructure(200, "level_0/ring2")
 			.addStructure(100, "level_0/ring1")
 			.addStructure(1, "level_0/ring0")
-			.addStructure(0, "level_0/spawn")
+			.addStructure(0, "level_0/start")
 			.build()
 		  ).register();
 
 		builder(1)
+		  .setSpawnBlock(new Vec3d(28.5, 14, 23.5))
 		  .setName("Habitable Zone")
-		  .register();
+		  .setGenerator(RingBackroomsGenerator.builder(false)
+			.addStructure(800, "level_1/ring4")
+			.addStructure(600, "level_1/ring3")
+			.addStructure(400, "level_1/ring2")
+			.addStructure(200, "level_1/ring1")
+			.addStructure(1, "level_1/ring0")
+			.addStructure(0, "level_1/start")
+			.build()
+		  ).register();
 
 		builder(2)
+		  .setSpawnBlock(new Vec3d(17.5, 2, 26.5))
 		  .setName("Abandoned Utility Halls")
-		  .register();
+		  .setGenerator(RingBackroomsGenerator.builder(false)
+			.addStructure(800, "level_2/ring4")
+			.addStructure(600, "level_2/ring3")
+			.addStructure(400, "level_2/ring2")
+			.addStructure(200, "level_2/ring1")
+			.addStructure(1, "level_2/ring0")
+			.addStructure(0, "level_2/start")
+			.build()
+		  ).register();
 
 		builder(3)
 		  .setName("Electrical Station")
-		  .register();
+		  .setGenerator(RingBackroomsGenerator.builder(true)
+			.addStructure(1, "level_3/ring0")
+			.addStructure(0, "level_3/start")
+			.build()
+		  ).register();
 
 		builder(4)
 		  .setName("Abandoned Office")
-		  .register();
+		  .setGenerator(RingBackroomsGenerator.builder(true)
+			.addStructure(0, "level_4/start")
+			.build()
+		  ).register();
 
 		builder(5)
 		  .setName("Terror Hotel")
@@ -89,7 +114,7 @@ public record BackroomsLevel(int number, String name, BlockPos spawnBlock, Backr
 	public static class Builder {
 		private final int levelId;
 		private String name = "[NAME-MISSING]";
-		private BlockPos spawnBlock = new BlockPos(BackroomsGenerator.HORIZONTAL_OFFSET / 2, 2, BackroomsGenerator.HORIZONTAL_OFFSET / 2);
+		private Vec3d spawnBlock = new Vec3d(BackroomsGenerator.HORIZONTAL_OFFSET / 2.0, 2.0, BackroomsGenerator.HORIZONTAL_OFFSET / 2.0);
 		private BackroomsGenerator generator = BackroomsGenerator.NO_GENERATOR;
 
 		Builder(int levelId) {
@@ -101,7 +126,7 @@ public record BackroomsLevel(int number, String name, BlockPos spawnBlock, Backr
 			return this;
 		}
 
-		public Builder setSpawnBlock(BlockPos spawnBlock) {
+		public Builder setSpawnBlock(Vec3d spawnBlock) {
 			this.spawnBlock = spawnBlock;
 			return this;
 		}

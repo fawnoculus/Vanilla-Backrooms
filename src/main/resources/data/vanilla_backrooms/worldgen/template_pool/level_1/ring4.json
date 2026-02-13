@@ -1,0 +1,51 @@
+{
+	"name": "vanilla_backrooms:level_1/ring4",
+	"fallback": "minecraft:empty",
+	"elements": [
+		{
+			"weight": 50,
+			"element": {
+				"location": "vanilla_backrooms:level_1/multiroom/1",
+				"processors": "minecraft:empty",
+				"projection": "rigid",
+				"element_type": "minecraft:single_pool_element"
+			}
+		},
+		{
+			"weight": 50,
+			"element": {
+				"location": "vanilla_backrooms:level_1/multiroom/2",
+				"processors": "minecraft:empty",
+				"projection": "rigid",
+				"element_type": "minecraft:single_pool_element"
+			}
+		},
+		{
+			"weight": 50,
+			"element": {
+				"location": "vanilla_backrooms:level_1/multiroom/3",
+				"processors": "minecraft:empty",
+				"projection": "rigid",
+				"element_type": "minecraft:single_pool_element"
+			}
+		},
+		{
+			"weight": 50,
+			"element": {
+				"location": "vanilla_backrooms:level_1/multiroom/4",
+				"processors": "minecraft:empty",
+				"projection": "rigid",
+				"element_type": "minecraft:single_pool_element"
+			}
+		},
+		{
+			"weight": 64,
+			"element": {
+				"location": "vanilla_backrooms:level_1/exit",
+				"processors": "minecraft:empty",
+				"projection": "rigid",
+				"element_type": "minecraft:single_pool_element"
+			}
+		}
+	]
+}

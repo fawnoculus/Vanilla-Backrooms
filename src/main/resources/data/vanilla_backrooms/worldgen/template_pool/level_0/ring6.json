@@ -12,7 +12,7 @@
 			}
 		},
 		{
-			"weight": 12,
+			"weight": 20,
 			"element": {
 				"location": "vanilla_backrooms:level_0/multiroom/2",
 				"processors": "minecraft:empty",
@@ -21,7 +21,7 @@
 			}
 		},
 		{
-			"weight": 19,
+			"weight": 20,
 			"element": {
 				"location": "vanilla_backrooms:level_0/multiroom/3",
 				"processors": "minecraft:empty",
@@ -30,7 +30,7 @@
 			}
 		},
 		{
-			"weight": 19,
+			"weight": 20,
 			"element": {
 				"location": "vanilla_backrooms:level_0/multiroom/4",
 				"processors": "minecraft:empty",
@@ -300,27 +300,9 @@
 			}
 		},
 		{
-			"weight": 12,
+			"weight": 11,
 			"element": {
-				"location": "vanilla_backrooms:level_0/rare/4",
-				"processors": "minecraft:empty",
-				"projection": "rigid",
-				"element_type": "minecraft:single_pool_element"
-			}
-		},
-		{
-			"weight": 12,
-			"element": {
-				"location": "vanilla_backrooms:level_0/rare/5",
-				"processors": "minecraft:empty",
-				"projection": "rigid",
-				"element_type": "minecraft:single_pool_element"
-			}
-		},
-		{
-			"weight": 12,
-			"element": {
-				"location": "vanilla_backrooms:level_0/rare/6",
+				"location": "vanilla_backrooms:level_0/epic/1",
 				"processors": "minecraft:empty",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
@@ -329,7 +311,7 @@
 		{
 			"weight": 11,
 			"element": {
-				"location": "vanilla_backrooms:level_0/epic/big_ceeling",
+				"location": "vanilla_backrooms:level_0/epic/2",
 				"processors": "minecraft:empty",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
@@ -338,7 +320,7 @@
 		{
 			"weight": 11,
 			"element": {
-				"location": "vanilla_backrooms:level_0/epic/villeg",
+				"location": "vanilla_backrooms:level_0/epic/3",
 				"processors": "minecraft:empty",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
@@ -347,7 +329,7 @@
 		{
 			"weight": 11,
 			"element": {
-				"location": "vanilla_backrooms:level_0/epic/mysteri_floor",
+				"location": "vanilla_backrooms:level_0/epic/4",
 				"processors": "minecraft:empty",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
@@ -356,25 +338,7 @@
 		{
 			"weight": 11,
 			"element": {
-				"location": "vanilla_backrooms:level_0/epic/office",
-				"processors": "minecraft:empty",
-				"projection": "rigid",
-				"element_type": "minecraft:single_pool_element"
-			}
-		},
-		{
-			"weight": 11,
-			"element": {
-				"location": "vanilla_backrooms:level_0/epic/storage_room",
-				"processors": "minecraft:empty",
-				"projection": "rigid",
-				"element_type": "minecraft:single_pool_element"
-			}
-		},
-		{
-			"weight": 10,
-			"element": {
-				"location": "vanilla_backrooms:level_0/epic/exit",
+				"location": "vanilla_backrooms:level_0/epic/5",
 				"processors": "minecraft:empty",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"

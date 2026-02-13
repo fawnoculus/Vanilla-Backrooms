@@ -1,0 +1,15 @@
+{
+	"name": "vanilla_backrooms:level_4/start",
+	"fallback": "minecraft:empty",
+	"elements": [
+		{
+			"weight": 1,
+			"element": {
+				"location": "vanilla_backrooms:level_4/start",
+				"processors": "minecraft:empty",
+				"projection": "rigid",
+				"element_type": "minecraft:single_pool_element"
+			}
+		}
+	]
+}
