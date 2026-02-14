@@ -82,7 +82,7 @@ public class Level1Generator implements BackroomsGenerator {
 		}
 
 
-		if (chunkRandom.nextInt(8) == 0) {
+		if (chunkRandom.nextInt(4) == 0) {
 			return new Pair<>(BlockRotation.NONE, PARKING);
 		}
 

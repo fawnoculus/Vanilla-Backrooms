@@ -108,6 +108,25 @@ public class BackroomsUtil {
 	}
 
 	public static void onEntityDimensionChanged(Entity entity, ServerWorld world) {
+		if (entity instanceof ServerPlayerEntity player) { // Players need special treatment, because they might have died, which would have reset their custom data
+			NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
+			boolean wasInBackrooms = permanentCustomData.getBoolean("isInBackrooms", false);
+			if (BackroomsLevel.isLevel(world.getRegistryKey().getValue())) {
+				if (wasInBackrooms) {
+					return;
+				}
+
+				permanentCustomData.putBoolean("isInBackrooms", true);
+				PlayerUtil.setPermanentCustomData(player, permanentCustomData);
+
+				onEnterBackrooms(entity);
+				return;
+			}
+
+			if (!wasInBackrooms) return;
+			onExitBackrooms(entity);
+		}
+
 		NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
 		boolean wasInBackrooms = customData.getBoolean("isInBackrooms", false);
 
@@ -117,6 +136,14 @@ public class BackroomsUtil {
 			}
 
 			customData.putBoolean("isInBackrooms", true);
+			CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(customData);
+
+			if (entity instanceof ServerPlayerEntity player) {
+				NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
+				permanentCustomData.putBoolean("isInBackrooms", true);
+				PlayerUtil.setPermanentCustomData(player, permanentCustomData);
+			}
+
 			onEnterBackrooms(entity);
 			return;
 		}
@@ -256,7 +283,6 @@ public class BackroomsUtil {
 				player.setExperiencePoints(0);
 			}
 
-
 			NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
 			permanentCustomData.putBoolean("isInBackrooms", true);
 			PlayerUtil.setPermanentCustomData(player, permanentCustomData);
@@ -314,6 +340,15 @@ public class BackroomsUtil {
 	}
 
 	public static void savePlayerData(ServerPlayerEntity player) throws IOException {
+		NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
+		boolean hasSavedData = permanentCustomData.getBoolean("hasSavedData", false);
+		if (hasSavedData) {
+			return;
+		}
+
+		permanentCustomData.putBoolean("hasSavedData", true);
+		PlayerUtil.setPermanentCustomData(player, permanentCustomData);
+
 		MinecraftServer server = Objects.requireNonNull(player.getServer());
 
 		Path playerData = server.getPath("data")
@@ -339,6 +374,15 @@ public class BackroomsUtil {
 
 
 	public static void loadPlayerData(ServerPlayerEntity player) {
+		NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
+		boolean hasSavedData = permanentCustomData.getBoolean("hasSavedData", false);
+		if (!hasSavedData) {
+			return;
+		}
+
+		permanentCustomData.putBoolean("hasSavedData", false);
+		PlayerUtil.setPermanentCustomData(player, permanentCustomData);
+
 		MinecraftServer server = Objects.requireNonNull(player.getServer());
 
 		Path playerData = server.getPath("data")

@@ -15,7 +15,9 @@ import java.util.UUID;
 public class PlayerUtil {
 	private final static HashMap<UUID, NbtCompound> DATA_CACHE = new HashMap<>();
 
-	// Data that is not affected by leaving and entering the backrooms
+	/**
+	 * Sets Custom Data that stays the same even if the player dies.
+	 */
 	public static void setPermanentCustomData(@NotNull ServerPlayerEntity player, NbtCompound nbt) {
 		MinecraftServer server = player.getServer();
 		assert server != null;
@@ -47,8 +49,9 @@ public class PlayerUtil {
 		}
 	}
 
-
-	// Data that is not affected by leaving and entering the backrooms
+	/**
+	 * Returns Custom Data that stays the same even if the player dies
+	 */
 	public static NbtCompound getPermanentCustomData(@NotNull ServerPlayerEntity player) {
 		if (DATA_CACHE.containsKey(player.getUuid())) {
 			return DATA_CACHE.get(player.getUuid());

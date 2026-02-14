@@ -27,8 +27,8 @@ public class AlmondWatterItem extends Item implements PolymerItem {
 			Optional.empty(),
 			Optional.of(ColorHelper.getArgb(210, 210, 170)),
 			List.of(
-			  new StatusEffectInstance(StatusEffects.REGENERATION, 30 * 20, 0, false, false, true),
-			  new StatusEffectInstance(StatusEffects.SATURATION, 15 * 20, 0, false, false, true)
+			  new StatusEffectInstance(StatusEffects.REGENERATION, 10 * 20, 0, false, false, true),
+			  new StatusEffectInstance(StatusEffects.SATURATION, 2 * 20, 0, false, false, true)
 			),
 			Optional.of("Almond Watter")
 		  ))

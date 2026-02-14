@@ -17,6 +17,12 @@ public record ClipChanceContainer(Map<Identifier, ClipChance> clipChances) {
 
 	public ClipChanceContainer(Map<Identifier, ClipChance> clipChances) {
 		this.clipChances = new HashMap<>(clipChances);
+
+		for (Map.Entry<Identifier, ClipChance> entry : DEFAULT.clipChances().entrySet()) {
+			if(!this.clipChances.containsKey(entry.getKey())) {
+				this.clipChances.put(entry.getKey(), entry.getValue());
+			}
+		}
 	}
 
 	private static @NotNull ClipChanceContainer makeDefault() {

@@ -5,7 +5,7 @@ import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 
 public interface CustomDataHolder {
-	String KEY = "ntm.custom_data";
+	String KEY = "vanilla_backrooms.custom_data";
 
 	static CustomDataHolder from(Entity entity) {
 		return (CustomDataHolder) entity;
