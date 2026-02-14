@@ -16,5 +16,25 @@
 	"item.vanilla_backrooms.flickering_light": "Flickering Light",
 	"item.vanilla_backrooms.active_light": "Active Light",
 	"item.vanilla_backrooms.noclip_block": "Noclip Block",
-	"item.vanilla_backrooms.backrooms_generator": "Backrooms Generator"
+	"item.vanilla_backrooms.backrooms_generator": "Backrooms Generator",
+
+	"tooltip.vanilla_backrooms.chest.level_0_common": "Level 0 Common",
+	"tooltip.vanilla_backrooms.chest.level_0_uncommon": "Level 0 Uncommon",
+	"tooltip.vanilla_backrooms.chest.level_0_rare": "Level 0 Rare",
+	"tooltip.vanilla_backrooms.chest.level_0_epic": "Level 0 Epic",
+
+	"tooltip.vanilla_backrooms.chest.level_1_common": "Level 1 Common",
+	"tooltip.vanilla_backrooms.chest.level_1_rare": "Level 1 Rare",
+
+	"tooltip.vanilla_backrooms.chest.level_2_common": "Level 2 Common",
+	"tooltip.vanilla_backrooms.chest.level_2_rare": "Level 2 Rare",
+
+	"tooltip.vanilla_backrooms.chest.level_3_common": "Level 3 Common",
+	"tooltip.vanilla_backrooms.chest.level_3_rare": "Level 3 Rare",
+
+	"tooltip.vanilla_backrooms.chest.level_4_common": "Level 4 Common",
+	"tooltip.vanilla_backrooms.chest.level_4_rare": "Level 4 Rare",
+
+	"tooltip.vanilla_backrooms.chest.level_5_common": "Level 5 Common",
+	"tooltip.vanilla_backrooms.chest.level_5_rare": "Level 5 Rare"
 }

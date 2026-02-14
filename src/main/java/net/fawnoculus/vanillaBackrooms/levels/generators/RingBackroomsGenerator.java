@@ -31,7 +31,31 @@ public record RingBackroomsGenerator(
 		return new Builder(rotateStructures);
 	}
 
-	private static void placeSegmentWithRotation(
+
+	@Override
+	public void placeBackroomsSegment(ServerWorld world, BlockPos pos) {
+		Registry<StructurePool> registry = world.getRegistryManager().getOrThrow(RegistryKeys.TEMPLATE_POOL);
+		Optional<RegistryEntry.Reference<StructurePool>> registryEntry = registry.getOptional(this.poolFromPos(pos));
+		if (registryEntry.isEmpty()) {
+			return;
+		}
+
+		BlockRotation rotation = BlockRotation.NONE;
+
+		if (this.rotateStructures) {
+			ChunkRandom chunkRandom = new ChunkRandom(new CheckedRandom(0L));
+			chunkRandom.setCarverSeed(
+			  world.getSeed(),
+			  ChunkSectionPos.getSectionCoord(pos.getX()),
+			  ChunkSectionPos.getSectionCoord(pos.getZ())
+			);
+			rotation = BlockRotation.random(chunkRandom);
+		}
+
+		placeSegmentWithRotation(world, pos, registryEntry.get(), rotation);
+	}
+
+	private void placeSegmentWithRotation(
 	  ServerWorld world,
 	  BlockPos pos,
 	  RegistryEntry.Reference<StructurePool> structurePool,
@@ -72,29 +96,6 @@ public record RingBackroomsGenerator(
 		}
 
 		return structures.getLast().getRight();
-	}
-
-	@Override
-	public void placeBackroomsSegment(ServerWorld world, BlockPos pos) {
-		Registry<StructurePool> registry = world.getRegistryManager().getOrThrow(RegistryKeys.TEMPLATE_POOL);
-		Optional<RegistryEntry.Reference<StructurePool>> registryEntry = registry.getOptional(this.poolFromPos(pos));
-		if (registryEntry.isEmpty()) {
-			return;
-		}
-
-		BlockRotation rotation = BlockRotation.NONE;
-
-		if (this.rotateStructures) {
-			ChunkRandom chunkRandom = new ChunkRandom(new CheckedRandom(0L));
-			chunkRandom.setCarverSeed(
-			  world.getSeed(),
-			  ChunkSectionPos.getSectionCoord(pos.getX()),
-			  ChunkSectionPos.getSectionCoord(pos.getZ())
-			);
-			rotation = BlockRotation.random(chunkRandom);
-		}
-
-		placeSegmentWithRotation(world, pos, registryEntry.get(), rotation);
 	}
 
 	public static class Builder {

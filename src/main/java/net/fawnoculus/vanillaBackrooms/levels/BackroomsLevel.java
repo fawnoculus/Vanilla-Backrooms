@@ -1,5 +1,6 @@
 package net.fawnoculus.vanillaBackrooms.levels;
 
+import net.fawnoculus.vanillaBackrooms.levels.generators.Level1Generator;
 import net.fawnoculus.vanillaBackrooms.levels.generators.RingBackroomsGenerator;
 import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
 import net.minecraft.util.Identifier;
@@ -35,15 +36,8 @@ public record BackroomsLevel(int number, String name, Vec3d spawnBlock, Backroom
 		builder(1)
 		  .setSpawnBlock(new Vec3d(28.5, 14, 23.5))
 		  .setName("Habitable Zone")
-		  .setGenerator(RingBackroomsGenerator.builder(false)
-			.addStructure(800, "level_1/ring4")
-			.addStructure(600, "level_1/ring3")
-			.addStructure(400, "level_1/ring2")
-			.addStructure(200, "level_1/ring1")
-			.addStructure(1, "level_1/ring0")
-			.addStructure(0, "level_1/start")
-			.build()
-		  ).register();
+		  .setGenerator(new Level1Generator())
+		  .register();
 
 		builder(2)
 		  .setSpawnBlock(new Vec3d(17.5, 2, 26.5))
