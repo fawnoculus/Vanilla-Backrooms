@@ -16,12 +16,30 @@
 	"message.vanilla_backrooms.lucky_o_milk.matcha": "You suddenly feel very relaxed and calm",
 	"message.vanilla_backrooms.lucky_o_milk.banana": "It tastes strongly of bananas",
 
+	"message.vanilla_backrooms.berry_matcha_blast": "You feel very focused",
+
 	"itemGroup.vanilla_backrooms.vanilla_backrooms": "Vanilla-Backrooms",
 
 	"tag.item.vanilla_backrooms.backrooms_non_return": "Backrooms not Return",
 	"tag.item.vanilla_backrooms.cold": "Cold",
 
 	"item.vanilla_backrooms.almond_watter": "Almond Watter",
+
+	"item.vanilla_backrooms.cold_plain_lucky_o_milk": "Cold Lucky O' Milk",
+	"item.vanilla_backrooms.cold_strawberry_lucky_o_milk": "Cold Lucky O' Milk",
+	"item.vanilla_backrooms.cold_choco_lucky_o_milk": "Cold Lucky O' Milk",
+	"item.vanilla_backrooms.cold_matcha_lucky_o_milk": "Cold Lucky O' Milk",
+	"item.vanilla_backrooms.cold_banana_lucky_o_milk": "Cold Lucky O' Milk",
+	"item.vanilla_backrooms.cold_luck_lucky_o_milk": "Cold Lucky O' Milk",
+
+	"item.vanilla_backrooms.warm_plain_lucky_o_milk": "Warm Lucky O' Milk",
+	"item.vanilla_backrooms.warm_strawberry_lucky_o_milk": "Warm Lucky O' Milk",
+	"item.vanilla_backrooms.warm_choco_lucky_o_milk": "Warm Lucky O' Milk",
+	"item.vanilla_backrooms.warm_matcha_lucky_o_milk": "Warm Lucky O' Milk",
+	"item.vanilla_backrooms.warm_banana_lucky_o_milk": "Warm Lucky O' Milk",
+	"item.vanilla_backrooms.warm_luck_lucky_o_milk": "Warm Lucky O' Milk",
+
+	"item.vanilla_backrooms.berry_matcha_blast": "BerryMatcha Blast",
 
 	"item.vanilla_backrooms.fake_sky": "Fake Sky",
 	"item.vanilla_backrooms.flickering_light": "Flickering Light",

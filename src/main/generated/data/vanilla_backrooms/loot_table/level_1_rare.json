@@ -18,10 +18,6 @@
             }
           ],
           "name": "vanilla_backrooms:almond_watter"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:ender_pearl"
         }
       ],
       "rolls": {
@@ -77,6 +73,26 @@
     {
       "bonus_rolls": 0.0,
       "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:torch"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:soul_torch"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:lantern"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:soul_lantern"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ender_pearl"
+        },
         {
           "type": "minecraft:item",
           "functions": [

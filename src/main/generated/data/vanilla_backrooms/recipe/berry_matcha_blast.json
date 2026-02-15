@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "berry_matcha_blast",
+  "ingredients": [
+    "#vanilla_backrooms:strawberry_lucky_o_milk",
+    "#vanilla_backrooms:matcha_lucky_o_milk",
+    "minecraft:bowl"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vanilla_backrooms:berry_matcha_blast"
+  }
+}

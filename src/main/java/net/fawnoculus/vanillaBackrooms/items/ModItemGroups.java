@@ -46,6 +46,8 @@ public class ModItemGroups {
 			itemGroup.add(ModItems.WARM_BANANA_LUCKY_O_MILK);
 			itemGroup.add(ModItems.WARM_LUCK_LUCKY_O_MILK);
 
+			itemGroup.add(ModItems.BERRY_MATCHA_BLAST);
+
 			itemGroup.add(ModBlockItems.FAKE_SKY);
 			itemGroup.add(ModBlockItems.FLICKERING_LIGHT);
 			itemGroup.add(ModBlockItems.ACTIVE_LIGHT);

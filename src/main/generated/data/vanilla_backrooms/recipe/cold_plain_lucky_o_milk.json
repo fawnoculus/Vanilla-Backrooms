@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "group": "plain_milk",
+  "group": "plain_lucky_o_milk",
   "ingredients": [
     "#vanilla_backrooms:cold",
     "vanilla_backrooms:warm_plain_lucky_o_milk"
