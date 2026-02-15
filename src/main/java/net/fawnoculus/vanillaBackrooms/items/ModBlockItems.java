@@ -42,12 +42,12 @@ public class ModBlockItems {
 	);
 	public static final BlockItem BACKROOMS_GENERATOR = register(
 	  ModBlocks.BACKROOMS_GENERATOR,
-	  (block, settings) -> new BasicBlockItem(block, settings, Items.COPPER_BULB, Text.literal("Backrooms Generator")),
+	  (block, settings) -> new BasicBlockItem(block, settings, Items.WAXED_COPPER_BULB, Text.literal("Backrooms Generator")),
 	  new Item.Settings()
 	);
 	public static final BlockItem FINISHED_BACKROOMS_GENERATOR = register(
 	  ModBlocks.FINISHED_BACKROOMS_GENERATOR,
-	  (block, settings) -> new BasicBlockItem(block, settings, Items.WAXED_COPPER_BULB, Text.literal("Finished Backrooms Generator")),
+	  (block, settings) -> new BasicBlockItem(block, settings, Items.WAXED_OXIDIZED_COPPER_BULB, Text.literal("Finished Backrooms Generator")),
 	  new Item.Settings()
 	);
 

@@ -2,7 +2,7 @@ package net.fawnoculus.vanillaBackrooms.levels;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
-import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
+import net.fawnoculus.vanillaBackrooms.misc.BackroomsHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -29,49 +29,48 @@ public record ClipChanceContainer(Map<Identifier, ClipChance> clipChances) {
 
 	private static @NotNull ClipChanceContainer makeDefault() {
 		ImmutableMap<Identifier, Integer> level0Chances = new ImmutableMap.Builder<Identifier, Integer>()
-		  .put(BackroomsUtil.getLevelId(1), 100)
-		  .put(BackroomsUtil.getLevelId(2), 5)
+		  .put(BackroomsHandler.getLevelId(1), 100)
+		  .put(BackroomsHandler.getLevelId(2), 5)
 		  .build();
 
 		ImmutableMap<Identifier, Integer> level1Chances = new ImmutableMap.Builder<Identifier, Integer>()
-		  .put(BackroomsUtil.getLevelId(2), 100)
+		  .put(BackroomsHandler.getLevelId(2), 100)
 		  .build();
 
 		ImmutableMap<Identifier, Integer> level2Chances = new ImmutableMap.Builder<Identifier, Integer>()
-		  .put(BackroomsUtil.getLevelId(0), 5)
-		  .put(BackroomsUtil.getLevelId(1), 5)
-		  .put(BackroomsUtil.getLevelId(3), 200)
-		  .put(BackroomsUtil.getLevelId(4), 10)
+		  .put(BackroomsHandler.getLevelId(0), 5)
+		  .put(BackroomsHandler.getLevelId(1), 5)
+		  .put(BackroomsHandler.getLevelId(3), 200)
+		  .put(BackroomsHandler.getLevelId(4), 10)
 		  .build();
 
 		ImmutableMap<Identifier, Integer> level3Chances = new ImmutableMap.Builder<Identifier, Integer>()
-		  .put(BackroomsUtil.getLevelId(2), 5)
-		  .put(BackroomsUtil.getLevelId(4), 200)
-		  .put(BackroomsUtil.getLevelId(5), 10)
+		  .put(BackroomsHandler.getLevelId(2), 5)
+		  .put(BackroomsHandler.getLevelId(4), 200)
+		  .put(BackroomsHandler.getLevelId(5), 10)
 		  .build();
 
 		ImmutableMap<Identifier, Integer> level4Chances = new ImmutableMap.Builder<Identifier, Integer>()
-		  .put(BackroomsUtil.getLevelId(3), 5)
-		  .put(BackroomsUtil.getLevelId(5), 200)
+		  .put(BackroomsHandler.getLevelId(3), 5)
+		  .put(BackroomsHandler.getLevelId(5), 200)
 		  .build();
 
 		ImmutableMap<Identifier, Integer> level5Chances = new ImmutableMap.Builder<Identifier, Integer>()
 		  .put(World.OVERWORLD.getValue(), 200)
-		  .put(BackroomsUtil.getLevelId(0), 1)
-		  .put(BackroomsUtil.getLevelId(1), 2)
-		  .put(BackroomsUtil.getLevelId(2), 4)
-		  .put(BackroomsUtil.getLevelId(3), 8)
-		  .put(BackroomsUtil.getLevelId(4), 16)
-		  .put(BackroomsUtil.getLevelId(5), 32)
+		  .put(BackroomsHandler.getLevelId(0), 2)
+		  .put(BackroomsHandler.getLevelId(1), 4)
+		  .put(BackroomsHandler.getLevelId(2), 8)
+		  .put(BackroomsHandler.getLevelId(3), 16)
+		  .put(BackroomsHandler.getLevelId(4), 32)
 		  .build();
 
 		ImmutableMap<Identifier, ClipChance> clipChances = new ImmutableMap.Builder<Identifier, ClipChance>()
-		  .put(BackroomsUtil.getLevelId(0), new ClipChance(level0Chances))
-		  .put(BackroomsUtil.getLevelId(1), new ClipChance(level1Chances))
-		  .put(BackroomsUtil.getLevelId(2), new ClipChance(level2Chances))
-		  .put(BackroomsUtil.getLevelId(3), new ClipChance(level3Chances))
-		  .put(BackroomsUtil.getLevelId(4), new ClipChance(level4Chances))
-		  .put(BackroomsUtil.getLevelId(5), new ClipChance(level5Chances))
+		  .put(BackroomsHandler.getLevelId(0), new ClipChance(level0Chances))
+		  .put(BackroomsHandler.getLevelId(1), new ClipChance(level1Chances))
+		  .put(BackroomsHandler.getLevelId(2), new ClipChance(level2Chances))
+		  .put(BackroomsHandler.getLevelId(3), new ClipChance(level3Chances))
+		  .put(BackroomsHandler.getLevelId(4), new ClipChance(level4Chances))
+		  .put(BackroomsHandler.getLevelId(5), new ClipChance(level5Chances))
 		  .build();
 
 		return new ClipChanceContainer(clipChances);

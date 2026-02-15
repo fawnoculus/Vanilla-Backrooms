@@ -1,11 +1,13 @@
 package net.fawnoculus.vanillaBackrooms.levels;
 
 import com.mojang.serialization.Codec;
+import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class ClipChance {
 	public static final Codec<ClipChance> CODEC = Codec
@@ -30,11 +32,15 @@ public class ClipChance {
 	}
 
 	public Identifier get(Random random) {
-		int selected = random.nextInt(totalClipChance);
+		int selected = random.nextInt(0, totalClipChance);
+		VanillaBackrooms.LOGGER.info("{}/{}, {}", selected, totalClipChance, clipChances);
 
 		for (Map.Entry<Identifier, Integer> entry : clipChances.entrySet()) {
 			selected -= entry.getValue();
 			if (selected <= 0) {
+				if (entry.getKey().equals(World.OVERWORLD.getValue())) {
+					VanillaBackrooms.LOGGER.warn("YAY");
+				}
 				return entry.getKey();
 			}
 		}

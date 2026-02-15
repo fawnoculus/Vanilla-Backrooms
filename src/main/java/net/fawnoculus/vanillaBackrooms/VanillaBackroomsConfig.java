@@ -60,6 +60,13 @@ public class VanillaBackroomsConfig {
 	  "Whether Xaeros Minimap and WorldMap should be put into fair mode in the backrooms (aka: no cave mode, aka: you can not see the halls) [default: true]"
 	);
 
+	public static final ConfigOption<Boolean> ADVENTURE_IN_BACKROOMS = FILE.newOption(
+	  "adventure_in_backrooms",
+	  Codec.BOOL,
+	  true,
+	  "Whether Players will have their game-mode set to adventure in the backrooms (creative and spectator players won't be set to adventure mode)  [default: true]"
+	);
+
 	public static final ConfigOption<Boolean> CLEAR_INV = FILE.newOption(
 	  "clear_inv",
 	  Codec.BOOL,

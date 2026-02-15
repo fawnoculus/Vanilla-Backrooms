@@ -1,7 +1,7 @@
 package net.fawnoculus.vanillaBackrooms.blocks.custom;
 
 import eu.pb4.polymer.core.api.block.SimplePolymerBlock;
-import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
+import net.fawnoculus.vanillaBackrooms.misc.BackroomsHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
@@ -30,6 +30,6 @@ public class NoclipBlock extends SimplePolymerBlock {
 			return;
 		}
 
-		BackroomsUtil.noclip(serverWorld.getServer(), entity);
+		BackroomsHandler.noclip(serverWorld.getServer(), entity);
 	}
 }

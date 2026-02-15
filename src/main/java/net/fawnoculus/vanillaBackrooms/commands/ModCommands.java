@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
 import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
-import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
+import net.fawnoculus.vanillaBackrooms.misc.BackroomsHandler;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -68,7 +68,7 @@ public class ModCommands {
 			return -1;
 		}
 
-		boolean successful = BackroomsUtil.noclip(context.getSource().getServer(), player);
+		boolean successful = BackroomsHandler.noclip(context.getSource().getServer(), player);
 
 		if (successful) {
 			context.getSource().sendFeedback(
@@ -94,7 +94,7 @@ public class ModCommands {
 			return -1;
 		}
 
-		boolean successful = BackroomsUtil.sendToDimension(context.getSource().getServer(), player, targetWorld.getRegistryKey());
+		boolean successful = BackroomsHandler.sendToDimension(context.getSource().getServer(), player, targetWorld.getRegistryKey());
 
 		if (successful) {
 			context.getSource().sendFeedback(
@@ -114,7 +114,7 @@ public class ModCommands {
 		boolean successful = true;
 
 		for (Entity entity : entities) {
-			if (!BackroomsUtil.noclip(context.getSource().getServer(), entity)) {
+			if (!BackroomsHandler.noclip(context.getSource().getServer(), entity)) {
 				successful = false;
 			}
 		}
@@ -138,7 +138,7 @@ public class ModCommands {
 
 		boolean successful = true;
 		for (Entity entity : entities) {
-			if (!BackroomsUtil.sendToDimension(context.getSource().getServer(), entity, targetWorld.getRegistryKey())) {
+			if (!BackroomsHandler.sendToDimension(context.getSource().getServer(), entity, targetWorld.getRegistryKey())) {
 				successful = false;
 			}
 		}

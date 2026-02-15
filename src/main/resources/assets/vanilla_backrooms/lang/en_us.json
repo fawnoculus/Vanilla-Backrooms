@@ -13,10 +13,14 @@
 
 	"tag.item.vanilla_backrooms.backrooms_non_return": "Backrooms not Return",
 
+	"item.vanilla_backrooms.almond_watter": "Almond Watter",
+
+	"item.vanilla_backrooms.fake_sky": "Fake Sky",
 	"item.vanilla_backrooms.flickering_light": "Flickering Light",
 	"item.vanilla_backrooms.active_light": "Active Light",
 	"item.vanilla_backrooms.noclip_block": "Noclip Block",
 	"item.vanilla_backrooms.backrooms_generator": "Backrooms Generator",
+	"item.vanilla_backrooms.finished_backrooms_generator": "Finished Backrooms Generator",
 
 	"tooltip.vanilla_backrooms.chest.level_0_common": "Level 0 Common",
 	"tooltip.vanilla_backrooms.chest.level_0_uncommon": "Level 0 Uncommon",

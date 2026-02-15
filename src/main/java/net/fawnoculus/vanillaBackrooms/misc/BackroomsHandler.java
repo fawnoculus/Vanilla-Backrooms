@@ -1,11 +1,11 @@
-package net.fawnoculus.vanillaBackrooms.util;
+package net.fawnoculus.vanillaBackrooms.misc;
 
 import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
 import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
 import net.fawnoculus.vanillaBackrooms.blocks.ModBlocks;
 import net.fawnoculus.vanillaBackrooms.blocks.entities.BackroomsGeneratorBE;
 import net.fawnoculus.vanillaBackrooms.levels.BackroomsLevel;
-import net.fawnoculus.vanillaBackrooms.misc.CustomDataHolder;
+import net.fawnoculus.vanillaBackrooms.util.PlayerUtil;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.InventoryOwner;
@@ -13,7 +13,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.vehicle.VehicleInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -34,7 +34,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
@@ -45,9 +44,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 
-public class BackroomsUtil {
+// This entire class is a huge mess,
+// but it handles so many things that re-writing would take to long
+public class BackroomsHandler {
 	@Contract("_ -> new")
 	public static @NotNull Identifier getLevelId(int levelNumber) {
 		return VanillaBackrooms.id("level_" + levelNumber);
@@ -156,7 +158,7 @@ public class BackroomsUtil {
 
 	public static boolean noclip(MinecraftServer server, Entity entity) {
 		entity.detach();
-		RegistryKey<World> nextDimension = getNextDimension(entity.getWorld().getRegistryKey(), entity.getRandom());
+		RegistryKey<World> nextDimension = getNextDimension(entity.getWorld().getRegistryKey(), new Random());
 		return sendToDimension(server, entity, nextDimension);
 	}
 
@@ -206,6 +208,13 @@ public class BackroomsUtil {
 				VanillaBackrooms.LOGGER.error("Failed to save Player Data for Player '{}', they will not be noclipped", player.getGameProfile().getName());
 				return false;
 			}
+
+			ServerPlayerEntity.Respawn respawn = player.getRespawn();
+			if (respawn != null) {
+				NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
+				permanentCustomData.put("outOfBackroomsRespawn", ServerPlayerEntity.Respawn.CODEC, respawn);
+				PlayerUtil.setPermanentCustomData(player, permanentCustomData);
+			}
 		}
 
 		entity.fallDistance = 0;
@@ -216,6 +225,7 @@ public class BackroomsUtil {
 				player.networkHandler.sendPacket(new TitleS2CPacket(Text.literal(level.levelName())));
 				player.networkHandler.sendPacket(new SubtitleS2CPacket(Text.literal(level.name())));
 			}
+
 			player.setSpawnPoint(new ServerPlayerEntity.Respawn(world.getRegistryKey(), BlockPos.ofFloored(spawnPos), world.getSpawnAngle(), true), false);
 		}
 
@@ -228,7 +238,8 @@ public class BackroomsUtil {
 		}
 
 		if (entity instanceof ServerPlayerEntity player) {
-			if (VanillaBackroomsConfig.CLEAR_INV.getValue()) {
+			NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
+			if (permanentCustomData.getBoolean("hasSavedData", false)) {
 				ArrayList<ItemStack> stacks = new ArrayList<>(player.getInventory().size());
 
 				for (ItemStack stack : player.getInventory()) {
@@ -245,6 +256,10 @@ public class BackroomsUtil {
 				}
 			}
 
+			ServerPlayerEntity.Respawn respawn =  permanentCustomData.get("outOfBackroomsRespawn", ServerPlayerEntity.Respawn.CODEC).orElseGet(() ->
+			  new ServerPlayerEntity.Respawn(server.getOverworld().getRegistryKey(), server.getOverworld().getSpawnPos(), server.getOverworld().getSpawnAngle(), true)
+			);
+			player.setSpawnPoint(respawn, false);
 			player.teleportTo(player.getRespawnTarget(false, TeleportTarget.NO_OP));
 
 			return;
@@ -275,16 +290,18 @@ public class BackroomsUtil {
 				player.sendMessage(Text.literal("§f§a§i§r§x§a§e§r§o"));
 			}
 
-			player.changeGameMode(GameMode.ADVENTURE);
+			if (VanillaBackroomsConfig.ADVENTURE_IN_BACKROOMS.getValue() && player.getGameMode() == GameMode.SURVIVAL) {
+				player.changeGameMode(GameMode.ADVENTURE);
+			}
 
 			player.getEnderPearls().forEach(Entity::discard);
 
 			player.clearStatusEffects();
+			player.getHungerManager().setFoodLevel(20);
+			player.getHungerManager().setSaturationLevel(20F);
 
 			if (VanillaBackroomsConfig.CLEAR_INV.getValue()) {
 				player.getInventory().clear();
-				player.getHungerManager().setFoodLevel(20);
-				player.getHungerManager().setSaturationLevel(20F);
 				player.setExperienceLevel(0);
 				player.setExperiencePoints(0);
 			}
@@ -316,7 +333,7 @@ public class BackroomsUtil {
 			}
 		}
 
-		if (entity instanceof VehicleInventory inventory) {
+		if (entity instanceof Inventory inventory) {
 			for (int i = 0; i < inventory.size(); i++) {
 				if (inventory.getStack(i).getRegistryEntry().isIn(VanillaBackroomsConfig.BACKROOMS_NOT_RETURN.getValue())) {
 					inventory.setStack(i, ItemStack.EMPTY);
@@ -325,7 +342,9 @@ public class BackroomsUtil {
 		}
 
 		if (entity instanceof ServerPlayerEntity player) {
-			player.sendMessage(Text.literal("§r§e§s§e§t§x§a§e§r§o"));
+			if (VanillaBackroomsConfig.DISABLE_XAERO_MINIMAP.getValue() || VanillaBackroomsConfig.XAERO_FAIR.getValue()) {
+				player.sendMessage(Text.literal("§r§e§s§e§t§x§a§e§r§o"));
+			}
 
 			NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
 			permanentCustomData.remove("isInBackrooms");
@@ -403,12 +422,19 @@ public class BackroomsUtil {
 		}
 		ReadView view = NbtReadView.create(ErrorReporter.EMPTY, player.getRegistryManager(), nbt.getCompoundOrEmpty("data"));
 
+		GameMode previousGameMode = player.getGameMode();
+
 		player.readData(view);
 
 		player.teleportTo(player.getRespawnTarget(false, TeleportTarget.NO_OP));
 		player.readRootVehicle(view);
 		player.readGameModeData(view);
 		player.getServer().getPlayerManager().sendStatusEffects(player);
-		player.changeGameMode(player.getGameMode());
+
+		GameMode newGameMode = player.getGameMode();
+
+		// Make the client actually know what game-mode it is supposed to be
+		player.changeGameMode(previousGameMode);
+		player.changeGameMode(newGameMode);
 	}
 }

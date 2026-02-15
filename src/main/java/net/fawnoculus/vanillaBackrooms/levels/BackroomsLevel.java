@@ -2,7 +2,7 @@ package net.fawnoculus.vanillaBackrooms.levels;
 
 import net.fawnoculus.vanillaBackrooms.levels.generators.Level1Generator;
 import net.fawnoculus.vanillaBackrooms.levels.generators.RingBackroomsGenerator;
-import net.fawnoculus.vanillaBackrooms.util.BackroomsUtil;
+import net.fawnoculus.vanillaBackrooms.misc.BackroomsHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Contract;
@@ -91,7 +91,7 @@ public record BackroomsLevel(int number, String name, Vec3d spawnBlock, Backroom
 
 	@Contract(" -> new")
 	public @NotNull Identifier getId() {
-		return BackroomsUtil.getLevelId(this.number);
+		return BackroomsHandler.getLevelId(this.number);
 	}
 
 	@Contract(pure = true)
