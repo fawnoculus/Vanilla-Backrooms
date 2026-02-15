@@ -95,6 +95,13 @@ public class VanillaBackroomsConfig {
 	  "Whether Chat should be disabled when you are in the backrooms [default: true]"
 	);
 
+	public static final ConfigOption<Boolean> ANNOUNCE_LEVEL = FILE.newOption(
+	  "announce_level",
+	  Codec.BOOL,
+	  false,
+	  "Whether Players will see a Title of the level name when they enter a level [default: true]"
+	);
+
 	public static final ConfigOption<Text> DISABLE_CHAT_MESSAGE = FILE.newOption(
 	  "disable_chat_message",
 	  TextCodecs.CODEC,

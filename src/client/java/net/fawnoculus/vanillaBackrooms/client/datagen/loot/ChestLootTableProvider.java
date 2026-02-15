@@ -319,5 +319,80 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
 			)
 		  )
 		);
+
+		// TODO: other loot pools
+
+		lootTable.accept(ModLootTables.LEVEL_2_COMMON, LootTable.builder()
+		);
+
+		lootTable.accept(ModLootTables.LEVEL_2_RARE, LootTable.builder()
+		);
+
+		lootTable.accept(ModLootTables.LEVEL_3_COMMON, LootTable.builder()
+		);
+
+		lootTable.accept(ModLootTables.LEVEL_3_RARE, LootTable.builder()
+		);
+
+		lootTable.accept(ModLootTables.LEVEL_4_COMMON, LootTable.builder()
+		);
+
+		lootTable.accept(ModLootTables.LEVEL_4_RARE, LootTable.builder()
+		);
+
+		lootTable.accept(ModLootTables.LEVEL_5_COMMON, LootTable.builder()
+		);
+
+		lootTable.accept(ModLootTables.LEVEL_5_RARE, LootTable.builder()
+		  .pool(LootPool.builder()
+			.rolls(UniformLootNumberProvider.create(0f, 1f))
+			.with(ItemEntry.builder(Items.DIAMOND))
+			.with(ItemEntry.builder(Items.EMERALD))
+			.with(ItemEntry.builder(Items.TOTEM_OF_UNDYING)
+			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+			)
+		  )
+		  .pool(LootPool.builder()
+			.rolls(UniformLootNumberProvider.create(0f, 2f))
+			.with(ItemEntry.builder(Items.SHIELD)
+			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			)
+			.with(ItemEntry.builder(Items.IRON_BOOTS)
+			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			)
+			.with(ItemEntry.builder(Items.IRON_HELMET)
+			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			)
+			.with(ItemEntry.builder(Items.IRON_LEGGINGS)
+			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			)
+			.with(ItemEntry.builder(Items.IRON_CHESTPLATE)
+			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			)
+		  )
+		  .pool(LootPool.builder()
+			.rolls(UniformLootNumberProvider.create(0f, 2f))
+			.with(ItemEntry.builder(Items.IRON_SWORD)
+			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+			)
+			.with(ItemEntry.builder(Items.IRON_AXE)
+			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+			)
+			.with(ItemEntry.builder(Items.IRON_SHOVEL)
+			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+			)
+			.with(ItemEntry.builder(Items.IRON_HOE)
+			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+			)
+		  )
+		);
 	}
 }

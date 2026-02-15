@@ -18,6 +18,8 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
+import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -207,9 +209,13 @@ public class BackroomsUtil {
 		}
 
 		entity.fallDistance = 0;
-		entity.teleport(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), 0, 0, false);
+		entity.teleport(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), entity.getYaw(), entity.getPitch(), false);
 
 		if (entity instanceof ServerPlayerEntity player) {
+			if (VanillaBackroomsConfig.ANNOUNCE_LEVEL.getValue()) {
+				player.networkHandler.sendPacket(new TitleS2CPacket(Text.literal(level.levelName())));
+				player.networkHandler.sendPacket(new SubtitleS2CPacket(Text.literal(level.name())));
+			}
 			player.setSpawnPoint(new ServerPlayerEntity.Respawn(world.getRegistryKey(), BlockPos.ofFloored(spawnPos), world.getSpawnAngle(), true), false);
 		}
 

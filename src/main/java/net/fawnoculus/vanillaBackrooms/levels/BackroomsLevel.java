@@ -76,8 +76,7 @@ public record BackroomsLevel(int number, String name, Vec3d spawnBlock, Backroom
 		return LEVELS.get(worldId) != null;
 	}
 
-	@Nullable
-	public static BackroomsLevel getLevel(Identifier worldId) {
+	public static @Nullable BackroomsLevel getLevel(Identifier worldId) {
 		return LEVELS.get(worldId);
 	}
 
@@ -93,6 +92,16 @@ public record BackroomsLevel(int number, String name, Vec3d spawnBlock, Backroom
 	@Contract(" -> new")
 	public @NotNull Identifier getId() {
 		return BackroomsUtil.getLevelId(this.number);
+	}
+
+	@Contract(pure = true)
+	public @NotNull String levelName() {
+		return String.format("Level-%d", number);
+	}
+
+	@Contract(pure = true)
+	public @NotNull String name() {
+		return name;
 	}
 
 	@Contract(pure = true)
