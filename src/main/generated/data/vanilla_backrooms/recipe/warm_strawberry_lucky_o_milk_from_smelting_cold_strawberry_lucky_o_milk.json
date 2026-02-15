@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.2,
+  "group": "strawberry_milk",
+  "ingredient": "vanilla_backrooms:cold_strawberry_lucky_o_milk",
+  "result": {
+    "id": "vanilla_backrooms:warm_strawberry_lucky_o_milk"
+  }
+}

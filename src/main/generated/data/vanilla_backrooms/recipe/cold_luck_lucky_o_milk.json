@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "luck_milk",
+  "ingredients": [
+    "#vanilla_backrooms:cold",
+    "vanilla_backrooms:warm_luck_lucky_o_milk"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vanilla_backrooms:cold_luck_lucky_o_milk"
+  }
+}

@@ -9,9 +9,17 @@
 	"message.vanilla_backrooms.noclip_multiple_to": "noclip-ed %1$s entities to Level %2$s",
 	"message.vanilla_backrooms.flicker_chance": "Flicker Chance: 1/%1$s (%2$s%%) pro Tick",
 
+	"message.vanilla_backrooms.lucky_o_milk.plain_cold": "It tastes like soy milk, would probably taste better warm",
+	"message.vanilla_backrooms.lucky_o_milk.plain_warm": "It tastes like soy milk",
+	"message.vanilla_backrooms.lucky_o_milk.strawberry": "It faintly smells of lavender",
+	"message.vanilla_backrooms.lucky_o_milk.choco": "You feel your pain subside",
+	"message.vanilla_backrooms.lucky_o_milk.matcha": "You suddenly feel very relaxed and calm",
+	"message.vanilla_backrooms.lucky_o_milk.banana": "It tastes strongly of bananas",
+
 	"itemGroup.vanilla_backrooms.vanilla_backrooms": "Vanilla-Backrooms",
 
 	"tag.item.vanilla_backrooms.backrooms_non_return": "Backrooms not Return",
+	"tag.item.vanilla_backrooms.cold": "Cold",
 
 	"item.vanilla_backrooms.almond_watter": "Almond Watter",
 
@@ -40,5 +48,18 @@
 	"tooltip.vanilla_backrooms.chest.level_4_rare": "Level 4 Rare",
 
 	"tooltip.vanilla_backrooms.chest.level_5_common": "Level 5 Common",
-	"tooltip.vanilla_backrooms.chest.level_5_rare": "Level 5 Rare"
+	"tooltip.vanilla_backrooms.chest.level_5_rare": "Level 5 Rare",
+
+	"tooltip.vanilla_backrooms.lucky_o_milk.plain": "Plain",
+	"tooltip.vanilla_backrooms.lucky_o_milk.strawberry": "Strawberry",
+	"tooltip.vanilla_backrooms.lucky_o_milk.choco": "Choco",
+	"tooltip.vanilla_backrooms.lucky_o_milk.matcha": "Matcha",
+	"tooltip.vanilla_backrooms.lucky_o_milk.label_1": "It's Label reads:",
+	"tooltip.vanilla_backrooms.lucky_o_milk.label_2": "Ingredients:",
+	"tooltip.vanilla_backrooms.lucky_o_milk.label_3": "Soybeans 100%",
+	"tooltip.vanilla_backrooms.lucky_o_milk.label_4": "Sugars 0%",
+	"tooltip.vanilla_backrooms.lucky_o_milk.label_5": "Natural preservatives: 300%",
+	"tooltip.vanilla_backrooms.lucky_o_milk.label_6": "Artificial Flavourings/Colourings: 0%",
+	"tooltip.vanilla_backrooms.lucky_o_milk.label_ingrained": " is ingrained in it's Label",
+	"tooltip.vanilla_backrooms.lucky_o_milk.label_not_ingrained": "There is no text ingrained on it's Label"
 }

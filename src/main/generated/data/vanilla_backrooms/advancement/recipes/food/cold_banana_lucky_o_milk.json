@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cold_milk": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vanilla_backrooms:cold_banana_lucky_o_milk"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vanilla_backrooms:cold_banana_lucky_o_milk"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cold_milk"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vanilla_backrooms:cold_banana_lucky_o_milk"
+    ]
+  }
+}

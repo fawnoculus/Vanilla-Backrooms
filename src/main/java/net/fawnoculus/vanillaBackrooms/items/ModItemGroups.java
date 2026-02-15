@@ -32,6 +32,20 @@ public class ModItemGroups {
 		ItemGroupEvents.modifyEntriesEvent(VANILLA_BACKROOMS_ITEMS_KEY).register(itemGroup -> {
 			itemGroup.add(ModItems.ALMOND_WATTER);
 
+			itemGroup.add(ModItems.COLD_PLAIN_LUCKY_O_MILK);
+			itemGroup.add(ModItems.COLD_STRAWBERRY_LUCKY_O_MILK);
+			itemGroup.add(ModItems.COLD_CHOCO_LUCKY_O_MILK);
+			itemGroup.add(ModItems.COLD_MATCHA_LUCKY_O_MILK);
+			itemGroup.add(ModItems.COLD_BANANA_LUCKY_O_MILK);
+			itemGroup.add(ModItems.COLD_LUCK_LUCKY_O_MILK);
+
+			itemGroup.add(ModItems.WARM_PLAIN_LUCKY_O_MILK);
+			itemGroup.add(ModItems.WARM_STRAWBERRY_LUCKY_O_MILK);
+			itemGroup.add(ModItems.WARM_CHOCO_LUCKY_O_MILK);
+			itemGroup.add(ModItems.WARM_MATCHA_LUCKY_O_MILK);
+			itemGroup.add(ModItems.WARM_BANANA_LUCKY_O_MILK);
+			itemGroup.add(ModItems.WARM_LUCK_LUCKY_O_MILK);
+
 			itemGroup.add(ModBlockItems.FAKE_SKY);
 			itemGroup.add(ModBlockItems.FLICKERING_LIGHT);
 			itemGroup.add(ModBlockItems.ACTIVE_LIGHT);

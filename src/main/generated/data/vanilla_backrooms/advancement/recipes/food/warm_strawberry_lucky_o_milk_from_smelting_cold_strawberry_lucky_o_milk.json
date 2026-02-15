@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cold_strawberry_lucky_o_milk": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vanilla_backrooms:cold_strawberry_lucky_o_milk"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vanilla_backrooms:warm_strawberry_lucky_o_milk_from_smelting_cold_strawberry_lucky_o_milk"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cold_strawberry_lucky_o_milk"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vanilla_backrooms:warm_strawberry_lucky_o_milk_from_smelting_cold_strawberry_lucky_o_milk"
+    ]
+  }
+}

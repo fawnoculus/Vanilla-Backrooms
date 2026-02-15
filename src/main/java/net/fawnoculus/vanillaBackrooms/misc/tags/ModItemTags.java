@@ -8,6 +8,8 @@ import net.minecraft.registry.tag.TagKey;
 public class ModItemTags {
 	public static final TagKey<Item> BACKROOMS_NON_RETURN = of("backrooms_non_return");
 
+	public static final TagKey<Item> COLD = of("cold");
+
 	private static TagKey<Item> of(String name) {
 		return TagKey.of(RegistryKeys.ITEM, VanillaBackrooms.id(name));
 	}
