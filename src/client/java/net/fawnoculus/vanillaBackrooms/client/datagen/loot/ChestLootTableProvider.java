@@ -10,6 +10,7 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.EnchantRandomlyLootFunction;
+import net.minecraft.loot.function.EnchantWithLevelsLootFunction;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.function.SetPotionLootFunction;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
@@ -835,14 +836,8 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
 			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1f, 4f)))
 			)
 			.with(ItemEntry.builder(Items.WRITABLE_BOOK))
-			.with(ItemEntry.builder(Items.ENCHANTED_BOOK)
-			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
-			)
-			.with(ItemEntry.builder(Items.ENCHANTED_BOOK)
-			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
-			)
-			.with(ItemEntry.builder(Items.ENCHANTED_BOOK)
-			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+			.with(ItemEntry.builder(Items.BOOK)
+			  .apply(EnchantWithLevelsLootFunction.builder(wrapperLookup, UniformLootNumberProvider.create(10f, 30f)))
 			)
 		  )
 		  .pool(LootPool.builder()
