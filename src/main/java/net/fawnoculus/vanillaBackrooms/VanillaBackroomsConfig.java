@@ -105,7 +105,7 @@ public class VanillaBackroomsConfig {
 	public static final ConfigOption<Boolean> ANNOUNCE_LEVEL = FILE.newOption(
 	  "announce_level",
 	  Codec.BOOL,
-	  false,
+	  true,
 	  "Whether Players will see a Title of the level name when they enter a level [default: true]"
 	);
 

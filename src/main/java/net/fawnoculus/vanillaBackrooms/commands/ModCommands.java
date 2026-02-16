@@ -65,7 +65,7 @@ public class ModCommands {
 		ServerPlayerEntity player = context.getSource().getPlayer();
 		if (player == null) {
 			context.getSource().sendError(Text.translatableWithFallback("message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a Player"));
-			return -1;
+			return 1;
 		}
 
 		boolean successful = BackroomsHandler.noclip(context.getSource().getServer(), player);
@@ -74,13 +74,13 @@ public class ModCommands {
 			context.getSource().sendFeedback(
 			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_next", "noclip-ed to next Level"), true
 			);
-			return 1;
+			return 0;
 		}
 
 		context.getSource().sendError(Text.translatableWithFallback(
 		  "message.vanilla_backrooms.noclip_failed", "Failed to noclip")
 		);
-		return -2;
+		return 2;
 	}
 
 	private static int noclipLevel(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -91,7 +91,7 @@ public class ModCommands {
 			context.getSource().sendError(Text.translatableWithFallback(
 			  "message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a Player")
 			);
-			return -1;
+			return 1;
 		}
 
 		boolean successful = BackroomsHandler.sendToDimension(context.getSource().getServer(), player, targetWorld.getRegistryKey());
@@ -100,13 +100,13 @@ public class ModCommands {
 			context.getSource().sendFeedback(
 			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_to", "noclip-ed to Level %1$s", targetWorld.getRegistryKey().getValue().toString()), true
 			);
-			return 1;
+			return 0;
 		}
 
 		context.getSource().sendError(Text.translatableWithFallback(
 		  "message.vanilla_backrooms.noclip_failed", "Failed to noclip")
 		);
-		return -2;
+		return 2;
 	}
 
 	private static int noclipEntities(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -120,16 +120,17 @@ public class ModCommands {
 		}
 
 		if (successful) {
-			context.getSource().sendError(Text.translatableWithFallback(
-			  "message.vanilla_backrooms.noclip_multiple_next", "noclip-ed %1$s entities next Level", entities.size())
+			context.getSource().sendFeedback(() -> Text.translatableWithFallback(
+			  "message.vanilla_backrooms.noclip_multiple_next", "noclip-ed %1$s entities next Level", entities.size()
+			), true
 			);
-			return 1;
+			return 0;
 		}
 
 		context.getSource().sendError(
 		  Text.translatableWithFallback("message.vanilla_backrooms.noclip_multiple_failed", "Failed to noclip some entities")
 		);
-		return -2;
+		return 1;
 	}
 
 	private static int noclipEntitiesLevel(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -144,15 +145,16 @@ public class ModCommands {
 		}
 
 		if (successful) {
-			context.getSource().sendError(Text.translatableWithFallback(
-			  "message.vanilla_backrooms.noclip_multiple_to", "noclip-ed %1$s entities to Level %2$s", entities.size(), targetWorld.getRegistryKey().getValue().toString())
+			context.getSource().sendFeedback(() -> Text.translatableWithFallback(
+			  "message.vanilla_backrooms.noclip_multiple_to", "noclip-ed %1$s entities to Level %2$s", entities.size(), targetWorld.getRegistryKey().getValue().toString()
+			  ), true
 			);
-			return 1;
+			return 0;
 		}
 
 		context.getSource().sendError(
 		  Text.translatableWithFallback("message.vanilla_backrooms.noclip_multiple_failed", "Failed to noclip some entities")
 		);
-		return -2;
+		return 1;
 	}
 }

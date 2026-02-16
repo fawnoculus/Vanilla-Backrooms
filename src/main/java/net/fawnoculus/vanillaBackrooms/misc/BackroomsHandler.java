@@ -256,9 +256,9 @@ public class BackroomsHandler {
 				}
 			}
 
-			ServerPlayerEntity.Respawn respawn =  permanentCustomData.get("outOfBackroomsRespawn", ServerPlayerEntity.Respawn.CODEC).orElseGet(() ->
-			  new ServerPlayerEntity.Respawn(server.getOverworld().getRegistryKey(), server.getOverworld().getSpawnPos(), server.getOverworld().getSpawnAngle(), true)
-			);
+			ServerPlayerEntity.Respawn respawn =  permanentCustomData.get("outOfBackroomsRespawn", ServerPlayerEntity.Respawn.CODEC)
+			  .filter(value -> !BackroomsLevel.isLevel(value.dimension().getValue()))
+			  .orElseGet(() -> new ServerPlayerEntity.Respawn(server.getOverworld().getRegistryKey(), server.getOverworld().getSpawnPos(), server.getOverworld().getSpawnAngle(), true));
 			player.setSpawnPoint(respawn, false);
 			player.teleportTo(player.getRespawnTarget(false, TeleportTarget.NO_OP));
 

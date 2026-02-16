@@ -66,7 +66,7 @@ public record BackroomsLevel(int number, String name, Vec3d spawnBlock, Backroom
 
 		builder(4)
 		  .setName("Abandoned Office")
-		  .setSpawnBlock(new Vec3d(30.5, 2, 11.5))
+		  .setSpawnBlock(new Vec3d(17, 1, 36))
 		  .setGenerator(RingBackroomsGenerator.builder(true)
 			.addStructure(0, "level_4/start")
 			.build()
