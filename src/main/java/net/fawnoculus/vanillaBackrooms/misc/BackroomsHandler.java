@@ -2,7 +2,6 @@ package net.fawnoculus.vanillaBackrooms.misc;
 
 import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
 import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
-import net.fawnoculus.vanillaBackrooms.blocks.ModBlocks;
 import net.fawnoculus.vanillaBackrooms.blocks.entities.BackroomsGeneratorBE;
 import net.fawnoculus.vanillaBackrooms.levels.BackroomsLevel;
 import net.fawnoculus.vanillaBackrooms.util.PlayerUtil;
@@ -42,10 +41,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 // This entire class is a huge mess,
 // but it handles so many things that re-writing would take to long
@@ -185,18 +181,8 @@ public class BackroomsHandler {
 			}
 		}
 
-
-		if (BackroomsGeneratorBE.shouldPlaceSegment(world, BlockPos.ORIGIN)) {
-			try {
-				level.generator().placeBackroomsSegment(world, BlockPos.ORIGIN);
-			} catch (Throwable throwable) {
-				VanillaBackrooms.LOGGER.error("Failed to generate center segment for backrooms level ({})", targetDimension.getValue(), throwable);
-				return false;
-			}
-			world.setBlockState(BlockPos.ORIGIN, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
-		}
-
-		Vec3d spawnPos = level.spawnBlock();
+		BackroomsGeneratorBE.tryPlaceSegment(world, BlockPos.ORIGIN, level.generator())
+		  .ifPresent(throwable -> VanillaBackrooms.LOGGER.error("Failed to generate center segment for backrooms level ({})", targetDimension.getValue(), throwable));
 
 		if (VanillaBackroomsConfig.CLEAR_INV.getValue()
 		  && targetDimension.getValue().equals(getLevelId(0))
@@ -218,6 +204,8 @@ public class BackroomsHandler {
 		}
 
 		entity.fallDistance = 0;
+
+		Vec3d spawnPos = level.spawnBlock();
 		entity.teleport(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), entity.getYaw(), entity.getPitch(), false);
 
 		if (entity instanceof ServerPlayerEntity player) {

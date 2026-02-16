@@ -11,5 +11,5 @@ public interface BackroomsGenerator {
 	BackroomsGenerator NO_GENERATOR = (world, pos) -> {
 	};
 
-	void placeBackroomsSegment(ServerWorld world, BlockPos pos);
+	void placeBackroomsSegment(ServerWorld world, BlockPos pos) throws RuntimeException;
 }

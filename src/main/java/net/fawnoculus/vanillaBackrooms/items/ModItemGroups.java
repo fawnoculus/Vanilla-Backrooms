@@ -71,7 +71,7 @@ public class ModItemGroups {
 
 			itemGroup.add(lootChest(ModLootTables.LEVEL_4_COMMON, Text.translatableWithFallback("tooltip.vanilla_backrooms.chest.level_4_common", "Level 4 Common")));
 			itemGroup.add(lootChest(ModLootTables.LEVEL_4_RARE, Text.translatableWithFallback("tooltip.vanilla_backrooms.chest.level_4_rare", "Level 4 Rare")));
-			itemGroup.add(lootChest(ModLootTables.LEVEL_4_RARE, Text.translatableWithFallback("tooltip.vanilla_backrooms.chest.level_4_lucky_o_milk", "Level 4 Lucky O' Milk")));
+			itemGroup.add(lootChest(ModLootTables.LEVEL_4_LUCKY_O_MILK, Text.translatableWithFallback("tooltip.vanilla_backrooms.chest.level_4_lucky_o_milk", "Level 4 Lucky O' Milk")));
 
 			itemGroup.add(lootChest(ModLootTables.LEVEL_5_COMMON, Text.translatableWithFallback("tooltip.vanilla_backrooms.chest.level_5_common", "Level 5 Common")));
 			itemGroup.add(lootChest(ModLootTables.LEVEL_5_RARE, Text.translatableWithFallback("tooltip.vanilla_backrooms.chest.level_5_rare", "Level 5 Rare")));

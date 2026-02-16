@@ -20,7 +20,6 @@ import net.minecraft.util.math.random.ChunkRandom;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public record RingBackroomsGenerator(
   boolean rotateStructures,
@@ -33,12 +32,9 @@ public record RingBackroomsGenerator(
 
 
 	@Override
-	public void placeBackroomsSegment(ServerWorld world, BlockPos pos) {
+	public void placeBackroomsSegment(ServerWorld world, BlockPos pos) throws RuntimeException {
 		Registry<StructurePool> registry = world.getRegistryManager().getOrThrow(RegistryKeys.TEMPLATE_POOL);
-		Optional<RegistryEntry.Reference<StructurePool>> registryEntry = registry.getOptional(this.poolFromPos(pos));
-		if (registryEntry.isEmpty()) {
-			return;
-		}
+		RegistryEntry.Reference<StructurePool> structurePool = registry.getOrThrow(this.poolFromPos(pos));
 
 		BlockRotation rotation = BlockRotation.NONE;
 
@@ -52,7 +48,7 @@ public record RingBackroomsGenerator(
 			rotation = BlockRotation.random(chunkRandom);
 		}
 
-		placeSegmentWithRotation(world, pos, registryEntry.get(), rotation);
+		placeSegmentWithRotation(world, pos, structurePool, rotation);
 	}
 
 	private void placeSegmentWithRotation(

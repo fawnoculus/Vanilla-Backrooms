@@ -17,8 +17,6 @@ import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.random.CheckedRandom;
 import net.minecraft.util.math.random.ChunkRandom;
 
-import java.util.Optional;
-
 public class Level1Generator implements BackroomsGenerator {
 	private static final RegistryKey<StructurePool> START = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/start"));
 	private static final RegistryKey<StructurePool> PARKING = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/parking"));
@@ -34,14 +32,11 @@ public class Level1Generator implements BackroomsGenerator {
 	private static final RegistryKey<StructurePool> RING_4 = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/ring4"));
 
 	@Override
-	public void placeBackroomsSegment(ServerWorld world, BlockPos pos) {
+	public void placeBackroomsSegment(ServerWorld world, BlockPos pos) throws RuntimeException {
 		Pair<BlockRotation, RegistryKey<StructurePool>> structure = getStructure(world, pos);
 
 		Registry<StructurePool> registry = world.getRegistryManager().getOrThrow(RegistryKeys.TEMPLATE_POOL);
-		Optional<RegistryEntry.Reference<StructurePool>> registryEntry = registry.getOptional(structure.getRight());
-		if (registryEntry.isEmpty()) {
-			return;
-		}
+		RegistryEntry.Reference<StructurePool> structurePool = registry.getOrThrow(structure.getRight());
 
 		int xOffset = 0;
 		int zOffset = 0;
@@ -61,7 +56,7 @@ public class Level1Generator implements BackroomsGenerator {
 
 		MixinUtil.setRandomBlockRotationOverride(structure.getLeft());
 
-		boolean success = StructurePoolBasedGenerator.generate(world, registryEntry.get(), STRUCTURE_START, 20, placementPos, false);
+		boolean success = StructurePoolBasedGenerator.generate(world, structurePool, STRUCTURE_START, 20, placementPos, false);
 
 		if (!success) {
 			VanillaBackrooms.LOGGER.warn("Failed to generate backrooms segment");
