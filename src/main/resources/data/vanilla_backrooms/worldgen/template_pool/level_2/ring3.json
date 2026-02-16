@@ -182,7 +182,7 @@
 			}
 		},
 		{
-			"weight": 16,
+			"weight": 64,
 			"element": {
 				"location": "vanilla_backrooms:level_2/exit",
 				"processors": "minecraft:empty",

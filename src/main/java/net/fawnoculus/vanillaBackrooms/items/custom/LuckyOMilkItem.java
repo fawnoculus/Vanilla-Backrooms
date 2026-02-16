@@ -4,10 +4,7 @@ import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.ReferenceSortedSets;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ConsumableComponents;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.component.type.PotionContentsComponent;
-import net.minecraft.component.type.TooltipDisplayComponent;
+import net.minecraft.component.type.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -39,6 +36,7 @@ public abstract class LuckyOMilkItem extends Item implements PolymerItem {
 		  ))
 		  .component(DataComponentTypes.TOOLTIP_DISPLAY, new TooltipDisplayComponent(false, ReferenceSortedSets.singleton(DataComponentTypes.POTION_CONTENTS)))
 		  .component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK)
+		  .component(DataComponentTypes.FOOD, new FoodComponent(1, 1.5f, true))
 		  .useRemainder(Items.GLASS_BOTTLE)
 		  .component(DataComponentTypes.LORE, new LoreComponent(flavour.makeTooltip()))
 		);

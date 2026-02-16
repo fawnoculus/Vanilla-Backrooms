@@ -24,7 +24,7 @@ public class BerryMatchaBlast extends Item implements PolymerItem {
 	public BerryMatchaBlast(@NotNull Settings settings) {
 		super(settings
 		  .component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK)
-		  .useRemainder(Items.GLASS_BOTTLE)
+		  .useRemainder(Items.BOWL)
 		);
 	}
 

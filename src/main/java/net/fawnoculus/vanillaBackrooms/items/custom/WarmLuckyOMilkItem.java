@@ -75,6 +75,8 @@ public class WarmLuckyOMilkItem extends LuckyOMilkItem {
 			  user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 5 * 60 * 20, 0, false, false, true));
 			case CHOCO ->
 			  user.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 30 * 20, 0, false, false, true));
+			case MATCHA ->
+			  user.addStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 2 * 30 * 20, 0, false, false, true));
 			case LUCK ->
 			  user.addStatusEffect(new StatusEffectInstance(StatusEffects.LUCK, 15 * 60 * 20, 4, false, false, true));
 		}
