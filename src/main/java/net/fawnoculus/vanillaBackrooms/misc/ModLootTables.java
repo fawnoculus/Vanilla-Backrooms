@@ -22,6 +22,7 @@ public class ModLootTables {
 
 	public static final RegistryKey<LootTable> LEVEL_4_COMMON = of("level_4_common");
 	public static final RegistryKey<LootTable> LEVEL_4_RARE = of("level_4_rare");
+	public static final RegistryKey<LootTable> LEVEL_4_LUCKY_O_MILK = of("level_4_lucky_o_milk");
 
 	public static final RegistryKey<LootTable> LEVEL_5_COMMON = of("level_5_common");
 	public static final RegistryKey<LootTable> LEVEL_5_RARE = of("level_5_rare");

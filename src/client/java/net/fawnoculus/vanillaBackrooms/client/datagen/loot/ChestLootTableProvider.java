@@ -162,13 +162,13 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
 
 		lootTable.accept(ModLootTables.LEVEL_0_EPIC, LootTable.builder()
 		  .pool(LootPool.builder()
-			.rolls(UniformLootNumberProvider.create(0f, 2f))
+			.rolls(UniformLootNumberProvider.create(1f, 2f))
 			.with(ItemEntry.builder(ModItems.ALMOND_WATTER)
 			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(2f, 4f)))
 			)
 		  )
 		  .pool(LootPool.builder()
-			.rolls(UniformLootNumberProvider.create(0f, 1f))
+			.rolls(UniformLootNumberProvider.create(3f, 5f))
 			.with(ItemEntry.builder(Items.BAKED_POTATO)
 			  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1f, 14f)))
 			)
@@ -189,7 +189,7 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
 			)
 		  )
 		  .pool(LootPool.builder()
-			.rolls(UniformLootNumberProvider.create(0f, 2f))
+			.rolls(UniformLootNumberProvider.create(1f, 2f))
 			.with(ItemEntry.builder(Items.SHIELD)
 			  .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
 			)
@@ -494,6 +494,37 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
 		);
 
 		lootTable.accept(ModLootTables.LEVEL_4_RARE, LootTable.builder()
+		);
+
+		lootTable.accept(ModLootTables.LEVEL_4_LUCKY_O_MILK, LootTable.builder()
+		  .pool(LootPool.builder()
+			.rolls(UniformLootNumberProvider.create(2f, 16f))
+			.with(ItemEntry.builder(ModItems.COLD_PLAIN_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_PLAIN_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_PLAIN_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_PLAIN_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_PLAIN_LUCKY_O_MILK))
+
+			.with(ItemEntry.builder(ModItems.COLD_STRAWBERRY_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_STRAWBERRY_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_STRAWBERRY_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_STRAWBERRY_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_STRAWBERRY_LUCKY_O_MILK))
+
+			.with(ItemEntry.builder(ModItems.COLD_CHOCO_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_CHOCO_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_CHOCO_LUCKY_O_MILK))
+
+			.with(ItemEntry.builder(ModItems.COLD_MATCHA_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_MATCHA_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_MATCHA_LUCKY_O_MILK))
+
+			.with(ItemEntry.builder(ModItems.COLD_BANANA_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_BANANA_LUCKY_O_MILK))
+			.with(ItemEntry.builder(ModItems.COLD_BANANA_LUCKY_O_MILK))
+
+			.with(ItemEntry.builder(ModItems.COLD_LUCK_LUCKY_O_MILK))
+		  )
 		);
 
 		lootTable.accept(ModLootTables.LEVEL_5_COMMON, LootTable.builder()

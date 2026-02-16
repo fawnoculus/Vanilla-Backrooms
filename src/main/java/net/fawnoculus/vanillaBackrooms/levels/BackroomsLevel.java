@@ -34,14 +34,14 @@ public record BackroomsLevel(int number, String name, Vec3d spawnBlock, Backroom
 		  ).register();
 
 		builder(1)
-		  .setSpawnBlock(new Vec3d(28.5, 14, 23.5))
 		  .setName("Habitable Zone")
+		  .setSpawnBlock(new Vec3d(28.5, 14, 23.5))
 		  .setGenerator(new Level1Generator())
 		  .register();
 
 		builder(2)
-		  .setSpawnBlock(new Vec3d(17.5, 2, 26.5))
 		  .setName("Abandoned Utility Halls")
+		  .setSpawnBlock(new Vec3d(17.5, 2, 26.5))
 		  .setGenerator(RingBackroomsGenerator.builder(false)
 			.addStructure(800, "level_2/ring4")
 			.addStructure(600, "level_2/ring3")
@@ -62,6 +62,7 @@ public record BackroomsLevel(int number, String name, Vec3d spawnBlock, Backroom
 
 		builder(4)
 		  .setName("Abandoned Office")
+		  .setSpawnBlock(new Vec3d(30.5, 2, 11.5))
 		  .setGenerator(RingBackroomsGenerator.builder(true)
 			.addStructure(0, "level_4/start")
 			.build()
