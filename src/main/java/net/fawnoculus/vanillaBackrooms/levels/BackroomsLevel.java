@@ -74,11 +74,14 @@ public record BackroomsLevel(int number, String name, Vec3d spawnBlock, Backroom
 
 		builder(5)
 		  .setName("Terror Hotel")
-		  .register();
+		  .setGenerator(RingBackroomsGenerator.builder(true)
+			.addStructure(0, "level_4/start")
+			.build()
+		  ).register();
 	}
 
 	public static boolean isLevel(Identifier worldId) {
-		return LEVELS.get(worldId) != null;
+		return LEVELS.containsKey(worldId);
 	}
 
 	public static @Nullable BackroomsLevel getLevel(Identifier worldId) {

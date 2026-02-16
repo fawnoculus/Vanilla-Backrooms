@@ -20,16 +20,16 @@ import net.minecraft.util.math.random.ChunkRandom;
 public class Level1Generator implements BackroomsGenerator {
 	private static final RegistryKey<StructurePool> START = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/start"));
 	private static final RegistryKey<StructurePool> PARKING = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/parking"));
-	private static final int RING_0_DISTANCE = 1;
 	private static final RegistryKey<StructurePool> RING_0 = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/ring0"));
-	private static final int RING_1_DISTANCE = 200 * 200;
 	private static final RegistryKey<StructurePool> RING_1 = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/ring1"));
-	private static final int RING_2_DISTANCE = 400 * 400;
 	private static final RegistryKey<StructurePool> RING_2 = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/ring2"));
-	private static final int RING_3_DISTANCE = 600 * 600;
 	private static final RegistryKey<StructurePool> RING_3 = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/ring3"));
-	private static final int RING_4_DISTANCE = 800 * 800;
 	private static final RegistryKey<StructurePool> RING_4 = RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id("level_1/ring4"));
+	private static final int RING_0_DISTANCE = 1;
+	private static final int RING_1_DISTANCE = 200 * 200;
+	private static final int RING_2_DISTANCE = 400 * 400;
+	private static final int RING_3_DISTANCE = 600 * 600;
+	private static final int RING_4_DISTANCE = 800 * 800;
 
 	@Override
 	public void placeBackroomsSegment(ServerWorld world, BlockPos pos) throws RuntimeException {
