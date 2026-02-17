@@ -2,10 +2,7 @@ package net.fawnoculus.vanillaBackrooms.items;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
-import net.fawnoculus.vanillaBackrooms.items.custom.AlmondWatterItem;
-import net.fawnoculus.vanillaBackrooms.items.custom.BerryMatchaBlast;
-import net.fawnoculus.vanillaBackrooms.items.custom.ColdLuckyOMilkItem;
-import net.fawnoculus.vanillaBackrooms.items.custom.WarmLuckyOMilkItem;
+import net.fawnoculus.vanillaBackrooms.items.custom.*;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -33,6 +30,8 @@ public class ModItems {
 	public static final Item WARM_LUCK_LUCKY_O_MILK = register("warm_luck_lucky_o_milk", WarmLuckyOMilkItem::luck, new Item.Settings());
 
 	public static final Item BERRY_MATCHA_BLAST = register("berry_matcha_blast", BerryMatchaBlast::new, new Item.Settings());
+
+	public static final Item LEVEL_KEY = register("level_key", LevelKeyItem::new, new Item.Settings());
 
 	public static @NotNull Item register(@NotNull String name, @NotNull Function<Item.Settings, Item> itemFactory, @NotNull Item.Settings settings) {
 		RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, VanillaBackrooms.id(name));

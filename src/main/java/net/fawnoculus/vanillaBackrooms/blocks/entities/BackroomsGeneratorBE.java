@@ -11,6 +11,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -33,15 +34,15 @@ public class BackroomsGeneratorBE extends BlockEntity {
 		}
 
 		try {
-			generator.placeBackroomsSegment(world, pos.add(0, 0, HORIZONTAL_OFFSET));
-			world.setBlockState(pos.add(0, 0, HORIZONTAL_OFFSET), ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
+			generator.placeBackroomsSegment(world, pos);
+			world.setBlockState(pos, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
 			return Optional.empty();
 		} catch (Throwable throwable) {
 			return Optional.of(throwable);
 		}
 	}
 
-	public static boolean shouldPlaceSegment(ServerWorld world, BlockPos pos) {
+	public static boolean shouldPlaceSegment(@NotNull ServerWorld world, BlockPos pos) {
 		Block block = world.getBlockState(pos).getBlock();
 		return block != ModBlocks.FINISHED_BACKROOMS_GENERATOR && block != ModBlocks.BACKROOMS_GENERATOR;
 	}

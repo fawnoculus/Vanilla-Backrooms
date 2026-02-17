@@ -56,7 +56,7 @@ public class ModCommands {
 	}
 
 	private static int reloadConfig(CommandContext<ServerCommandSource> context) {
-		context.getSource().sendFeedback(() -> Text.translatableWithFallback("message.vanilla_backrooms.reloading_config", "Reloading Config"), true);
+		context.getSource().sendFeedback(() -> Text.translatableWithFallback("message.vanilla_backrooms.reloading_config", "Reloading vanilla-backrooms config"), true);
 		VanillaBackroomsConfig.FILE.readFile();
 		return 1;
 	}
@@ -64,7 +64,7 @@ public class ModCommands {
 	private static int noclip(CommandContext<ServerCommandSource> context) {
 		ServerPlayerEntity player = context.getSource().getPlayer();
 		if (player == null) {
-			context.getSource().sendError(Text.translatableWithFallback("message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a Player"));
+			context.getSource().sendError(Text.translatableWithFallback("message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a player"));
 			return 1;
 		}
 
@@ -72,7 +72,7 @@ public class ModCommands {
 
 		if (successful) {
 			context.getSource().sendFeedback(
-			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_next", "noclip-ed to next Level"), true
+			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_next", "Noclip-ed to next level"), true
 			);
 			return 0;
 		}
@@ -89,7 +89,7 @@ public class ModCommands {
 		ServerPlayerEntity player = context.getSource().getPlayer();
 		if (player == null) {
 			context.getSource().sendError(Text.translatableWithFallback(
-			  "message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a Player")
+			  "message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a player")
 			);
 			return 1;
 		}
@@ -98,7 +98,7 @@ public class ModCommands {
 
 		if (successful) {
 			context.getSource().sendFeedback(
-			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_to", "noclip-ed to Level %1$s", targetWorld.getRegistryKey().getValue().toString()), true
+			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_to", "Noclip-ed to level %1$s", targetWorld.getRegistryKey().getValue().toString()), true
 			);
 			return 0;
 		}
@@ -121,7 +121,7 @@ public class ModCommands {
 
 		if (successful) {
 			context.getSource().sendFeedback(() -> Text.translatableWithFallback(
-			  "message.vanilla_backrooms.noclip_multiple_next", "noclip-ed %1$s entities next Level", entities.size()
+			  "message.vanilla_backrooms.noclip_multiple_next", "Noclip-ed %1$s entities next level", entities.size()
 			), true
 			);
 			return 0;
@@ -146,7 +146,7 @@ public class ModCommands {
 
 		if (successful) {
 			context.getSource().sendFeedback(() -> Text.translatableWithFallback(
-			  "message.vanilla_backrooms.noclip_multiple_to", "noclip-ed %1$s entities to Level %2$s", entities.size(), targetWorld.getRegistryKey().getValue().toString()
+			  "message.vanilla_backrooms.noclip_multiple_to", "Noclip-ed %1$s entities to level %2$s", entities.size(), targetWorld.getRegistryKey().getValue().toString()
 			  ), true
 			);
 			return 0;

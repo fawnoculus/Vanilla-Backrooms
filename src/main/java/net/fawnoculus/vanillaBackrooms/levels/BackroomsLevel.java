@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public record BackroomsLevel(int number, String name, Vec3d spawnBlock, BackroomsGenerator generator) {
+public record BackroomsLevel(int number, String name, Vec3d spawnPos, BackroomsGenerator generator) {
 	private static final Map<Identifier, BackroomsLevel> LEVELS = new HashMap<>();
 
 	public static void initialize() {
@@ -75,7 +75,7 @@ public record BackroomsLevel(int number, String name, Vec3d spawnBlock, Backroom
 		builder(5)
 		  .setName("Terror Hotel")
 		  .setGenerator(RingBackroomsGenerator.builder(true)
-			.addStructure(0, "level_4/start")
+			.addStructure(0, "level_5/start")
 			.build()
 		  ).register();
 	}

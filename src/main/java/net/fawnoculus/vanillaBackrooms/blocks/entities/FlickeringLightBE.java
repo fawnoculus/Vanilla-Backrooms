@@ -47,7 +47,7 @@ public class FlickeringLightBE extends BlockEntity {
 		player.sendMessage(
 		  Text.translatableWithFallback(
 			"message.vanilla_backrooms.flicker_chance",
-			"Flicker Chance: 1/%1$s (%2$s%%) pro Tick",
+			"Flicker chance: 1/%1$s (%2$s%%) pro tick",
 			this.flickerChance + 1,
 			String.format("%1$#.2f", 100.0 / (this.flickerChance + 1))
 		  ), true

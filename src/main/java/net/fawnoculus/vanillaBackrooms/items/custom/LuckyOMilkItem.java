@@ -86,29 +86,29 @@ public abstract class LuckyOMilkItem extends Item implements PolymerItem {
 		public @NotNull @Unmodifiable List<Text> makeTooltip() {
 			if (key != null && text != null) {
 				return List.of(
-				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_1", "It's Label reads:").formatted(Formatting.WHITE),
-				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_2", "Ingredients:").formatted(Formatting.GRAY),
-				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_3", "Soybeans 100%").formatted(Formatting.GRAY),
-				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_4", "Sugars 0%").formatted(Formatting.GRAY),
-				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_5", "Natural preservatives: 300%").formatted(Formatting.GRAY),
-				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_6", "Artificial Flavourings/Colourings: 0%").formatted(Formatting.GRAY),
+				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_1", "It's Label reads:").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.WHITE)),
+				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_2", "Ingredients:").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
+				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_3", "Soybeans 100%").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
+				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_4", "Sugars 0%").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
+				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_5", "Natural preservatives: 300%").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
+				  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_6", "Artificial Flavourings/Colourings: 0%").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
 				  Text.empty(),
-				  Text.literal("\"").formatted(Formatting.GRAY)
-					.append(Text.translatableWithFallback(this.key, this.text).formatted(Formatting.GRAY))
-					.append(Text.literal("\"").formatted(Formatting.GRAY))
-					.append(Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_ingrained", " is ingrained in it's Label").formatted(Formatting.WHITE))
+				  Text.literal("\"").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY))
+					.append(Text.translatableWithFallback(this.key, this.text).setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)))
+					.append(Text.literal("\"").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)))
+					.append(Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_ingrained", " is ingrained in it's Label").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.WHITE)))
 				);
 			}
 
 			return List.of(
-			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_1", "It's Label reads:").formatted(Formatting.WHITE),
-			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_2", "Ingredients:").formatted(Formatting.GRAY),
-			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_3", "Soybeans 100%").formatted(Formatting.GRAY),
-			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_4", "Sugars 0%").formatted(Formatting.GRAY),
-			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_5", "Natural preservatives: 300%").formatted(Formatting.GRAY),
-			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_6", "Artificial Flavourings/Colourings: 0%").formatted(Formatting.GRAY),
+			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_1", "It's Label reads:").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.WHITE)),
+			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_2", "Ingredients:").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
+			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_3", "Soybeans 100%").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
+			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_4", "Sugars 0%").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
+			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_5", "Natural preservatives: 300%").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
+			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_6", "Artificial Flavourings/Colourings: 0%").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.GRAY)),
 			  Text.empty(),
-			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_not_ingrained", "There is no text ingrained on it's Label").formatted(Formatting.WHITE)
+			  Text.translatableWithFallback("tooltip.vanilla_backrooms.lucky_o_milk.label_not_ingrained", "There is no text ingrained on it's Label").setStyle(Style.EMPTY.withItalic(false).withFormatting(Formatting.WHITE))
 			);
 		}
 	}

@@ -41,14 +41,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 // This entire class is a huge mess,
 // but it handles so many things that re-writing would take to long
-public class BackroomsHandler {
+public final class BackroomsHandler {
+	private BackroomsHandler() {
+	}
+
 	@Contract("_ -> new")
 	public static @NotNull Identifier getLevelId(int levelNumber) {
 		return VanillaBackrooms.id("level_" + levelNumber);
@@ -155,6 +155,10 @@ public class BackroomsHandler {
 		onExitBackrooms(entity);
 	}
 
+	public static boolean isInBackrooms(Entity entity) {
+		return BackroomsLevel.isLevel(entity.getWorld().getRegistryKey().getValue());
+	}
+
 	public static boolean noclip(MinecraftServer server, Entity entity) {
 		entity.detach();
 		RegistryKey<World> nextDimension = getNextDimension(entity.getWorld().getRegistryKey(), new Random());
@@ -184,18 +188,30 @@ public class BackroomsHandler {
 			}
 		}
 
-		BackroomsGeneratorBE.tryPlaceSegment(world, BlockPos.ORIGIN, level.generator())
-		  .ifPresent(throwable -> VanillaBackrooms.LOGGER.error("Failed to generate center segment for backrooms level ({})", targetDimension.getValue(), throwable));
+		Optional<Throwable> error = BackroomsGeneratorBE.tryPlaceSegment(world, BlockPos.ORIGIN, level.generator());
+		if (error.isPresent()) {
+			VanillaBackrooms.LOGGER.error("Failed to generate center segment for backrooms level {}", targetDimension.getValue(), error.get());
+			return false;
+		}
 
-		if (VanillaBackroomsConfig.CLEAR_INV.getValue()
-		  && targetDimension.getValue().equals(getLevelId(0))
-		  && entity instanceof ServerPlayerEntity player
-		) {
-			try {
-				savePlayerData(player);
-			} catch (Exception e) {
-				VanillaBackrooms.LOGGER.error("Failed to save Player Data for Player '{}', they will not be noclipped", player.getGameProfile().getName());
-				return false;
+		Vec3d spawnPos = level.spawnPos();
+
+		if (entity instanceof ServerPlayerEntity player) {
+			if (VanillaBackroomsConfig.CLEAR_INV.getValue()
+			  && !isInBackrooms(entity) // make sure the player wasn't already in the backrooms before
+			  && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE)
+			) {
+				try {
+					savePlayerData(player);
+				} catch (Exception e) {
+					VanillaBackrooms.LOGGER.error("Failed to save Player Data for Player '{}', they will not be noclipped", player.getGameProfile().getName());
+					return false;
+				}
+			}
+
+			if (VanillaBackroomsConfig.ANNOUNCE_LEVEL.getValue()) {
+				player.networkHandler.sendPacket(new TitleS2CPacket(Text.literal(level.levelName())));
+				player.networkHandler.sendPacket(new SubtitleS2CPacket(Text.literal(level.name())));
 			}
 
 			ServerPlayerEntity.Respawn respawn = player.getRespawn();
@@ -204,30 +220,17 @@ public class BackroomsHandler {
 				permanentCustomData.put("outOfBackroomsRespawn", ServerPlayerEntity.Respawn.CODEC, respawn);
 				PlayerUtil.setPermanentCustomData(player, permanentCustomData);
 			}
-		}
-
-		entity.fallDistance = 0;
-
-		Vec3d spawnPos = level.spawnBlock();
-		entity.teleport(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), entity.getYaw(), entity.getPitch(), false);
-
-		if (entity instanceof ServerPlayerEntity player) {
-			if (VanillaBackroomsConfig.ANNOUNCE_LEVEL.getValue()) {
-				player.networkHandler.sendPacket(new TitleS2CPacket(Text.literal(level.levelName())));
-				player.networkHandler.sendPacket(new SubtitleS2CPacket(Text.literal(level.name())));
-			}
 
 			player.setSpawnPoint(new ServerPlayerEntity.Respawn(world.getRegistryKey(), BlockPos.ofFloored(spawnPos), world.getSpawnAngle(), true), false);
 		}
+
+		entity.fallDistance = 0;
+		entity.teleport(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), entity.getYaw(), entity.getPitch(), false);
 
 		return true;
 	}
 
 	private static void exitBackrooms(MinecraftServer server, Entity entity, RegistryKey<World> targetWorld) {
-		if (!onExitBackrooms(entity)) {
-			return;
-		}
-
 		if (entity instanceof ServerPlayerEntity player) {
 			NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
 			if (permanentCustomData.getBoolean("hasSavedData", false)) {
@@ -247,7 +250,7 @@ public class BackroomsHandler {
 				}
 			}
 
-			ServerPlayerEntity.Respawn respawn =  permanentCustomData.get("outOfBackroomsRespawn", ServerPlayerEntity.Respawn.CODEC)
+			ServerPlayerEntity.Respawn respawn = permanentCustomData.get("outOfBackroomsRespawn", ServerPlayerEntity.Respawn.CODEC)
 			  .filter(value -> !BackroomsLevel.isLevel(value.dimension().getValue()))
 			  .orElseGet(() -> new ServerPlayerEntity.Respawn(server.getOverworld().getRegistryKey(), server.getOverworld().getSpawnPos(), server.getOverworld().getSpawnAngle(), true));
 			player.setSpawnPoint(respawn, false);
@@ -303,7 +306,7 @@ public class BackroomsHandler {
 		}
 	}
 
-	private static boolean onExitBackrooms(Entity entity) {
+	private static void onExitBackrooms(Entity entity) {
 		NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
 		customData.remove("isInBackrooms");
 		CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(customData);
@@ -311,7 +314,7 @@ public class BackroomsHandler {
 		if (entity instanceof ItemEntity item && item.getStack().getRegistryEntry().isIn(VanillaBackroomsConfig.BACKROOMS_NOT_RETURN.getValue())) {
 			item.kill((ServerWorld) item.getWorld());
 			item.discard();
-			return false;
+			return;
 		}
 
 		if (entity instanceof InventoryOwner owner) {
@@ -341,8 +344,6 @@ public class BackroomsHandler {
 			permanentCustomData.remove("isInBackrooms");
 			PlayerUtil.setPermanentCustomData(player, permanentCustomData);
 		}
-
-		return true;
 	}
 
 	public static RegistryKey<World> getNextDimension(RegistryKey<World> previousDimension, Random random) {

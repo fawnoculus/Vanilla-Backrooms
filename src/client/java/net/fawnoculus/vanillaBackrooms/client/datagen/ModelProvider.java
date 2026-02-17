@@ -34,5 +34,7 @@ public class ModelProvider extends FabricModelProvider {
 		itemModelGenerator.register(ModItems.WARM_LUCK_LUCKY_O_MILK);
 
 		itemModelGenerator.register(ModItems.BERRY_MATCHA_BLAST);
+
+		itemModelGenerator.register(ModItems.LEVEL_KEY);
 	}
 }

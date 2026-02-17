@@ -51,6 +51,7 @@ public class PlayerUtil {
 
 	/**
 	 * Returns Custom Data that stays the same even if the player dies
+	 * (If you set values in the NbtCompound you must also use {@link PlayerUtil#setPermanentCustomData(ServerPlayerEntity, NbtCompound)} for the custom data to actually stay)
 	 */
 	public static NbtCompound getPermanentCustomData(@NotNull ServerPlayerEntity player) {
 		if (DATA_CACHE.containsKey(player.getUuid())) {
