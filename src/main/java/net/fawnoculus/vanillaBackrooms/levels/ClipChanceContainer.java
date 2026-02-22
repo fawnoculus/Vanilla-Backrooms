@@ -34,7 +34,7 @@ public record ClipChanceContainer(Map<Identifier, ClipChance> clipChances) {
           .build();
 
         ImmutableMap<Identifier, Integer> level1Chances = new ImmutableMap.Builder<Identifier, Integer>()
-          .put(BackroomsHandler.getLevelId(2), 100)
+          .put(BackroomsHandler.getLevelId(2), 1)
           .build();
 
         ImmutableMap<Identifier, Integer> level2Chances = new ImmutableMap.Builder<Identifier, Integer>()
@@ -45,9 +45,7 @@ public record ClipChanceContainer(Map<Identifier, ClipChance> clipChances) {
           .build();
 
         ImmutableMap<Identifier, Integer> level3Chances = new ImmutableMap.Builder<Identifier, Integer>()
-          .put(BackroomsHandler.getLevelId(2), 5)
-          .put(BackroomsHandler.getLevelId(4), 200)
-          .put(BackroomsHandler.getLevelId(5), 10)
+          .put(BackroomsHandler.getLevelId(4), 1)
           .build();
 
         ImmutableMap<Identifier, Integer> level4Chances = new ImmutableMap.Builder<Identifier, Integer>()

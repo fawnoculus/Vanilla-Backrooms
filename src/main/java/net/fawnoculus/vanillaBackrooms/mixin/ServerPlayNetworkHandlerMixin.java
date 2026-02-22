@@ -1,8 +1,7 @@
 package net.fawnoculus.vanillaBackrooms.mixin;
 
 import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
-import net.fawnoculus.vanillaBackrooms.util.PlayerUtil;
-import net.minecraft.nbt.NbtCompound;
+import net.fawnoculus.vanillaBackrooms.misc.BackroomsHandler;
 import net.minecraft.network.packet.c2s.play.ChatCommandSignedC2SPacket;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
@@ -29,8 +28,7 @@ public class ServerPlayNetworkHandlerMixin {
             return;
         }
 
-        NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
-        if (customData.getBoolean("isInBackrooms", false)) {
+        if (BackroomsHandler.isInBackrooms(player)) {
             this.player.sendMessage(VanillaBackroomsConfig.DISABLE_CHAT_MESSAGE.getValue());
             ci.cancel();
         }
@@ -46,8 +44,7 @@ public class ServerPlayNetworkHandlerMixin {
             return;
         }
 
-        NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
-        if (customData.getBoolean("isInBackrooms", false)) {
+        if (BackroomsHandler.isInBackrooms(player)) {
             this.player.sendMessage(VanillaBackroomsConfig.DISABLE_COMMANDS_MESSAGE.getValue());
             ci.cancel();
         }
@@ -63,8 +60,7 @@ public class ServerPlayNetworkHandlerMixin {
             return;
         }
 
-        NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
-        if (customData.getBoolean("isInBackrooms", false)) {
+        if (BackroomsHandler.isInBackrooms(player)) {
             this.player.sendMessage(VanillaBackroomsConfig.DISABLE_COMMANDS_MESSAGE.getValue());
             ci.cancel();
         }

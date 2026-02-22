@@ -5,13 +5,10 @@ import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
 import net.fawnoculus.vanillaBackrooms.blocks.entities.BackroomsGeneratorBE;
 import net.fawnoculus.vanillaBackrooms.levels.BackroomsLevel;
 import net.fawnoculus.vanillaBackrooms.util.PlayerUtil;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
@@ -29,7 +26,6 @@ import net.minecraft.storage.NbtWriteView;
 import net.minecraft.storage.ReadView;
 import net.minecraft.text.Text;
 import net.minecraft.util.ErrorReporter;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -56,113 +52,6 @@ public final class BackroomsHandler {
 
     public static RegistryKey<World> getLevelKey(int levelNumber) {
         return RegistryKey.of(RegistryKeys.WORLD, getLevelId(levelNumber));
-    }
-
-    public static void onEntityDie(@NotNull LivingEntity entity, @NotNull ServerWorld world, @NotNull DamageSource ignored, float damage) {
-        if (VanillaBackroomsConfig.DEATH_NOCLIP.getValue().isFalse(world.getServer()) || damage < entity.getHealth()) {
-            return;
-        }
-
-        if (VanillaBackroomsConfig.DEATH_NOCLIP_ONLY_PLAYERS.getValue() && !(entity instanceof ServerPlayerEntity)) {
-            return;
-        }
-
-        if (!VanillaBackroomsConfig.DEATH_NOCLIP_IN_BACKROOMS.getValue() && BackroomsLevel.isLevel(world.getRegistryKey().getValue())) {
-            return;
-        }
-
-        for (Hand hand : Hand.values()) {
-            if (entity.getStackInHand(hand).get(DataComponentTypes.DEATH_PROTECTION) != null) {
-                return;
-            }
-        }
-
-        noclip(world.getServer(), entity);
-        entity.setHealth(entity.getHealth() + damage); // Make the entity have with enough health to survive
-    }
-
-    public static void onEntitySuffocate(@NotNull LivingEntity entity, @NotNull ServerWorld world, @NotNull DamageSource source, float ignored) {
-        NbtCompound data = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
-
-        if (VanillaBackroomsConfig.SUFFOCATION_NOCLIP.getValue().isFalse(world.getServer()) || !source.isOf(DamageTypes.IN_WALL)) {
-            data.remove("suffocationDamageTicks");
-            CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
-            return;
-        }
-
-        if (VanillaBackroomsConfig.SUFFOCATION_NOCLIP_ONLY_PLAYERS.getValue() && !(entity instanceof ServerPlayerEntity)) {
-            data.remove("suffocationDamageTicks");
-            CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
-            return;
-        }
-
-        if (!VanillaBackroomsConfig.SUFFOCATION_NOCLIP_IN_BACKROOMS.getValue() && BackroomsLevel.isLevel(world.getRegistryKey().getValue())) {
-            data.remove("suffocationDamageTicks");
-            CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
-            return;
-        }
-
-
-        int ticks = data.getInt("suffocationDamageTicks", 0);
-        ticks++;
-
-        if ((entity.getHealth() <= 4 && world.getRandom().nextBoolean())
-          || ticks >= world.getRandom().nextBetween(60, 100)
-        ) {
-            data.remove("suffocationDamageTicks");
-            CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
-
-            noclip(world.getServer(), entity);
-            return;
-        }
-
-        data.putInt("suffocationDamageTicks", ticks);
-        CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
-    }
-
-    public static void onEntityDimensionChanged(@NotNull Entity entity, @NotNull ServerWorld world) {
-        if (entity instanceof ServerPlayerEntity player) { // Players need special treatment, because they might have died, which would have reset their custom data
-            NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
-            boolean wasInBackrooms = permanentCustomData.getBoolean("isInBackrooms", false);
-            if (BackroomsLevel.isLevel(world.getRegistryKey().getValue())) {
-                if (wasInBackrooms) {
-                    return;
-                }
-
-                permanentCustomData.putBoolean("isInBackrooms", true);
-                PlayerUtil.setPermanentCustomData(player, permanentCustomData);
-
-                onEnterBackrooms(entity);
-                return;
-            }
-
-            if (!wasInBackrooms) return;
-            onExitBackrooms(entity);
-        }
-
-        NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
-        boolean wasInBackrooms = customData.getBoolean("isInBackrooms", false);
-
-        if (BackroomsLevel.isLevel(world.getRegistryKey().getValue())) {
-            if (wasInBackrooms) {
-                return;
-            }
-
-            customData.putBoolean("isInBackrooms", true);
-            CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(customData);
-
-            if (entity instanceof ServerPlayerEntity player) {
-                NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
-                permanentCustomData.putBoolean("isInBackrooms", true);
-                PlayerUtil.setPermanentCustomData(player, permanentCustomData);
-            }
-
-            onEnterBackrooms(entity);
-            return;
-        }
-
-        if (!wasInBackrooms) return;
-        onExitBackrooms(entity);
     }
 
     public static boolean isInBackrooms(Entity entity) {
@@ -240,7 +129,7 @@ public final class BackroomsHandler {
         return true;
     }
 
-    private static void exitBackrooms(MinecraftServer server, Entity entity, RegistryKey<World> targetWorld) {
+    public static void exitBackrooms(MinecraftServer server, Entity entity, RegistryKey<World> targetWorld) {
         if (entity instanceof ServerPlayerEntity player) {
             NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
             if (permanentCustomData.getBoolean("hasSavedData", false)) {
@@ -280,7 +169,15 @@ public final class BackroomsHandler {
         entity.teleport(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), world.getSpawnAngle(), 0, false);
     }
 
-    private static void onEnterBackrooms(Entity entity) {
+    /**
+     * Called when an entity enters the backrooms, not when they switch between different levels of the backrooms
+     * @param entity The entity that entered the backrooms
+     */
+    public static void onEnterBackrooms(Entity entity) {
+        NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
+        customData.putBoolean("isInBackrooms", true);
+        CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(customData);
+
         if (entity instanceof LivingEntity livingEntity) {
             livingEntity.setHealth(livingEntity.getMaxHealth());
         }
@@ -309,14 +206,10 @@ public final class BackroomsHandler {
                 player.setExperienceLevel(0);
                 player.setExperiencePoints(0);
             }
-
-            NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
-            permanentCustomData.putBoolean("isInBackrooms", true);
-            PlayerUtil.setPermanentCustomData(player, permanentCustomData);
         }
     }
 
-    private static void onExitBackrooms(Entity entity) {
+    public static void onExitBackrooms(Entity entity) {
         NbtCompound customData = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
         customData.remove("isInBackrooms");
         CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(customData);
@@ -345,14 +238,8 @@ public final class BackroomsHandler {
             }
         }
 
-        if (entity instanceof ServerPlayerEntity player) {
-            if (VanillaBackroomsConfig.DISABLE_XAERO_MINIMAP.getValue() || VanillaBackroomsConfig.XAERO_FAIR.getValue()) {
-                player.sendMessage(Text.literal("§r§e§s§e§t§x§a§e§r§o"));
-            }
-
-            NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
-            permanentCustomData.remove("isInBackrooms");
-            PlayerUtil.setPermanentCustomData(player, permanentCustomData);
+        if (entity instanceof ServerPlayerEntity player && (VanillaBackroomsConfig.DISABLE_XAERO_MINIMAP.getValue() || VanillaBackroomsConfig.XAERO_FAIR.getValue())) {
+            player.sendMessage(Text.literal("§r§e§s§e§t§x§a§e§r§o"));
         }
     }
 

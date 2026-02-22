@@ -16,5 +16,5 @@ public interface EntityDamagedEvent {
           }
       });
 
-    void onDamaged(@NotNull LivingEntity entity, @NotNull ServerWorld world, @NotNull DamageSource source, float amount);
+    void onDamaged(LivingEntity entity, @NotNull ServerWorld world, @NotNull DamageSource source, float amount);
 }
