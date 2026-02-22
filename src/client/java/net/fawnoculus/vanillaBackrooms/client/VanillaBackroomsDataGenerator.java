@@ -12,19 +12,19 @@ import net.fawnoculus.vanillaBackrooms.client.datagen.tag.ItemTagProvider;
 
 public class VanillaBackroomsDataGenerator implements DataGeneratorEntrypoint {
 
-	@Override
-	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
-		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
+    @Override
+    public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
+        FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
-		pack.addProvider(ItemTagProvider::new);
-		pack.addProvider(BlockTagProvider::new);
+        pack.addProvider(ItemTagProvider::new);
+        pack.addProvider(BlockTagProvider::new);
 
-		pack.addProvider(CraftingRecipeProvider::new);
-		pack.addProvider(SmeltingRecipeProvider::new);
+        pack.addProvider(CraftingRecipeProvider::new);
+        pack.addProvider(SmeltingRecipeProvider::new);
 
-		pack.addProvider(BlockLootTableProvider::new);
-		pack.addProvider(ChestLootTableProvider::new);
+        pack.addProvider(BlockLootTableProvider::new);
+        pack.addProvider(ChestLootTableProvider::new);
 
-		pack.addProvider(ModelProvider::new);
-	}
+        pack.addProvider(ModelProvider::new);
+    }
 }

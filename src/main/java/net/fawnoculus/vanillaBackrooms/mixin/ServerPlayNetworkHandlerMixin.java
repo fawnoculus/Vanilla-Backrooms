@@ -16,57 +16,57 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public class ServerPlayNetworkHandlerMixin {
-	@Shadow
-	public ServerPlayerEntity player;
+    @Shadow
+    public ServerPlayerEntity player;
 
-	@Inject(at = @At("HEAD"), method = "onChatMessage", cancellable = true)
-	private void ignoreMessage(ChatMessageC2SPacket packet, CallbackInfo ci) {
-		if (!VanillaBackroomsConfig.DISABLE_CHAT_IN_BACKROOMS.getValue()) {
-			return;
-		}
+    @Inject(at = @At("HEAD"), method = "onChatMessage", cancellable = true)
+    private void ignoreMessage(ChatMessageC2SPacket packet, CallbackInfo ci) {
+        if (!VanillaBackroomsConfig.DISABLE_CHAT_IN_BACKROOMS.getValue()) {
+            return;
+        }
 
-		if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.hasPermissionLevel(2)) {
-			return;
-		}
+        if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.hasPermissionLevel(2)) {
+            return;
+        }
 
-		NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
-		if (customData.getBoolean("isInBackrooms", false)) {
-			this.player.sendMessage(VanillaBackroomsConfig.DISABLE_CHAT_MESSAGE.getValue());
-			ci.cancel();
-		}
-	}
+        NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
+        if (customData.getBoolean("isInBackrooms", false)) {
+            this.player.sendMessage(VanillaBackroomsConfig.DISABLE_CHAT_MESSAGE.getValue());
+            ci.cancel();
+        }
+    }
 
-	@Inject(at = @At("HEAD"), method = "onCommandExecution", cancellable = true)
-	private void ignoreCommand(CommandExecutionC2SPacket packet, CallbackInfo ci) {
-		if (!VanillaBackroomsConfig.DISABLE_COMMANDS_IN_BACKROOMS.getValue()) {
-			return;
-		}
+    @Inject(at = @At("HEAD"), method = "onCommandExecution", cancellable = true)
+    private void ignoreCommand(CommandExecutionC2SPacket packet, CallbackInfo ci) {
+        if (!VanillaBackroomsConfig.DISABLE_COMMANDS_IN_BACKROOMS.getValue()) {
+            return;
+        }
 
-		if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.hasPermissionLevel(2)) {
-			return;
-		}
+        if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.hasPermissionLevel(2)) {
+            return;
+        }
 
-		NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
-		if (customData.getBoolean("isInBackrooms", false)) {
-			this.player.sendMessage(VanillaBackroomsConfig.DISABLE_COMMANDS_MESSAGE.getValue());
-			ci.cancel();
-		}
-	}
+        NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
+        if (customData.getBoolean("isInBackrooms", false)) {
+            this.player.sendMessage(VanillaBackroomsConfig.DISABLE_COMMANDS_MESSAGE.getValue());
+            ci.cancel();
+        }
+    }
 
-	@Inject(at = @At("HEAD"), method = "onChatCommandSigned", cancellable = true)
-	private void ignoreCommand(ChatCommandSignedC2SPacket packet, CallbackInfo ci) {
-		if (!VanillaBackroomsConfig.DISABLE_COMMANDS_IN_BACKROOMS.getValue()) {
-			return;
-		}
+    @Inject(at = @At("HEAD"), method = "onChatCommandSigned", cancellable = true)
+    private void ignoreCommand(ChatCommandSignedC2SPacket packet, CallbackInfo ci) {
+        if (!VanillaBackroomsConfig.DISABLE_COMMANDS_IN_BACKROOMS.getValue()) {
+            return;
+        }
 
-		if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.hasPermissionLevel(2)) {
-			return;
-		}
+        if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.hasPermissionLevel(2)) {
+            return;
+        }
 
-		NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
-		if (customData.getBoolean("isInBackrooms", false)) {
-			this.player.sendMessage(VanillaBackroomsConfig.DISABLE_COMMANDS_MESSAGE.getValue());
-			ci.cancel();
-		}
-	}
+        NbtCompound customData = PlayerUtil.getPermanentCustomData(player);
+        if (customData.getBoolean("isInBackrooms", false)) {
+            this.player.sendMessage(VanillaBackroomsConfig.DISABLE_COMMANDS_MESSAGE.getValue());
+            ci.cancel();
+        }
+    }
 }

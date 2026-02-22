@@ -5,15 +5,16 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.world.ServerWorld;
+import org.jetbrains.annotations.NotNull;
 
 @FunctionalInterface
 public interface EntityDamagedEvent {
-	Event<EntityDamagedEvent> EVENT = EventFactory.createArrayBacked(EntityDamagedEvent.class, callbacks ->
-	  (entity, world, source, amount) -> {
-		  for (EntityDamagedEvent callback : callbacks) {
-			  callback.onDamaged(entity, world, source, amount);
-		  }
-	  });
+    Event<EntityDamagedEvent> EVENT = EventFactory.createArrayBacked(EntityDamagedEvent.class, callbacks ->
+      (entity, world, source, amount) -> {
+          for (EntityDamagedEvent callback : callbacks) {
+              callback.onDamaged(entity, world, source, amount);
+          }
+      });
 
-	void onDamaged(LivingEntity entity, ServerWorld world, DamageSource source, float amount);
+    void onDamaged(@NotNull LivingEntity entity, @NotNull ServerWorld world, @NotNull DamageSource source, float amount);
 }

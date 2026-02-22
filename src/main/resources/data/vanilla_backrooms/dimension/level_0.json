@@ -7,7 +7,7 @@
 			"layers": [
 				{
 					"block": "minecraft:bedrock",
-					"height": 128
+					"height": 96
 				}
 			],
 			"structure_overrides": []

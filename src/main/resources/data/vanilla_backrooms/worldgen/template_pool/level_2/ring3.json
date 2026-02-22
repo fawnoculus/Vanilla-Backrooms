@@ -1,7 +1,8 @@
 {
 	"name": "vanilla_backrooms:level_2/ring3",
 	"fallback": "minecraft:empty",
-	"elements": [{
+	"elements": [
+		{
 			"weight": 50,
 			"element": {
 				"location": "vanilla_backrooms:level_2/rooms/1",

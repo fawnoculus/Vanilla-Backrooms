@@ -19,31 +19,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class VanillaBackrooms implements ModInitializer {
-	public static final String MOD_ID = "vanilla_backrooms";
-	public static final ModContainer CONTAINER = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow();
-	public static final String NAME = CONTAINER.getMetadata().getName();
-	public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
+    public static final String MOD_ID = "vanilla_backrooms";
+    public static final ModContainer CONTAINER = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow();
+    public static final String NAME = CONTAINER.getMetadata().getName();
+    public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
 
-	@Contract("_ -> new")
-	public static @NotNull Identifier id(String name) {
-		return Identifier.of(MOD_ID, name);
-	}
+    @Contract("_ -> new")
+    public static @NotNull Identifier id(String name) {
+        return Identifier.of(MOD_ID, name);
+    }
 
-	@Override
-	public void onInitialize() {
-		PolymerResourcePackUtils.addModAssets(MOD_ID);
+    @Override
+    public void onInitialize() {
+        PolymerResourcePackUtils.addModAssets(MOD_ID);
 
-		VanillaBackroomsConfig.initialize();
-		BackroomsLevel.initialize();
-		ModCommands.initialize();
+        VanillaBackroomsConfig.initialize();
+        BackroomsLevel.initialize();
+        ModCommands.initialize();
 
-		ModBlocks.initialize();
-		ModBlockEntities.initialize();
+        ModBlocks.initialize();
+        ModBlockEntities.initialize();
 
-		ModItems.initialize();
-		ModBlockItems.initialize();
-		ModItemGroups.initialize();
+        ModItems.initialize();
+        ModBlockItems.initialize();
+        ModItemGroups.initialize();
 
-		ModEvents.initialize();
-	}
+        ModEvents.initialize();
+    }
 }

@@ -7,12 +7,12 @@ import net.minecraft.block.Blocks;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class FakeSkyBlock extends Block implements PolymerBlock {
-	public FakeSkyBlock(Settings settings) {
-		super(settings);
-	}
+    public FakeSkyBlock(Settings settings) {
+        super(settings);
+    }
 
-	@Override
-	public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
-		return Blocks.LIGHT_BLUE_CONCRETE.getDefaultState();
-	}
+    @Override
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return Blocks.LIGHT_BLUE_CONCRETE.getDefaultState();
+    }
 }

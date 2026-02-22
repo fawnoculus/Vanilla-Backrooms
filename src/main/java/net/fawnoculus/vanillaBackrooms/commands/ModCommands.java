@@ -20,141 +20,141 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class ModCommands {
-	public static void initialize() {
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
-		  literal("vanilla-backrooms")
-			.then(literal("version")
-			  .executes(ModCommands::version)
-			)
-			.then(literal("reload-config")
-			  .requires(source -> source.hasPermissionLevel(2))
-			  .executes(ModCommands::reloadConfig)
-			)
-			.then(literal("noclip-self")
-			  .requires(source -> source.hasPermissionLevel(2))
-			  .executes(ModCommands::noclip)
-			  .then(argument("target_dimension", DimensionArgumentType.dimension())
-				.executes(ModCommands::noclipLevel)
-			  )
-			)
-			.then(literal("noclip")
-			  .requires(source -> source.hasPermissionLevel(2))
-			  .then(argument("targets", EntityArgumentType.entities())
-				.executes(ModCommands::noclipEntities)
-				.then(argument("target_dimension", DimensionArgumentType.dimension())
-				  .executes(ModCommands::noclipEntitiesLevel)
-				)
-			  )
-			)
-		));
-	}
+    public static void initialize() {
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
+          literal("vanilla-backrooms")
+            .then(literal("version")
+              .executes(ModCommands::version)
+            )
+            .then(literal("reload-config")
+              .requires(source -> source.hasPermissionLevel(2))
+              .executes(ModCommands::reloadConfig)
+            )
+            .then(literal("noclip-self")
+              .requires(source -> source.hasPermissionLevel(2))
+              .executes(ModCommands::noclip)
+              .then(argument("target_dimension", DimensionArgumentType.dimension())
+                .executes(ModCommands::noclipLevel)
+              )
+            )
+            .then(literal("noclip")
+              .requires(source -> source.hasPermissionLevel(2))
+              .then(argument("targets", EntityArgumentType.entities())
+                .executes(ModCommands::noclipEntities)
+                .then(argument("target_dimension", DimensionArgumentType.dimension())
+                  .executes(ModCommands::noclipEntitiesLevel)
+                )
+              )
+            )
+        ));
+    }
 
-	private static int version(CommandContext<ServerCommandSource> context) {
-		var version = VanillaBackrooms.CONTAINER.getMetadata().getVersion();
-		context.getSource().sendFeedback(() -> Text.literal(version.getFriendlyString()), false);
-		return 1;
-	}
+    private static int version(CommandContext<ServerCommandSource> context) {
+        var version = VanillaBackrooms.CONTAINER.getMetadata().getVersion();
+        context.getSource().sendFeedback(() -> Text.literal(version.getFriendlyString()), false);
+        return 1;
+    }
 
-	private static int reloadConfig(CommandContext<ServerCommandSource> context) {
-		context.getSource().sendFeedback(() -> Text.translatableWithFallback("message.vanilla_backrooms.reloading_config", "Reloading vanilla-backrooms config"), true);
-		VanillaBackroomsConfig.FILE.readFile();
-		return 1;
-	}
+    private static int reloadConfig(CommandContext<ServerCommandSource> context) {
+        context.getSource().sendFeedback(() -> Text.translatableWithFallback("message.vanilla_backrooms.reloading_config", "Reloading vanilla-backrooms config"), true);
+        VanillaBackroomsConfig.FILE.readFile();
+        return 1;
+    }
 
-	private static int noclip(CommandContext<ServerCommandSource> context) {
-		ServerPlayerEntity player = context.getSource().getPlayer();
-		if (player == null) {
-			context.getSource().sendError(Text.translatableWithFallback("message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a player"));
-			return 1;
-		}
+    private static int noclip(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        if (player == null) {
+            context.getSource().sendError(Text.translatableWithFallback("message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a player"));
+            return 1;
+        }
 
-		boolean successful = BackroomsHandler.noclip(context.getSource().getServer(), player);
+        boolean successful = BackroomsHandler.noclip(context.getSource().getServer(), player);
 
-		if (successful) {
-			context.getSource().sendFeedback(
-			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_next", "Noclip-ed to next level"), true
-			);
-			return 0;
-		}
+        if (successful) {
+            context.getSource().sendFeedback(
+              () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_next", "Noclip-ed to next level"), true
+            );
+            return 0;
+        }
 
-		context.getSource().sendError(Text.translatableWithFallback(
-		  "message.vanilla_backrooms.noclip_failed", "Failed to noclip")
-		);
-		return 2;
-	}
+        context.getSource().sendError(Text.translatableWithFallback(
+          "message.vanilla_backrooms.noclip_failed", "Failed to noclip")
+        );
+        return 2;
+    }
 
-	private static int noclipLevel(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-		ServerWorld targetWorld = DimensionArgumentType.getDimensionArgument(context, "target_dimension");
+    private static int noclipLevel(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        ServerWorld targetWorld = DimensionArgumentType.getDimensionArgument(context, "target_dimension");
 
-		ServerPlayerEntity player = context.getSource().getPlayer();
-		if (player == null) {
-			context.getSource().sendError(Text.translatableWithFallback(
-			  "message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a player")
-			);
-			return 1;
-		}
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        if (player == null) {
+            context.getSource().sendError(Text.translatableWithFallback(
+              "message.vanilla_backrooms.must_be_executed_by_player", "Must be executed by a player")
+            );
+            return 1;
+        }
 
-		boolean successful = BackroomsHandler.sendToDimension(context.getSource().getServer(), player, targetWorld.getRegistryKey());
+        boolean successful = BackroomsHandler.sendToDimension(context.getSource().getServer(), player, targetWorld.getRegistryKey());
 
-		if (successful) {
-			context.getSource().sendFeedback(
-			  () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_to", "Noclip-ed to level %1$s", targetWorld.getRegistryKey().getValue().toString()), true
-			);
-			return 0;
-		}
+        if (successful) {
+            context.getSource().sendFeedback(
+              () -> Text.translatableWithFallback("message.vanilla_backrooms.noclip_to", "Noclip-ed to level %1$s", targetWorld.getRegistryKey().getValue().toString()), true
+            );
+            return 0;
+        }
 
-		context.getSource().sendError(Text.translatableWithFallback(
-		  "message.vanilla_backrooms.noclip_failed", "Failed to noclip")
-		);
-		return 2;
-	}
+        context.getSource().sendError(Text.translatableWithFallback(
+          "message.vanilla_backrooms.noclip_failed", "Failed to noclip")
+        );
+        return 2;
+    }
 
-	private static int noclipEntities(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-		Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "targets");
-		boolean successful = true;
+    private static int noclipEntities(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "targets");
+        boolean successful = true;
 
-		for (Entity entity : entities) {
-			if (!BackroomsHandler.noclip(context.getSource().getServer(), entity)) {
-				successful = false;
-			}
-		}
+        for (Entity entity : entities) {
+            if (!BackroomsHandler.noclip(context.getSource().getServer(), entity)) {
+                successful = false;
+            }
+        }
 
-		if (successful) {
-			context.getSource().sendFeedback(() -> Text.translatableWithFallback(
-			  "message.vanilla_backrooms.noclip_multiple_next", "Noclip-ed %1$s entities next level", entities.size()
-			), true
-			);
-			return 0;
-		}
+        if (successful) {
+            context.getSource().sendFeedback(() -> Text.translatableWithFallback(
+                "message.vanilla_backrooms.noclip_multiple_next", "Noclip-ed %1$s entities next level", entities.size()
+              ), true
+            );
+            return 0;
+        }
 
-		context.getSource().sendError(
-		  Text.translatableWithFallback("message.vanilla_backrooms.noclip_multiple_failed", "Failed to noclip some entities")
-		);
-		return 1;
-	}
+        context.getSource().sendError(
+          Text.translatableWithFallback("message.vanilla_backrooms.noclip_multiple_failed", "Failed to noclip some entities")
+        );
+        return 1;
+    }
 
-	private static int noclipEntitiesLevel(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-		ServerWorld targetWorld = DimensionArgumentType.getDimensionArgument(context, "target_dimension");
-		Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "targets");
+    private static int noclipEntitiesLevel(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        ServerWorld targetWorld = DimensionArgumentType.getDimensionArgument(context, "target_dimension");
+        Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "targets");
 
-		boolean successful = true;
-		for (Entity entity : entities) {
-			if (!BackroomsHandler.sendToDimension(context.getSource().getServer(), entity, targetWorld.getRegistryKey())) {
-				successful = false;
-			}
-		}
+        boolean successful = true;
+        for (Entity entity : entities) {
+            if (!BackroomsHandler.sendToDimension(context.getSource().getServer(), entity, targetWorld.getRegistryKey())) {
+                successful = false;
+            }
+        }
 
-		if (successful) {
-			context.getSource().sendFeedback(() -> Text.translatableWithFallback(
-			  "message.vanilla_backrooms.noclip_multiple_to", "Noclip-ed %1$s entities to level %2$s", entities.size(), targetWorld.getRegistryKey().getValue().toString()
-			  ), true
-			);
-			return 0;
-		}
+        if (successful) {
+            context.getSource().sendFeedback(() -> Text.translatableWithFallback(
+                "message.vanilla_backrooms.noclip_multiple_to", "Noclip-ed %1$s entities to level %2$s", entities.size(), targetWorld.getRegistryKey().getValue().toString()
+              ), true
+            );
+            return 0;
+        }
 
-		context.getSource().sendError(
-		  Text.translatableWithFallback("message.vanilla_backrooms.noclip_multiple_failed", "Failed to noclip some entities")
-		);
-		return 1;
-	}
+        context.getSource().sendError(
+          Text.translatableWithFallback("message.vanilla_backrooms.noclip_multiple_failed", "Failed to noclip some entities")
+        );
+        return 1;
+    }
 }

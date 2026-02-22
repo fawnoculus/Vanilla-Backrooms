@@ -19,51 +19,51 @@ import net.minecraft.util.Identifier;
 import java.util.function.BiFunction;
 
 public class ModBlockItems {
-	public static final BlockItem FAKE_SKY = register(
-	  ModBlocks.FAKE_SKY,
-	  (block, settings) -> new BasicBlockItem(block, settings, Items.LIGHT_BLUE_CONCRETE, Text.literal("Fake Sky")),
-	  new Item.Settings()
-	);
-	public static final BlockItem FLICKERING_LIGHT = register(
-	  ModBlocks.FLICKERING_LIGHT,
-	  (block, settings) -> new BasicBlockItem(block, settings, Items.REDSTONE_LAMP, Text.literal("Flickering Light")),
-	  new Item.Settings()
-	);
-	public static final BlockItem ACTIVE_LIGHT = register(
-	  ModBlocks.ACTIVE_LIGHT,
-	  (block, settings) -> new BasicBlockItem(block, settings, Items.REDSTONE_LAMP, false,
-		Text.literal("Active Light"), BlockStateComponent.DEFAULT.with(Properties.LIT, true)),
-	  new Item.Settings()
-	);
-	public static final BlockItem NOCLIP_BLOCK = register(
-	  ModBlocks.NOCLIP_BLOCK,
-	  (block, settings) -> new BasicBlockItem(block, settings, Items.STRUCTURE_VOID, Text.literal("Noclip Block")),
-	  new Item.Settings()
-	);
-	public static final BlockItem BACKROOMS_GENERATOR = register(
-	  ModBlocks.BACKROOMS_GENERATOR,
-	  (block, settings) -> new BasicBlockItem(block, settings, Items.WAXED_COPPER_BULB, Text.literal("Backrooms Generator")),
-	  new Item.Settings()
-	);
-	public static final BlockItem FINISHED_BACKROOMS_GENERATOR = register(
-	  ModBlocks.FINISHED_BACKROOMS_GENERATOR,
-	  (block, settings) -> new BasicBlockItem(block, settings, Items.WAXED_OXIDIZED_COPPER_BULB, Text.literal("Finished Backrooms Generator")),
-	  new Item.Settings()
-	);
+    public static final BlockItem FAKE_SKY = register(
+      ModBlocks.FAKE_SKY,
+      (block, settings) -> new BasicBlockItem(block, settings, Items.LIGHT_BLUE_CONCRETE, Text.literal("Fake Sky")),
+      new Item.Settings()
+    );
+    public static final BlockItem FLICKERING_LIGHT = register(
+      ModBlocks.FLICKERING_LIGHT,
+      (block, settings) -> new BasicBlockItem(block, settings, Items.REDSTONE_LAMP, Text.literal("Flickering Light")),
+      new Item.Settings()
+    );
+    public static final BlockItem ACTIVE_LIGHT = register(
+      ModBlocks.ACTIVE_LIGHT,
+      (block, settings) -> new BasicBlockItem(block, settings, Items.REDSTONE_LAMP, false,
+        Text.literal("Active Light"), BlockStateComponent.DEFAULT.with(Properties.LIT, true)),
+      new Item.Settings()
+    );
+    public static final BlockItem NOCLIP_BLOCK = register(
+      ModBlocks.NOCLIP_BLOCK,
+      (block, settings) -> new BasicBlockItem(block, settings, Items.STRUCTURE_VOID, Text.literal("Noclip Block")),
+      new Item.Settings()
+    );
+    public static final BlockItem BACKROOMS_GENERATOR = register(
+      ModBlocks.BACKROOMS_GENERATOR,
+      (block, settings) -> new BasicBlockItem(block, settings, Items.WAXED_COPPER_BULB, Text.literal("Backrooms Generator")),
+      new Item.Settings()
+    );
+    public static final BlockItem FINISHED_BACKROOMS_GENERATOR = register(
+      ModBlocks.FINISHED_BACKROOMS_GENERATOR,
+      (block, settings) -> new BasicBlockItem(block, settings, Items.WAXED_OXIDIZED_COPPER_BULB, Text.literal("Finished Backrooms Generator")),
+      new Item.Settings()
+    );
 
 
-	private static BlockItem register(Block block, BiFunction<Block, Item.Settings, BlockItem> blockItemFactory, Item.Settings settings) {
-		Identifier id = Registries.BLOCK.getId(block);
-		RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, id);
-		BlockItem item = blockItemFactory.apply(block, settings.registryKey(itemKey));
+    private static BlockItem register(Block block, BiFunction<Block, Item.Settings, BlockItem> blockItemFactory, Item.Settings settings) {
+        Identifier id = Registries.BLOCK.getId(block);
+        RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, id);
+        BlockItem item = blockItemFactory.apply(block, settings.registryKey(itemKey));
 
-		if (!(item instanceof PolymerItem)) {
-			throw new IllegalArgumentException("Item Factory must return a PolymerItem");
-		}
+        if (!(item instanceof PolymerItem)) {
+            throw new IllegalArgumentException("Item Factory must return a PolymerItem");
+        }
 
-		return Registry.register(Registries.ITEM, itemKey, item);
-	}
+        return Registry.register(Registries.ITEM, itemKey, item);
+    }
 
-	public static void initialize() {
-	}
+    public static void initialize() {
+    }
 }

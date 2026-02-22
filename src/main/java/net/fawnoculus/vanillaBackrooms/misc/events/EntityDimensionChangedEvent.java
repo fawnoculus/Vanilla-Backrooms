@@ -4,15 +4,16 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
+import org.jetbrains.annotations.NotNull;
 
 @FunctionalInterface
 public interface EntityDimensionChangedEvent {
-	Event<EntityDimensionChangedEvent> EVENT = EventFactory.createArrayBacked(EntityDimensionChangedEvent.class, callbacks ->
-	  (entity, world) -> {
-		  for (EntityDimensionChangedEvent callback : callbacks) {
-			  callback.onDimensionChanged(entity, world);
-		  }
-	  });
+    Event<EntityDimensionChangedEvent> EVENT = EventFactory.createArrayBacked(EntityDimensionChangedEvent.class, callbacks ->
+      (entity, world) -> {
+          for (EntityDimensionChangedEvent callback : callbacks) {
+              callback.onDimensionChanged(entity, world);
+          }
+      });
 
-	void onDimensionChanged(Entity entity, ServerWorld world);
+    void onDimensionChanged(@NotNull Entity entity, @NotNull ServerWorld world);
 }

@@ -17,30 +17,30 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class BackroomsGeneratorBlock extends BlockWithEntity implements PolymerBlock {
-	public static final MapCodec<BackroomsGeneratorBlock> CODEC = createCodec(BackroomsGeneratorBlock::new);
+    public static final MapCodec<BackroomsGeneratorBlock> CODEC = createCodec(BackroomsGeneratorBlock::new);
 
-	public BackroomsGeneratorBlock(Settings settings) {
-		super(settings);
-	}
+    public BackroomsGeneratorBlock(Settings settings) {
+        super(settings);
+    }
 
-	@Override
-	public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
-		return Blocks.TARGET.getDefaultState();
-	}
+    @Override
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return Blocks.TARGET.getDefaultState();
+    }
 
-	@Override
-	protected MapCodec<? extends BlockWithEntity> getCodec() {
-		return CODEC;
-	}
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
+    }
 
-	@Override
-	public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-		return new BackroomsGeneratorBE(pos, state);
-	}
+    @Override
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new BackroomsGeneratorBE(pos, state);
+    }
 
-	@Override
-	public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, BlockState state, BlockEntityType<T> type) {
-		if (world.isClient()) return null;
-		return validateTicker(type, ModBlockEntities.BACKROOMS_GENERATOR_BE, BackroomsGeneratorBE::tick);
-	}
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, BlockState state, BlockEntityType<T> type) {
+        if (world.isClient()) return null;
+        return validateTicker(type, ModBlockEntities.BACKROOMS_GENERATOR_BE, BackroomsGeneratorBE::tick);
+    }
 }

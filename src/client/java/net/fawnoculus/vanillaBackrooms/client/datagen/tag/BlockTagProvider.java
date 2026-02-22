@@ -9,15 +9,15 @@ import net.minecraft.registry.tag.BlockTags;
 import java.util.concurrent.CompletableFuture;
 
 public class BlockTagProvider extends FabricTagProvider.BlockTagProvider {
-	public BlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-		super(output, registriesFuture);
-	}
+    public BlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
+    }
 
-	@Override
-	protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
-		valueLookupBuilder(BlockTags.PICKAXE_MINEABLE)
-		  .add(ModBlocks.ACTIVE_LIGHT)
-		  .add(ModBlocks.FLICKERING_LIGHT)
-		  .add(ModBlocks.FAKE_SKY);
-	}
+    @Override
+    protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+        valueLookupBuilder(BlockTags.PICKAXE_MINEABLE)
+          .add(ModBlocks.ACTIVE_LIGHT)
+          .add(ModBlocks.FLICKERING_LIGHT)
+          .add(ModBlocks.FAKE_SKY);
+    }
 }

@@ -15,21 +15,21 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class NoclipBlock extends SimplePolymerBlock {
-	public NoclipBlock(Settings settings) {
-		super(settings, Blocks.STRUCTURE_VOID);
-	}
+    public NoclipBlock(Settings settings) {
+        super(settings, Blocks.STRUCTURE_VOID);
+    }
 
-	@Override
-	protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		return VoxelShapes.empty();
-	}
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return VoxelShapes.empty();
+    }
 
-	@Override
-	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
-		if (!(world instanceof ServerWorld serverWorld)) {
-			return;
-		}
+    @Override
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+        if (!(world instanceof ServerWorld serverWorld)) {
+            return;
+        }
 
-		BackroomsHandler.noclip(serverWorld.getServer(), entity);
-	}
+        BackroomsHandler.noclip(serverWorld.getServer(), entity);
+    }
 }

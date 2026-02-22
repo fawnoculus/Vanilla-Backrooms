@@ -8,12 +8,12 @@ import net.minecraft.state.property.Properties;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class ActiveLightBlock extends Block implements PolymerBlock {
-	public ActiveLightBlock(Settings settings) {
-		super(settings);
-	}
+    public ActiveLightBlock(Settings settings) {
+        super(settings);
+    }
 
-	@Override
-	public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
-		return Blocks.REDSTONE_LAMP.getDefaultState().with(Properties.LIT, true);
-	}
+    @Override
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return Blocks.REDSTONE_LAMP.getDefaultState().with(Properties.LIT, true);
+    }
 }

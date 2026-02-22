@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerWorld.class)
 public class ServerWorldMixin {
-	@Inject(at = @At("HEAD"), method = "onDimensionChanged")
-	private void entityDimensionChanged(Entity entity, CallbackInfo ci) {
-		EntityDimensionChangedEvent.EVENT.invoker().onDimensionChanged(entity, (ServerWorld) (Object) this);
-	}
+    @Inject(at = @At("HEAD"), method = "onDimensionChanged")
+    private void entityDimensionChanged(Entity entity, CallbackInfo ci) {
+        EntityDimensionChangedEvent.EVENT.invoker().onDimensionChanged(entity, (ServerWorld) (Object) this);
+    }
 }

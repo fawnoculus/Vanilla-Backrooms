@@ -16,24 +16,24 @@ import net.minecraft.util.math.random.CheckedRandom;
 import net.minecraft.util.math.random.ChunkRandom;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-public record RingBackroomsGenerator(@Unmodifiable List<Entry> structures) implements BackroomsGenerator {
+public record SimpleBackroomsGenerator(boolean rotate,
+                                       RegistryKey<StructurePool> structurePoolKey) implements BackroomsGenerator {
     @Contract("_ -> new")
-    public static @NotNull Builder builder(boolean defaultRotate) {
-        return new Builder(defaultRotate);
+    public static @NotNull SimpleBackroomsGenerator of(String name) {
+        return of(true, name);
+    }
+
+    @Contract("_, _ -> new")
+    public static @NotNull SimpleBackroomsGenerator of(boolean rotate, String name) {
+        return new SimpleBackroomsGenerator(rotate, RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id(name)));
     }
 
     @Override
     public void placeBackroomsSegment(@NotNull ServerWorld world, @NotNull BlockPos pos) throws RuntimeException {
-        Entry entry = this.entryFromPos(pos);
-        RegistryEntry.Reference<StructurePool> structurePool = world.getRegistryManager().getOrThrow(RegistryKeys.TEMPLATE_POOL).getOrThrow(entry.structurePoolKey);
+        RegistryEntry.Reference<StructurePool> structurePool = world.getRegistryManager().getOrThrow(RegistryKeys.TEMPLATE_POOL).getOrThrow(this.structurePoolKey);
 
-        if (entry.rotate) {
+        if (this.rotate) {
             ChunkRandom chunkRandom = new ChunkRandom(new CheckedRandom(0L));
             chunkRandom.setCarverSeed(
               world.getSeed(),
@@ -76,59 +76,5 @@ public record RingBackroomsGenerator(@Unmodifiable List<Entry> structures) imple
         if (!success) {
             VanillaBackrooms.LOGGER.warn("Failed to generate backrooms segment");
         }
-    }
-
-    public Entry entryFromPos(@NotNull BlockPos pos) {
-        double squareDistanceFromCenter = Math.abs((double) pos.getX() * pos.getX() + pos.getZ() * pos.getZ());
-
-        for (Entry entry : structures) {
-            if (squareDistanceFromCenter >= entry.squareDistance) {
-                return entry;
-            }
-        }
-
-        return structures.getLast();
-    }
-
-    public static class Builder {
-        private final boolean defaultRotate;
-        private final List<Entry> structures = new ArrayList<>();
-
-        public Builder(boolean defaultRotate) {
-            this.defaultRotate = defaultRotate;
-        }
-
-        public Builder add(int distanceFromCenter, String name) {
-            return add(this.defaultRotate, distanceFromCenter, name);
-        }
-
-        public Builder addRotate(int distanceFromCenter, String name) {
-            return add(true, distanceFromCenter, name);
-        }
-
-        public Builder addNoRotate(int distanceFromCenter, String name) {
-            return add(false, distanceFromCenter, name);
-        }
-
-        public Builder add(boolean rotate, int distanceFromCenter, String name) {
-            int squareDistance = distanceFromCenter * distanceFromCenter;
-
-            this.structures.add(
-              new Entry(rotate, squareDistance, RegistryKey.of(RegistryKeys.TEMPLATE_POOL, VanillaBackrooms.id(name)))
-            );
-
-            return this;
-        }
-
-        public RingBackroomsGenerator build() {
-            if (this.structures.isEmpty()) {
-                throw new IllegalStateException("Can not build Dimension data without any structure pools");
-            }
-            structures.sort(Comparator.comparingInt(Entry::squareDistance));
-            return new RingBackroomsGenerator(List.copyOf(structures.reversed()));
-        }
-    }
-
-    public record Entry(boolean rotate, int squareDistance, RegistryKey<StructurePool> structurePoolKey) {
     }
 }

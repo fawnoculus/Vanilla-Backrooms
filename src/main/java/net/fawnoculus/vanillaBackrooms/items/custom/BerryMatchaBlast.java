@@ -21,44 +21,44 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class BerryMatchaBlast extends Item implements PolymerItem {
-	public BerryMatchaBlast(@NotNull Settings settings) {
-		super(settings
-		  .component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK)
-		  .useRemainder(Items.BOWL)
-		);
-	}
+    public BerryMatchaBlast(@NotNull Settings settings) {
+        super(settings
+          .component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK)
+          .useRemainder(Items.BOWL)
+        );
+    }
 
-	@Override
-	public Item getPolymerItem(ItemStack itemStack, PacketContext context) {
-		return Items.SUSPICIOUS_STEW;
-	}
+    @Override
+    public Item getPolymerItem(ItemStack itemStack, PacketContext context) {
+        return Items.SUSPICIOUS_STEW;
+    }
 
-	@Override
-	public ItemStack finishUsing(ItemStack stack, World world, @NotNull LivingEntity user) {
-		if (user instanceof ServerPlayerEntity player) {
-			player.networkHandler.sendPacket(new OverlayMessageS2CPacket(
-			  Text.translatableWithFallback("message.vanilla_backrooms.lucky_o_milk.plain_cold", "You feel very focused")
-			));
-		}
+    @Override
+    public ItemStack finishUsing(ItemStack stack, World world, @NotNull LivingEntity user) {
+        if (user instanceof ServerPlayerEntity player) {
+            player.networkHandler.sendPacket(new OverlayMessageS2CPacket(
+              Text.translatableWithFallback("message.vanilla_backrooms.lucky_o_milk.plain_cold", "You feel very focused")
+            ));
+        }
 
-		user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 60 * 20, 0, false, false ,true));
-		user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 60 * 20, 1, false, false ,true));
+        user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 60 * 20, 0, false, false, true));
+        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 60 * 20, 1, false, false, true));
 
-		return super.finishUsing(stack, world, user);
-	}
+        return super.finishUsing(stack, world, user);
+    }
 
-	@Override
-	public @Nullable Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
-		if (PolymerResourcePackUtils.hasMainPack(context)) {
-			return PolymerItem.super.getPolymerItemModel(stack, context);
-		}
-		return null;
-	}
+    @Override
+    public @Nullable Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+        if (PolymerResourcePackUtils.hasMainPack(context)) {
+            return PolymerItem.super.getPolymerItemModel(stack, context);
+        }
+        return null;
+    }
 
-	@Override
-	public void modifyBasePolymerItemStack(ItemStack out, ItemStack stack, PacketContext context) {
-		if (!PolymerResourcePackUtils.hasMainPack(context)) {
-			out.set(DataComponentTypes.CUSTOM_NAME, Text.literal("BerryMatcha Blast").setStyle(Style.EMPTY.withItalic(false)));
-		}
-	}
+    @Override
+    public void modifyBasePolymerItemStack(ItemStack out, ItemStack stack, PacketContext context) {
+        if (!PolymerResourcePackUtils.hasMainPack(context)) {
+            out.set(DataComponentTypes.CUSTOM_NAME, Text.literal("BerryMatcha Blast").setStyle(Style.EMPTY.withItalic(false)));
+        }
+    }
 }

@@ -5,13 +5,13 @@ import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 
 public interface CustomDataHolder {
-	String KEY = "vanilla_backrooms.custom_data";
+    String KEY = "vanilla_backrooms.custom_data";
 
-	static CustomDataHolder from(Entity entity) {
-		return (CustomDataHolder) entity;
-	}
+    static CustomDataHolder from(Entity entity) {
+        return (CustomDataHolder) entity;
+    }
 
-	@NotNull NbtCompound VanillaBackrooms$getCustomData();
+    @NotNull NbtCompound VanillaBackrooms$getCustomData();
 
-	void VanillaBackrooms$setCustomData(NbtCompound customData);
+    void VanillaBackrooms$setCustomData(NbtCompound customData);
 }
