@@ -5,11 +5,14 @@
 [![Licensed under: GPL-3.0](https://img.shields.io/github/license/fawnoculus/Vanilla-Backrooms?style=flat&color=900c3f)](https://github.com/fawnoculus/Vanilla-Backrooms/blob/master/LICENSE.txt)
 [![Build Workflow](https://github.com/fawnoculus/Vanilla-Backrooms/actions/workflows/build.yml/badge.svg)](https://github.com/fawnoculus/Vanilla-Backrooms/actions/workflows/build.yml)
 
-Ever wanted to put your friends in the backrooms, but it would be way too suspicious to make them download a mod?
-Well then this mod is the solution off your problem!
-This mod, which only has to be installed on the server will bring them to the backrooms without them having to download a mod.
-
 TLDR: Vanilla-Backrooms is a serverside only Backrooms mod based on info from the [Backrooms Wiki](https://backrooms-wiki.wikidot.com/start).
+
+*Ever wanted to put your friends in the backrooms, but it would be way too suspicious to make them download a mod?*
+
+**Well then this mod is the solution off your problem!**
+
+This mod, which only has to be installed on the server will bring them to the backrooms without them having to download a mod.
+They won't even know what happened when they suddenly clip into the backrooms!
 
 ### Vanilla-Backrooms currently has these Levels:
 - [Level-0](https://backrooms-wiki.wikidot.com/level-0): Tutorial Level

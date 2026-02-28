@@ -7,6 +7,7 @@ import net.fawnoculus.vanillaBackrooms.levels.BackroomsLevel;
 import net.fawnoculus.vanillaBackrooms.misc.events.EntityDamagedEvent;
 import net.fawnoculus.vanillaBackrooms.misc.events.EntityDimensionChangedEvent;
 import net.fawnoculus.vanillaBackrooms.misc.events.PlayerRespawnEvent;
+import net.fawnoculus.vanillaBackrooms.mixin.invoker.LivingEntityInvoker;
 import net.fawnoculus.vanillaBackrooms.util.PlayerUtil;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
@@ -48,7 +49,11 @@ public class ModEvents {
         }
     }
 
-    private static void onEntityDie(@NotNull LivingEntity entity, @NotNull ServerWorld world, @NotNull DamageSource ignored, float damage) {
+    private static void onEntityDie(@NotNull LivingEntity entity, @NotNull ServerWorld world, @NotNull DamageSource source, float damage) {
+        if (!entity.canTakeDamage() || entity.isInvulnerableTo(world, source)) {
+            return;
+        }
+
         if (VanillaBackroomsConfig.DEATH_NOCLIP.getValue().isFalse(world.getServer()) || damage < entity.getHealth()) {
             return;
         }
@@ -57,7 +62,8 @@ public class ModEvents {
             return;
         }
 
-        if (!VanillaBackroomsConfig.DEATH_NOCLIP_IN_BACKROOMS.getValue() && BackroomsLevel.isLevel(world.getRegistryKey().getValue())) {
+        boolean isInBackrooms = BackroomsLevel.isLevel(world.getRegistryKey().getValue());
+        if (!VanillaBackroomsConfig.DEATH_NOCLIP_IN_BACKROOMS.getValue() && isInBackrooms) {
             return;
         }
 
@@ -67,12 +73,19 @@ public class ModEvents {
             }
         }
 
+        ((LivingEntityInvoker) entity).VanillaBackrooms$drop(world, source);
         BackroomsHandler.noclip(world.getServer(), entity);
         entity.setHealth(entity.getHealth() + damage); // Make the entity have with enough health to survive
     }
 
     private static void onEntitySuffocate(@NotNull LivingEntity entity, @NotNull ServerWorld world, @NotNull DamageSource source, float ignored) {
         NbtCompound data = CustomDataHolder.from(entity).VanillaBackrooms$getCustomData();
+
+        if (!entity.canTakeDamage() || entity.isInvulnerableTo(world, source)) {
+            data.remove("suffocationDamageTicks");
+            CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(data);
+            return;
+        }
 
         if (VanillaBackroomsConfig.SUFFOCATION_NOCLIP.getValue().isFalse(world.getServer()) || !source.isOf(DamageTypes.IN_WALL)) {
             data.remove("suffocationDamageTicks");

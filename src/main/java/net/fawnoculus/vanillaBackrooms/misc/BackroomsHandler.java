@@ -171,6 +171,7 @@ public final class BackroomsHandler {
 
     /**
      * Called when an entity enters the backrooms, not when they switch between different levels of the backrooms
+     *
      * @param entity The entity that entered the backrooms
      */
     public static void onEnterBackrooms(Entity entity) {

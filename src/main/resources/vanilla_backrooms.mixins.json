@@ -1,20 +1,21 @@
 {
-	"required": true,
-	"minVersion": "0.8",
-	"package": "net.fawnoculus.vanillaBackrooms.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-		"BlockRotationMixin",
-		"EntityMixin",
-		"LivingEntityMixin",
-		"PlayerManagerMixin",
-		"ServerPlayNetworkHandlerMixin",
-		"ServerWorldMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	},
-	"overwrites": {
-		"requireAnnotations": true
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.fawnoculus.vanillaBackrooms.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BlockRotationMixin",
+    "EntityMixin",
+    "LivingEntityMixin",
+    "PlayerManagerMixin",
+    "ServerPlayNetworkHandlerMixin",
+    "ServerWorldMixin",
+    "invoker.LivingEntityInvoker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
 	}
 }
