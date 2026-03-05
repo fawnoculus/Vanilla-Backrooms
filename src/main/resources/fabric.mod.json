@@ -3,7 +3,7 @@
 	"id": "vanilla_backrooms",
 	"version": "${version}",
 	"name": "Vanilla-Backrooms",
-	"description": "Vanilla-Backrooms is a serverside only Backrooms mod",
+	"description": "Vanilla-Backrooms is a server-side only Backrooms mod based on Polymer",
 	"authors": [
 		"fawnoculus",
 		"OrdenEnderman"
