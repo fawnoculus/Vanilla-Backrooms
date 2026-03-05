@@ -144,6 +144,13 @@ public class VanillaBackroomsConfig {
       "Chance that no-clipping in Level 5 will send you to the overworld, 0 means never, 1 means always [0.0 - 1.0, default 1.0]"
     );
 
+    public static final ConfigOption<Boolean> SUPPRESS_BLOCK_ATTACHED_ENTITY_ERROR = FILE.newOption(
+      "suppress_block_attached_entity_error",
+      Codec.BOOL,
+      true,
+      "Removes the 'Block-attached entity at invalid position: ...' error that sometimes occurs when generating the backrooms [default: true]"
+    );
+
     public static void initialize() {
         FILE.initialize();
     }

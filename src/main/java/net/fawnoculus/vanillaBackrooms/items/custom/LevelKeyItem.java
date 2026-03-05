@@ -2,6 +2,7 @@ package net.fawnoculus.vanillaBackrooms.items.custom;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import net.fawnoculus.vanillaBackrooms.items.ModItems;
 import net.fawnoculus.vanillaBackrooms.levels.BackroomsLevel;
 import net.fawnoculus.vanillaBackrooms.misc.BackroomsHandler;
 import net.minecraft.block.BlockState;
@@ -49,10 +50,16 @@ public class LevelKeyItem extends Item implements PolymerItem {
         return state.getBlock().getRegistryEntry().isIn(BlockTags.DOORS);
     }
 
-    public static @NotNull NbtComponent ofLevel(Identifier levelId) {
+    public static @NotNull NbtCompound ofLevel(Identifier levelId) {
         NbtCompound nbt = new NbtCompound();
         nbt.put(BOUND_LEVEL_KEY, Identifier.CODEC, levelId);
-        return NbtComponent.of(nbt);
+        return nbt;
+    }
+
+    public static @NotNull ItemStack stackFromLevel(Identifier targetDimension) {
+        ItemStack stack = new ItemStack(ModItems.LEVEL_KEY);
+        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(LevelKeyItem.ofLevel(targetDimension)));
+        return stack;
     }
 
     private static @NotNull @Unmodifiable List<Text> makeTooltip(@NotNull ItemStack stack) {
@@ -135,9 +142,11 @@ public class LevelKeyItem extends Item implements PolymerItem {
 
     @Override
     public @Nullable Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+        /*
         if (PolymerResourcePackUtils.hasMainPack(context)) {
             return PolymerItem.super.getPolymerItemModel(stack, context);
         }
+         */
         return null;
     }
 

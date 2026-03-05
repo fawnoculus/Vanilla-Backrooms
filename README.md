@@ -5,14 +5,14 @@
 [![Licensed under: GPL-3.0](https://img.shields.io/github/license/fawnoculus/Vanilla-Backrooms?style=flat&color=900c3f)](https://github.com/fawnoculus/Vanilla-Backrooms/blob/master/LICENSE.txt)
 [![Build Workflow](https://github.com/fawnoculus/Vanilla-Backrooms/actions/workflows/build.yml/badge.svg)](https://github.com/fawnoculus/Vanilla-Backrooms/actions/workflows/build.yml)
 
-TLDR: Vanilla-Backrooms is a serverside only Backrooms mod based on info from the [Backrooms Wiki](https://backrooms-wiki.wikidot.com/start).
+TLDR: Vanilla-Backrooms is a server-side only Backrooms mod based on [Polymer](https://github.com/Patbox/polymer), made with info from the [Backrooms Wiki](https://backrooms-wiki.wikidot.com/start).
 
 *Ever wanted to put your friends in the backrooms, but it would be way too suspicious to make them download a mod?*
 
 **Well then this mod is the solution off your problem!**
 
-This mod, which only has to be installed on the server will bring them to the backrooms without them having to download a mod.
-They won't even know what happened when they suddenly clip into the backrooms!
+This mod, which only has to be installed on the server, will bring them to the backrooms without them having to download a mod.
+They won't even know what happened when they suddenly clip out of reality!
 
 ### Vanilla-Backrooms currently has these Levels:
 - [Level-0](https://backrooms-wiki.wikidot.com/level-0): Tutorial Level
@@ -21,12 +21,14 @@ They won't even know what happened when they suddenly clip into the backrooms!
 - [Level-3](https://backrooms-wiki.wikidot.com/level-3): Electrical Station
 - [Level-4](https://backrooms-wiki.wikidot.com/level-4): Abandoned Office
 - [Level-5](https://backrooms-wiki.wikidot.com/level-5): Terror Hotel
+
 More Levels are in development!
 
 ### Vanilla-Backrooms currently has these Object:
 - [Object-1](https://backrooms-wiki.wikidot.com/object-1): Almond Water
 - [Object-2](https://backrooms-wiki.wikidot.com/object-2): Level Keys
 - [Object-28](https://backrooms-wiki.wikidot.com/object-28): Lucky O’ Milk
+
 More Objects are in development!
 
 ## Installing Vanilla-Backrooms

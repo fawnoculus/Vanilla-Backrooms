@@ -3,13 +3,13 @@
 	"id": "vanilla_backrooms",
 	"version": "${version}",
 	"name": "Vanilla-Backrooms",
-	"description": "",
+	"description": "Vanilla-Backrooms is a serverside only Backrooms mod",
 	"authors": [
 		"fawnoculus",
 		"OrdenEnderman"
 	],
 	"contact": {},
-	"license": "MIT",
+	"license": "GPL-3.0",
 	"icon": "assets/vanilla_backrooms/icon.png",
 	"environment": "*",
 	"entrypoints": {

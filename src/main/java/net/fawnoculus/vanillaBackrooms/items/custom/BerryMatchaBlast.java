@@ -49,9 +49,11 @@ public class BerryMatchaBlast extends Item implements PolymerItem {
 
     @Override
     public @Nullable Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+        /*
         if (PolymerResourcePackUtils.hasMainPack(context)) {
             return PolymerItem.super.getPolymerItemModel(stack, context);
         }
+         */
         return null;
     }
 

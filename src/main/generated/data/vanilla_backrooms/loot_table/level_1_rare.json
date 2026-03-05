@@ -128,6 +128,10 @@
           "type": "minecraft:item",
           "functions": [
             {
+              "function": "minecraft:enchant_randomly",
+              "options": "#minecraft:on_random_loot"
+            },
+            {
               "add": false,
               "count": {
                 "type": "minecraft:uniform",
@@ -135,10 +139,6 @@
                 "min": 0.0
               },
               "function": "minecraft:set_count"
-            },
-            {
-              "function": "minecraft:enchant_randomly",
-              "options": "#minecraft:on_random_loot"
             }
           ],
           "name": "minecraft:diamond_boots"
@@ -147,6 +147,10 @@
           "type": "minecraft:item",
           "functions": [
             {
+              "function": "minecraft:enchant_randomly",
+              "options": "#minecraft:on_random_loot"
+            },
+            {
               "add": false,
               "count": {
                 "type": "minecraft:uniform",
@@ -154,10 +158,6 @@
                 "min": 0.0
               },
               "function": "minecraft:set_count"
-            },
-            {
-              "function": "minecraft:enchant_randomly",
-              "options": "#minecraft:on_random_loot"
             }
           ],
           "name": "minecraft:diamond_helmet"
@@ -166,6 +166,10 @@
           "type": "minecraft:item",
           "functions": [
             {
+              "function": "minecraft:enchant_randomly",
+              "options": "#minecraft:on_random_loot"
+            },
+            {
               "add": false,
               "count": {
                 "type": "minecraft:uniform",
@@ -173,10 +177,6 @@
                 "min": 0.0
               },
               "function": "minecraft:set_count"
-            },
-            {
-              "function": "minecraft:enchant_randomly",
-              "options": "#minecraft:on_random_loot"
             }
           ],
           "name": "minecraft:diamond_leggings"
@@ -185,6 +185,10 @@
           "type": "minecraft:item",
           "functions": [
             {
+              "function": "minecraft:enchant_randomly",
+              "options": "#minecraft:on_random_loot"
+            },
+            {
               "add": false,
               "count": {
                 "type": "minecraft:uniform",
@@ -192,10 +196,6 @@
                 "min": 0.0
               },
               "function": "minecraft:set_count"
-            },
-            {
-              "function": "minecraft:enchant_randomly",
-              "options": "#minecraft:on_random_loot"
             }
           ],
           "name": "minecraft:diamond_chestplate"
@@ -206,6 +206,34 @@
         "max": 2.0,
         "min": 0.0
       }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty"
+        },
+        {
+          "type": "minecraft:empty"
+        },
+        {
+          "type": "minecraft:empty"
+        },
+        {
+          "type": "minecraft:empty"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": "{bound_level:\"vanilla_backrooms:level_1\"}"
+            }
+          ],
+          "name": "vanilla_backrooms:level_key"
+        }
+      ],
+      "rolls": 1.0
     }
   ]
 }

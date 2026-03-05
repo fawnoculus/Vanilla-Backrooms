@@ -39,9 +39,11 @@ public class BasicBlockItem extends BlockItem implements PolymerItem {
 
     @Override
     public @Nullable Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+        /*
         if (this.polymerUseModel && PolymerResourcePackUtils.hasMainPack(context)) {
             return PolymerItem.super.getPolymerItemModel(stack, context);
         }
+         */
         return null;
     }
 

@@ -18,6 +18,7 @@ import java.io.Writer;
 public class JsonConfigEncoder implements ConfigEncoding {
     public static final Gson GSON = new GsonBuilder()
       .serializeNulls()
+      .disableHtmlEscaping()
       .setStrictness(Strictness.LENIENT)
       .setPrettyPrinting()
       .create();

@@ -291,6 +291,34 @@
         "max": 2.0,
         "min": 0.0
       }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty"
+        },
+        {
+          "type": "minecraft:empty"
+        },
+        {
+          "type": "minecraft:empty"
+        },
+        {
+          "type": "minecraft:empty"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": "{bound_level:\"vanilla_backrooms:level_2\"}"
+            }
+          ],
+          "name": "vanilla_backrooms:level_key"
+        }
+      ],
+      "rolls": 1.0
     }
   ]
 }

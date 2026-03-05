@@ -48,15 +48,6 @@
             }
         },
         {
-            "weight": 50,
-            "element": {
-                "location": "vanilla_backrooms:level_5/rooms/6",
-                "processors": "minecraft:empty",
-                "projection": "rigid",
-                "element_type": "minecraft:single_pool_element"
-            }
-        },
-        {
             "weight": 150,
             "element": {
                 "location": "vanilla_backrooms:level_5/exit",

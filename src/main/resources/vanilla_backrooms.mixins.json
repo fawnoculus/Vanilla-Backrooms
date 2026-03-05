@@ -4,12 +4,14 @@
   "package": "net.fawnoculus.vanillaBackrooms.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BlockAttachedEntityMixin",
     "BlockRotationMixin",
     "EntityMixin",
     "LivingEntityMixin",
     "PlayerManagerMixin",
     "ServerPlayNetworkHandlerMixin",
     "ServerWorldMixin",
+    "accessor.LivingEntityAccessor",
     "invoker.LivingEntityInvoker"
   ],
   "injectors": {

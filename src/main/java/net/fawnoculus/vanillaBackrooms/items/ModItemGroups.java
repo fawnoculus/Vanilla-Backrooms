@@ -17,7 +17,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,13 +51,13 @@ public class ModItemGroups {
 
             itemGroup.add(ModItems.BERRY_MATCHA_BLAST);
 
-            itemGroup.add(levelKey(BackroomsHandler.getLevelId(0)));
-            itemGroup.add(levelKey(BackroomsHandler.getLevelId(1)));
-            itemGroup.add(levelKey(BackroomsHandler.getLevelId(2)));
-            itemGroup.add(levelKey(BackroomsHandler.getLevelId(3)));
-            itemGroup.add(levelKey(BackroomsHandler.getLevelId(4)));
-            itemGroup.add(levelKey(BackroomsHandler.getLevelId(5)));
-            itemGroup.add(levelKey(World.OVERWORLD.getValue()));
+            itemGroup.add(LevelKeyItem.stackFromLevel(BackroomsHandler.getLevelId(0)));
+            itemGroup.add(LevelKeyItem.stackFromLevel(BackroomsHandler.getLevelId(1)));
+            itemGroup.add(LevelKeyItem.stackFromLevel(BackroomsHandler.getLevelId(2)));
+            itemGroup.add(LevelKeyItem.stackFromLevel(BackroomsHandler.getLevelId(3)));
+            itemGroup.add(LevelKeyItem.stackFromLevel(BackroomsHandler.getLevelId(4)));
+            itemGroup.add(LevelKeyItem.stackFromLevel(BackroomsHandler.getLevelId(5)));
+            itemGroup.add(LevelKeyItem.stackFromLevel(World.OVERWORLD.getValue()));
 
             itemGroup.add(ModBlockItems.FAKE_SKY);
             itemGroup.add(ModBlockItems.FLICKERING_LIGHT);
@@ -88,12 +87,6 @@ public class ModItemGroups {
             itemGroup.add(lootChest(ModLootTables.LEVEL_5_COMMON, Text.translatableWithFallback("tooltip.vanilla_backrooms.chest.level_5_common", "Level 5 Common")));
             itemGroup.add(lootChest(ModLootTables.LEVEL_5_RARE, Text.translatableWithFallback("tooltip.vanilla_backrooms.chest.level_5_rare", "Level 5 Rare")));
         });
-    }
-
-    private static @NotNull ItemStack levelKey(Identifier targetDimension) {
-        ItemStack stack = new ItemStack(ModItems.LEVEL_KEY);
-        stack.set(DataComponentTypes.CUSTOM_DATA, LevelKeyItem.ofLevel(targetDimension));
-        return stack;
     }
 
     private static @NotNull ItemStack lootChest(RegistryKey<LootTable> lootTable, Text lore) {

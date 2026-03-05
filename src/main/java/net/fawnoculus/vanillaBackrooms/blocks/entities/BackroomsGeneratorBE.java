@@ -1,9 +1,11 @@
 package net.fawnoculus.vanillaBackrooms.blocks.entities;
 
+import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
 import net.fawnoculus.vanillaBackrooms.blocks.ModBlockEntities;
 import net.fawnoculus.vanillaBackrooms.blocks.ModBlocks;
 import net.fawnoculus.vanillaBackrooms.levels.BackroomsGenerator;
 import net.fawnoculus.vanillaBackrooms.levels.BackroomsLevel;
+import net.fawnoculus.vanillaBackrooms.util.MixinUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -35,7 +37,9 @@ public class BackroomsGeneratorBE extends BlockEntity {
         }
 
         try {
+            MixinUtil.setSuppressBlockAttachedEntityError(VanillaBackroomsConfig.SUPPRESS_BLOCK_ATTACHED_ENTITY_ERROR.getValue());
             generator.placeBackroomsSegment(world, pos);
+            MixinUtil.setSuppressBlockAttachedEntityError(false);
             world.setBlockState(pos, ModBlocks.BACKROOMS_GENERATOR.getDefaultState());
             return Optional.empty();
         } catch (Throwable throwable) {

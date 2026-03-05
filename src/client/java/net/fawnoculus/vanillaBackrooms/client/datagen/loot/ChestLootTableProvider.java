@@ -3,16 +3,16 @@ package net.fawnoculus.vanillaBackrooms.client.datagen.loot;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
 import net.fawnoculus.vanillaBackrooms.items.ModItems;
+import net.fawnoculus.vanillaBackrooms.items.custom.LevelKeyItem;
+import net.fawnoculus.vanillaBackrooms.misc.BackroomsHandler;
 import net.fawnoculus.vanillaBackrooms.misc.ModLootTables;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.loot.entry.EmptyEntry;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.EnchantRandomlyLootFunction;
-import net.minecraft.loot.function.EnchantWithLevelsLootFunction;
-import net.minecraft.loot.function.SetCountLootFunction;
-import net.minecraft.loot.function.SetPotionLootFunction;
+import net.minecraft.loot.function.*;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.potion.Potion;
@@ -137,20 +137,20 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
           .pool(LootPool.builder()
             .rolls(UniformLootNumberProvider.create(0f, 2f))
             .with(ItemEntry.builder(Items.IRON_HELMET)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_BOOTS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_LEGGINGS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_CHESTPLATE)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.SHIELD)
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
@@ -194,20 +194,29 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
             )
             .with(ItemEntry.builder(Items.DIAMOND_BOOTS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.DIAMOND_HELMET)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.DIAMOND_LEGGINGS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.DIAMOND_CHESTPLATE)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+            )
+          )
+          .pool(LootPool.builder()
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(ItemEntry.builder(ModItems.LEVEL_KEY)
+              .apply(levelKeyData(0))
             )
           )
         );
@@ -265,20 +274,20 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
             )
             .with(ItemEntry.builder(Items.IRON_BOOTS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_HELMET)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_LEGGINGS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_CHESTPLATE)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
           )
         );
@@ -319,20 +328,29 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
             )
             .with(ItemEntry.builder(Items.DIAMOND_BOOTS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.DIAMOND_HELMET)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.DIAMOND_LEGGINGS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.DIAMOND_CHESTPLATE)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+            )
+          )
+          .pool(LootPool.builder()
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(ItemEntry.builder(ModItems.LEVEL_KEY)
+              .apply(levelKeyData(1))
             )
           )
         );
@@ -471,6 +489,15 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
             )
             .with(ItemEntry.builder(Items.DIAMOND_CHESTPLATE)
               .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
+            )
+          )
+          .pool(LootPool.builder()
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(ItemEntry.builder(ModItems.LEVEL_KEY)
+              .apply(levelKeyData(2))
             )
           )
         );
@@ -783,6 +810,15 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
               .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(2f, 4f)))
             )
           )
+          .pool(LootPool.builder()
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(ItemEntry.builder(ModItems.LEVEL_KEY)
+              .apply(levelKeyData(3))
+            )
+          )
         );
 
 
@@ -925,6 +961,15 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
               .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1f, 2f)))
             )
           )
+          .pool(LootPool.builder()
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(ItemEntry.builder(ModItems.LEVEL_KEY)
+              .apply(levelKeyData(4))
+            )
+          )
         );
 
         lootTable.accept(ModLootTables.LEVEL_4_LUCKY_O_MILK, LootTable.builder()
@@ -1033,20 +1078,20 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
               .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_BOOTS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_HELMET)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_LEGGINGS)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
             .with(ItemEntry.builder(Items.IRON_CHESTPLATE)
-              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
               .apply(EnchantRandomlyLootFunction.builder(wrapperLookup))
+              .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
           )
           .pool(LootPool.builder()
@@ -1068,10 +1113,25 @@ public class ChestLootTableProvider extends SimpleFabricLootTableProvider {
               .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0f, 1f)))
             )
           )
+          .pool(LootPool.builder()
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(EmptyEntry.builder())
+            .with(ItemEntry.builder(ModItems.LEVEL_KEY)
+              .apply(levelKeyData(5))
+            )
+          )
         );
     }
 
     private SetPotionLootFunction.Builder<?> potion(RegistryWrapper.WrapperLookup wrapperLookup, RegistryEntry<Potion> entry) {
         return SetPotionLootFunction.builder(wrapperLookup.getEntryOrThrow(entry.getKey().orElseThrow()));
+    }
+
+
+    @SuppressWarnings("deprecation")
+    private SetCustomDataLootFunction.Builder<?> levelKeyData(final int levelNumber) {
+        return SetCustomDataLootFunction.builder(LevelKeyItem.ofLevel(BackroomsHandler.getLevelId(levelNumber)));
     }
 }

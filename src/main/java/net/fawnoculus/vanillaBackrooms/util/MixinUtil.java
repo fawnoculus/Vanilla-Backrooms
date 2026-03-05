@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class MixinUtil {
     private static @Nullable BlockRotation randomBlockRotationOverride = null;
+    private static boolean suppressBlockAttachedEntityError = false;
 
     public static @Nullable BlockRotation getRandomBlockRotationOverride() {
         return MixinUtil.randomBlockRotationOverride;
@@ -12,5 +13,13 @@ public class MixinUtil {
 
     public static void setRandomBlockRotationOverride(@Nullable BlockRotation override) {
         MixinUtil.randomBlockRotationOverride = override;
+    }
+
+    public static boolean suppressBlockAttachedEntityError() {
+        return suppressBlockAttachedEntityError;
+    }
+
+    public static void setSuppressBlockAttachedEntityError(boolean suppressBlockAttachedEntityError) {
+        MixinUtil.suppressBlockAttachedEntityError = suppressBlockAttachedEntityError;
     }
 }

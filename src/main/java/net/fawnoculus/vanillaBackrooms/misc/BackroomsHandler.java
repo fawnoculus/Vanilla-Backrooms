@@ -4,6 +4,7 @@ import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
 import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
 import net.fawnoculus.vanillaBackrooms.blocks.entities.BackroomsGeneratorBE;
 import net.fawnoculus.vanillaBackrooms.levels.BackroomsLevel;
+import net.fawnoculus.vanillaBackrooms.mixin.accessor.LivingEntityAccessor;
 import net.fawnoculus.vanillaBackrooms.util.PlayerUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.InventoryOwner;
@@ -101,6 +102,7 @@ public final class BackroomsHandler {
               && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE)
             ) {
                 try {
+                    player.fallDistance = 0;
                     savePlayerData(player);
                 } catch (Exception e) {
                     VanillaBackrooms.LOGGER.error("Failed to save Player Data for Player '{}', they will not be noclipped", player.getGameProfile().getName());
@@ -130,6 +132,11 @@ public final class BackroomsHandler {
     }
 
     public static void exitBackrooms(MinecraftServer server, Entity entity, RegistryKey<World> targetWorld) {
+        if (entity instanceof LivingEntity livingEntity) {
+            ((LivingEntityAccessor) livingEntity).VanillaBackrooms$lastDamageTaken(Float.MAX_VALUE);
+            livingEntity.hurtTime = 20 * 5;
+        }
+
         if (entity instanceof ServerPlayerEntity player) {
             NbtCompound permanentCustomData = PlayerUtil.getPermanentCustomData(player);
             if (permanentCustomData.getBoolean("hasSavedData", false)) {
@@ -142,7 +149,10 @@ public final class BackroomsHandler {
 
                     stacks.add(stack.copy());
                 }
+
                 loadPlayerData(player);
+                player.fallDistance = 0;
+                player.setHealth(player.getMaxHealth());
 
                 for (ItemStack stack : stacks) {
                     player.giveOrDropStack(stack);
