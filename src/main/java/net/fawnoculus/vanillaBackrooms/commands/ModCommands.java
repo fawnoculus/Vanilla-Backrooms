@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fawnoculus.vanillaBackrooms.VanillaBackrooms;
 import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
 import net.fawnoculus.vanillaBackrooms.misc.BackroomsHandler;
+import net.minecraft.command.DefaultPermissions;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -27,18 +28,18 @@ public class ModCommands {
               .executes(ModCommands::version)
             )
             .then(literal("reload-config")
-              .requires(source -> source.hasPermissionLevel(2))
+              .requires(source -> source.getPermissions().hasPermission(DefaultPermissions.MODERATORS))
               .executes(ModCommands::reloadConfig)
             )
             .then(literal("noclip-self")
-              .requires(source -> source.hasPermissionLevel(2))
+              .requires(source -> source.getPermissions().hasPermission(DefaultPermissions.MODERATORS))
               .executes(ModCommands::noclip)
               .then(argument("target_dimension", DimensionArgumentType.dimension())
                 .executes(ModCommands::noclipLevel)
               )
             )
             .then(literal("noclip")
-              .requires(source -> source.hasPermissionLevel(2))
+              .requires(source -> source.getPermissions().hasPermission(DefaultPermissions.MODERATORS))
               .then(argument("targets", EntityArgumentType.entities())
                 .executes(ModCommands::noclipEntities)
                 .then(argument("target_dimension", DimensionArgumentType.dimension())

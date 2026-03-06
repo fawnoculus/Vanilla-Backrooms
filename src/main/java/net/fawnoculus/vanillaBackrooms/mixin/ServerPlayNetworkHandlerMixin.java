@@ -2,6 +2,7 @@ package net.fawnoculus.vanillaBackrooms.mixin;
 
 import net.fawnoculus.vanillaBackrooms.VanillaBackroomsConfig;
 import net.fawnoculus.vanillaBackrooms.misc.BackroomsHandler;
+import net.minecraft.command.DefaultPermissions;
 import net.minecraft.network.packet.c2s.play.ChatCommandSignedC2SPacket;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
@@ -24,7 +25,7 @@ public class ServerPlayNetworkHandlerMixin {
             return;
         }
 
-        if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.hasPermissionLevel(2)) {
+        if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.getPermissions().hasPermission(DefaultPermissions.MODERATORS)) {
             return;
         }
 
@@ -40,7 +41,7 @@ public class ServerPlayNetworkHandlerMixin {
             return;
         }
 
-        if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.hasPermissionLevel(2)) {
+        if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.getPermissions().hasPermission(DefaultPermissions.MODERATORS)) {
             return;
         }
 
@@ -56,7 +57,7 @@ public class ServerPlayNetworkHandlerMixin {
             return;
         }
 
-        if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.hasPermissionLevel(2)) {
+        if (VanillaBackroomsConfig.OPERATORS_BYPASS_RESTRICTIONS.getValue() && player.getPermissions().hasPermission(DefaultPermissions.MODERATORS)) {
             return;
         }
 
