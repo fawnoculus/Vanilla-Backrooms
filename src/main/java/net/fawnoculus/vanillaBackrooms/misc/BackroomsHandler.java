@@ -29,10 +29,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProperties;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,17 +58,17 @@ public final class BackroomsHandler {
     }
 
     public static boolean isInBackrooms(Entity entity) {
-        return BackroomsLevel.isLevel(entity.getWorld().getRegistryKey().getValue());
+        return BackroomsLevel.isLevel(entity.getEntityWorld().getRegistryKey().getValue());
     }
 
     public static boolean noclip(MinecraftServer server, Entity entity) {
         entity.detach();
-        RegistryKey<World> nextDimension = getNextDimension(entity.getWorld().getRegistryKey(), new Random());
+        RegistryKey<World> nextDimension = getNextDimension(entity.getEntityWorld().getRegistryKey(), new Random());
         return sendToDimension(server, entity, nextDimension);
     }
 
     public static boolean sendToDimension(MinecraftServer server, Entity entity, RegistryKey<World> targetDimension) {
-        RegistryKey<World> previousDimension = entity.getWorld().getRegistryKey();
+        RegistryKey<World> previousDimension = entity.getEntityWorld().getRegistryKey();
 
         if (previousDimension.getValue().equals(targetDimension.getValue())) {
             return false;
@@ -105,7 +107,7 @@ public final class BackroomsHandler {
                     player.fallDistance = 0;
                     savePlayerData(player);
                 } catch (Exception e) {
-                    VanillaBackrooms.LOGGER.error("Failed to save Player Data for Player '{}', they will not be noclipped", player.getGameProfile().getName());
+                    VanillaBackrooms.LOGGER.error("Failed to save Player Data for Player '{}', they will not be noclipped", player.getGameProfile().name());
                     return false;
                 }
             }
@@ -122,7 +124,12 @@ public final class BackroomsHandler {
                 PlayerUtil.setPermanentCustomData(player, permanentCustomData);
             }
 
-            player.setSpawnPoint(new ServerPlayerEntity.Respawn(world.getRegistryKey(), BlockPos.ofFloored(spawnPos), world.getSpawnAngle(), true), false);
+            WorldProperties.SpawnPoint spawnPoint = new WorldProperties.SpawnPoint(
+              GlobalPos.create(world.getRegistryKey(), BlockPos.ofFloored(spawnPos)),
+              world.getSpawnPoint().pitch(),
+              world.getSpawnPoint().yaw()
+            );
+            player.setSpawnPoint(new ServerPlayerEntity.Respawn(spawnPoint, true), false);
         }
 
         entity.fallDistance = 0;
@@ -160,8 +167,8 @@ public final class BackroomsHandler {
             }
 
             ServerPlayerEntity.Respawn respawn = permanentCustomData.get("outOfBackroomsRespawn", ServerPlayerEntity.Respawn.CODEC)
-              .filter(value -> !BackroomsLevel.isLevel(value.dimension().getValue()))
-              .orElseGet(() -> new ServerPlayerEntity.Respawn(server.getOverworld().getRegistryKey(), server.getOverworld().getSpawnPos(), server.getOverworld().getSpawnAngle(), true));
+              .filter(value -> !BackroomsLevel.isLevel(value.respawnData().getDimension().getValue()))
+              .orElseGet(() -> new ServerPlayerEntity.Respawn(server.getOverworld().getSpawnPoint(), true));
             player.setSpawnPoint(respawn, false);
             player.teleportTo(player.getRespawnTarget(false, TeleportTarget.NO_OP));
 
@@ -174,9 +181,9 @@ public final class BackroomsHandler {
             world = server.getOverworld();
         }
 
-        Vec3d spawnPos = world.getSpawnPos().toCenterPos();
         entity.fallDistance = 0;
-        entity.teleport(world, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Set.of(), world.getSpawnAngle(), 0, false);
+        WorldProperties.SpawnPoint spawnPoint = world.getSpawnPoint();
+        entity.teleport(world, spawnPoint.getPos().getX(), spawnPoint.getPos().getY(), spawnPoint.getPos().getZ(), Set.of(), spawnPoint.yaw(), spawnPoint.pitch(), false);
     }
 
     /**
@@ -226,7 +233,7 @@ public final class BackroomsHandler {
         CustomDataHolder.from(entity).VanillaBackrooms$setCustomData(customData);
 
         if (entity instanceof ItemEntity item && item.getStack().getRegistryEntry().isIn(VanillaBackroomsConfig.BACKROOMS_NOT_RETURN.getValue())) {
-            item.kill((ServerWorld) item.getWorld());
+            item.kill((ServerWorld) item.getEntityWorld());
             item.discard();
             return;
         }
@@ -274,7 +281,7 @@ public final class BackroomsHandler {
         permanentCustomData.putBoolean("hasSavedData", true);
         PlayerUtil.setPermanentCustomData(player, permanentCustomData);
 
-        MinecraftServer server = Objects.requireNonNull(player.getServer());
+        MinecraftServer server = player.getEntityWorld().getServer();
 
         Path playerData = server.getPath("data")
           .resolve("vanilla_backrooms")
@@ -308,7 +315,7 @@ public final class BackroomsHandler {
         permanentCustomData.putBoolean("hasSavedData", false);
         PlayerUtil.setPermanentCustomData(player, permanentCustomData);
 
-        MinecraftServer server = Objects.requireNonNull(player.getServer());
+        MinecraftServer server = player.getEntityWorld().getServer();
 
         Path playerData = server.getPath("data")
           .resolve("vanilla_backrooms")
@@ -327,9 +334,7 @@ public final class BackroomsHandler {
         player.readData(view);
 
         player.teleportTo(player.getRespawnTarget(false, TeleportTarget.NO_OP));
-        player.readRootVehicle(view);
-        player.readGameModeData(view);
-        player.getServer().getPlayerManager().sendStatusEffects(player);
+        server.getPlayerManager().sendStatusEffects(player);
 
         GameMode newGameMode = player.getGameMode();
 

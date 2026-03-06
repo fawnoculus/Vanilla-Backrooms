@@ -63,9 +63,8 @@ public class LevelKeyItem extends Item implements PolymerItem {
     }
 
     private static @NotNull @Unmodifiable List<Text> makeTooltip(@NotNull ItemStack stack) {
-        @SuppressWarnings("deprecation")
         Optional<Identifier> boundDimension = Optional.ofNullable(stack.get(DataComponentTypes.CUSTOM_DATA))
-          .flatMap(nbtComponent -> nbtComponent.getNbt().get(BOUND_LEVEL_KEY, Identifier.CODEC));
+          .flatMap(nbtComponent -> nbtComponent.copyNbt().get(BOUND_LEVEL_KEY, Identifier.CODEC));
 
         if (boundDimension.isEmpty()) {
             return List.of(
@@ -112,9 +111,8 @@ public class LevelKeyItem extends Item implements PolymerItem {
             return super.use(world, player, hand);
         }
 
-        @SuppressWarnings("deprecation")
         Optional<Identifier> optional = Optional.ofNullable(player.getStackInHand(hand).get(DataComponentTypes.CUSTOM_DATA))
-          .flatMap(nbtComponent -> nbtComponent.getNbt().get(BOUND_LEVEL_KEY, Identifier.CODEC));
+          .flatMap(nbtComponent -> nbtComponent.copyNbt().get(BOUND_LEVEL_KEY, Identifier.CODEC));
         if (optional.isEmpty()) {
             return super.use(world, player, hand);
         }

@@ -19,8 +19,7 @@ public class PlayerUtil {
      * Sets Custom Data that stays the same even if the player dies.
      */
     public static void setPermanentCustomData(@NotNull ServerPlayerEntity player, NbtCompound nbt) {
-        MinecraftServer server = player.getServer();
-        assert server != null;
+        MinecraftServer server = player.getEntityWorld().getServer();
 
         Path playerData = server.getPath("data")
           .resolve("vanilla_backrooms")
@@ -58,8 +57,7 @@ public class PlayerUtil {
             return DATA_CACHE.get(player.getUuid());
         }
 
-        MinecraftServer server = player.getServer();
-        assert server != null;
+        MinecraftServer server = player.getEntityWorld().getServer();
 
         Path playerData = server.getPath("data")
           .resolve("vanilla_backrooms")
