@@ -1,8 +1,9 @@
 # v0.1.2
-## Fixed:
-- Some Loot-pools in level 0
 ## Changed:
 - Default Configuration to be more survival friendly
+## Fixed:
+- Some Loot-pools in level 0
+- A Doors in Level 3
 
 # v0.1.1
 ## Added:
