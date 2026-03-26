@@ -1,3 +1,9 @@
+# v0.1.2
+## Fixed:
+- Some Loot-pools in level 0
+## Changed:
+- Default Configuration to be more survival friendly
+
 # v0.1.1
 ## Added:
 - support for more versions

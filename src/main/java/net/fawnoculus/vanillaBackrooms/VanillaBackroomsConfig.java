@@ -77,14 +77,14 @@ public class VanillaBackroomsConfig {
     public static final ConfigOption<Boolean> ADVENTURE_IN_BACKROOMS = FILE.newOption(
       "adventure_in_backrooms",
       Codec.BOOL,
-      true,
+      false,
       "Whether Players will have their game-mode set to adventure in the backrooms (creative and spectator players won't be set to adventure mode)  [default: true]"
     );
 
     public static final ConfigOption<Boolean> CLEAR_INV = FILE.newOption(
       "clear_inv",
       Codec.BOOL,
-      true,
+      false,
       "Whether Players inventories and experience will be cleared and hunger reset when entering the backrooms (they'll get it back when they exit) [default: true]"
     );
 
