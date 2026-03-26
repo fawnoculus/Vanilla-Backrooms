@@ -52,13 +52,14 @@ public class ModCommands {
     private static int version(CommandContext<ServerCommandSource> context) {
         var version = VanillaBackrooms.CONTAINER.getMetadata().getVersion();
         context.getSource().sendFeedback(() -> Text.literal(version.getFriendlyString()), false);
-        return 1;
+        return 0;
     }
 
     private static int reloadConfig(CommandContext<ServerCommandSource> context) {
         context.getSource().sendFeedback(() -> Text.translatableWithFallback("message.vanilla_backrooms.reloading_config", "Reloading vanilla-backrooms config"), true);
         VanillaBackroomsConfig.FILE.readFile();
-        return 1;
+        VanillaBackroomsConfig.FILE.writeFile();
+        return 0;
     }
 
     private static int noclip(CommandContext<ServerCommandSource> context) {

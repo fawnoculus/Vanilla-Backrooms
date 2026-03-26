@@ -9,6 +9,9 @@
 		"OrdenEnderman"
 	],
 	"contact": {},
+    "contributors": [
+        "Randomspear (Testing)"
+    ],
 	"license": "GPL-3.0",
 	"icon": "assets/vanilla_backrooms/icon.png",
 	"environment": "*",

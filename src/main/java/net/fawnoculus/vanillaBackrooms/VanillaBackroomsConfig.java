@@ -77,15 +77,22 @@ public class VanillaBackroomsConfig {
     public static final ConfigOption<Boolean> ADVENTURE_IN_BACKROOMS = FILE.newOption(
       "adventure_in_backrooms",
       Codec.BOOL,
-      true,
+      false,
       "Whether Players will have their game-mode set to adventure in the backrooms (creative and spectator players won't be set to adventure mode)  [default: true]"
     );
 
     public static final ConfigOption<Boolean> CLEAR_INV = FILE.newOption(
       "clear_inv",
       Codec.BOOL,
-      true,
+      false,
       "Whether Players inventories and experience will be cleared and hunger reset when entering the backrooms (they'll get it back when they exit) [default: true]"
+    );
+
+    public static final ConfigOption<Boolean> ANNOUNCE_LEVEL = FILE.newOption(
+      "announce_level",
+      Codec.BOOL,
+      true,
+      "Whether Players will see a Title of the level name when they enter a level [default: true]"
     );
 
     public static final ConfigOption<Boolean> OPERATORS_BYPASS_RESTRICTIONS = FILE.newOption(
@@ -98,7 +105,7 @@ public class VanillaBackroomsConfig {
     public static final ConfigOption<Boolean> DISABLE_COMMANDS_IN_BACKROOMS = FILE.newOption(
       "disable_command_in_backrooms",
       Codec.BOOL,
-      true,
+      false,
       "Whether Suffocating in a Block makes you noclip into the Backrooms (usefully when you have commands like tpa to stop players from exiting) [default: true]"
     );
 
@@ -114,13 +121,6 @@ public class VanillaBackroomsConfig {
       Codec.BOOL,
       false,
       "Whether Chat should be disabled when you are in the backrooms [default: true]"
-    );
-
-    public static final ConfigOption<Boolean> ANNOUNCE_LEVEL = FILE.newOption(
-      "announce_level",
-      Codec.BOOL,
-      true,
-      "Whether Players will see a Title of the level name when they enter a level [default: true]"
     );
 
     public static final ConfigOption<Text> DISABLE_CHAT_MESSAGE = FILE.newOption(
