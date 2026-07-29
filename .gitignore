@@ -23,6 +23,8 @@ local.properties
 .idea/*
 !.idea/icon.*
 !.idea/scopes
+# use jspecify annotations for Nullable & Notnull
+!.idea/codeInsightSettings.xml
 
 # vscode
 .settings/

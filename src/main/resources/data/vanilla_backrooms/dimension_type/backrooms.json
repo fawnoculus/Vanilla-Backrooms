@@ -1,24 +1,24 @@
 {
-	"ultrawarm": false,
-	"natural": false,
-	"piglin_safe": true,
-	"respawn_anchor_works": true,
-	"bed_works": true,
-	"has_raids": false,
-	"has_skylight": true,
-	"has_ceiling": true,
-	"coordinate_scale": 1,
-	"ambient_light": 0,
-	"logical_height": 96,
-	"effects": "minecraft:the_nether",
-	"cardinal_light": "nether",
-	"infiniburn": "#minecraft:infiniburn_nether",
-	"min_y": -48,
-	"height": 96,
-	"monster_spawn_light_level": {
-		"type": "minecraft:uniform",
-		"min_inclusive": 0,
-		"max_inclusive": 7
-	},
-	"monster_spawn_block_light_limit": 0
+  "ultrawarm": false,
+  "natural": false,
+  "piglin_safe": true,
+  "respawn_anchor_works": true,
+  "bed_works": true,
+  "has_raids": false,
+  "has_skylight": true,
+  "has_ceiling": true,
+  "coordinate_scale": 1,
+  "ambient_light": 0,
+  "logical_height": 96,
+  "effects": "minecraft:the_nether",
+  "cardinal_light": "nether",
+  "infiniburn": "#minecraft:infiniburn_nether",
+  "min_y": -48,
+  "height": 96,
+  "monster_spawn_light_level": {
+    "type": "minecraft:uniform",
+    "min_inclusive": 0,
+    "max_inclusive": 7
+  },
+  "monster_spawn_block_light_limit": 0
 }

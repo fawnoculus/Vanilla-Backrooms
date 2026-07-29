@@ -1,42 +1,42 @@
 {
-	"schemaVersion": 1,
-	"id": "vanilla_backrooms",
-	"version": "${version}",
-	"name": "Vanilla-Backrooms",
-	"description": "Vanilla-Backrooms is a server-side only Backrooms mod based on Polymer",
-	"authors": [
-		"fawnoculus",
-		"OrdenEnderman"
-	],
-	"contact": {},
-    "contributors": [
-        "Randomspear (Testing)"
+  "schemaVersion": 1,
+  "id": "vanilla_backrooms",
+  "version": "${version}",
+  "name": "Vanilla-Backrooms",
+  "description": "Vanilla-Backrooms is a server-side only Backrooms mod based on Polymer",
+  "authors": [
+    "fawnoculus",
+    "OrdenEnderman"
+  ],
+  "contact": {},
+  "contributors": [
+    "Randomspear (Testing)"
+  ],
+  "license": "GPL-3.0",
+  "icon": "assets/vanilla_backrooms/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "net.fawnoculus.vanillaBackrooms.client.VanillaBackroomsDataGenerator"
     ],
-    "license": "GPL-3.0",
-	"icon": "assets/vanilla_backrooms/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"fabric-datagen": [
-			"net.fawnoculus.vanillaBackrooms.client.VanillaBackroomsDataGenerator"
-		],
-		"client": [
-			"net.fawnoculus.vanillaBackrooms.client.VanillaBackroomsClient"
-		],
-		"main": [
-			"net.fawnoculus.vanillaBackrooms.VanillaBackrooms"
-		]
-	},
-	"mixins": [
-		"vanilla_backrooms.mixins.json",
-		{
-			"config": "vanilla-backrooms.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-        "polymer-bundled": ">=${polymer_version}",
-        "fabricloader": ">=${loader_version}",
-        "fabric-api": ">=${fabric_api_version}",
-		"minecraft": "${minecraft_version}"
-	}
+    "client": [
+      "net.fawnoculus.vanillaBackrooms.client.VanillaBackroomsClient"
+    ],
+    "main": [
+      "net.fawnoculus.vanillaBackrooms.VanillaBackrooms"
+    ]
+  },
+  "mixins": [
+    "vanilla_backrooms.mixins.json",
+    {
+      "config": "vanilla-backrooms.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "polymer-bundled": ">=${polymer_version}",
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": ">=${fabric_api_version}",
+    "minecraft": "${minecraft_version}"
+  }
 }
